@@ -65,6 +65,9 @@ public:
     double Adjust(double _x, double extern_d);//线性自变量，使用外部计算的d项
     double Adjust_Incremental();// 增量式全部基于误差计算，暂不引入额外参数
 
+    //清理
+    void Clear();
+
     Fit_Params fun_p = { 0 }, fun_i = { 0 }, fun_d = { 0 };//三次拟合参数
     double kp = 0, ki = 0, kd = 0;//普通参数
     double fact_kp = 0, fact_ki = 0, fact_kd = 0;

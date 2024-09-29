@@ -1,5 +1,7 @@
 #include "../include/PIDmethod.h"
 
+SystemTick_Fun PIDtimer::Get_SystemTick = NULL;//静态变量必须实现
+
 /**
  * @brief Update time stamp
  * @return none

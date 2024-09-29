@@ -43,8 +43,6 @@ public:
 
 };
 
-SystemTick_Fun PIDtimer::Get_SystemTick = NULL;//静态变量必须实现
-
 /*PID方法类*/
 class PIDmethod : public PIDtimer
 {

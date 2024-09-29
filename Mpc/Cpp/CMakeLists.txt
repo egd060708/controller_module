@@ -1,5 +1,5 @@
 # 设置 Eigen 库的头文件路径
-set(EIGEN3_INCLUDE_DIR "D:/Libraries/eigen-3.3.4/eigen-3.3.4")
+set(EIGEN3_INCLUDE_DIR "D:/Libraries/eigen-3.4.0/eigen-3.4.0")
 # set(qpOASES_INCLUDE_DIR "D:/Libraries/qpOASES-stable-3.2/qpOASES-stable-3.2/include")
 
 # 所有源文件形成变量

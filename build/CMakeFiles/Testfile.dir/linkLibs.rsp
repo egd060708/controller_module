@@ -1,0 +1,1 @@
+ Mpc/Cpp/libMpcCpp.a Pid/Cpp/libPidCpp.a D:/Git_Project/github/controller_module/Mpc/Cpp/libs/libqpOASES.a -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 

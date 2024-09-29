@@ -1,0 +1,2 @@
+D:\usefulTools\MinGW\mingw64\bin\ar.exe qc libPidCpp.a CMakeFiles/PidCpp.dir/source/PIDmethod.cpp.obj
+D:\usefulTools\MinGW\mingw64\bin\ranlib.exe libPidCpp.a

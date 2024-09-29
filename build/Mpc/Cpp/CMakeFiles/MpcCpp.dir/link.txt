@@ -1,0 +1,2 @@
+D:\usefulTools\MinGW\mingw64\bin\ar.exe qc libMpcCpp.a CMakeFiles/MpcCpp.dir/source/mpcCal.cpp.obj
+D:\usefulTools\MinGW\mingw64\bin\ranlib.exe libMpcCpp.a

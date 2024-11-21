@@ -1,5 +1,6 @@
 #pragma once
 
+//#define NOMINMAX
 #include <qpOASES.hpp>
 #include <Eigen/Dense>
 #include <limits>
@@ -68,8 +69,8 @@ public:
     Matrixr(2 * xNum, 1) X_COMPARE = Matrixr(2 * xNum, 1)::Zero();                    // 对齐时间戳后的状态，预测在低位，实际在高位
     // 约束矩阵
     // 输入约束
-    Matrixr(uNum* ctrlStep, 1) lb = Matrixr(uNum * ctrlStep, 1)::Constant(std::numeric_limits<real_t>::min());
-    Matrixr(uNum* ctrlStep, 1) ub = Matrixr(uNum * ctrlStep, 1)::Constant(std::numeric_limits<real_t>::max());
+    Matrixr(uNum* ctrlStep, 1) lb = Matrixr(uNum * ctrlStep, 1)::Constant((std::numeric_limits<real_t>::min)());
+    Matrixr(uNum* ctrlStep, 1) ub = Matrixr(uNum * ctrlStep, 1)::Constant((std::numeric_limits<real_t>::max)());
     /*MatrixXd lb;
     MatrixXd ub;*/
 //#if not SIMPLE_CONSTRAIN
@@ -78,8 +79,8 @@ public:
     real_t Aub_qpOASES[cNum * ctrlStep];
     // box约束
     Matrixr(cNum* ctrlStep, uNum* ctrlStep) cA = Matrixr(cNum * ctrlStep, uNum * ctrlStep)::Zero();
-    Matrixr(cNum* ctrlStep, 1) Alb = Matrixr(cNum * ctrlStep, 1)::Constant(std::numeric_limits<real_t>::min());
-    Matrixr(cNum* ctrlStep, 1) Aub = Matrixr(cNum * ctrlStep, 1)::Constant(std::numeric_limits<real_t>::max());
+    Matrixr(cNum* ctrlStep, 1) Alb = Matrixr(cNum * ctrlStep, 1)::Constant((std::numeric_limits<real_t>::min)());
+    Matrixr(cNum* ctrlStep, 1) Aub = Matrixr(cNum * ctrlStep, 1)::Constant((std::numeric_limits<real_t>::max)());
     /*MatrixXd cA;
     MatrixXd Alb;
     MatrixXd Aub;*/

@@ -136,10 +136,7 @@ public:
             xOpt_qpOASES[i] = 0;
             xOpt_initialGuess[i] = 0;
         }
-        xOpt_initialGuess[2] = 100;
-        xOpt_initialGuess[5] = 100;
-        xOpt_initialGuess[8] = 100;
-        xOpt_initialGuess[11] = 100;
+        
         for (int i = 0; i < ctrlStep * uNum + ctrlStep * cNum; i++) {
             yOpt_qpOASES[i] = 0.0;
         }
@@ -190,13 +187,14 @@ public:
                 Aub_qpOASES[i * Aub.cols() + j] = Aub(i, j);
         if (isModelUpdate == 1)
         {
-            qp_solver.init(H_qpOASES, g_qpOASES, cA_qpOASES, lb_qpOASES, ub_qpOASES, Alb_qpOASES, Aub_qpOASES, nWSR, &CPU_t, xOpt_initialGuess);
+            //qp_solver.init(H_qpOASES, g_qpOASES, cA_qpOASES, lb_qpOASES, ub_qpOASES, Alb_qpOASES, Aub_qpOASES, nWSR, &CPU_t, xOpt_initialGuess);
+            qp_solver.init(H_qpOASES, g_qpOASES, cA_qpOASES, lb_qpOASES, ub_qpOASES, Alb_qpOASES, Aub_qpOASES, nWSR, &CPU_t);
             isModelUpdate = 0;
         }
         else
         {
-            //qp_solver.init(H_qpOASES, g_qpOASES, cA_qpOASES, lb_qpOASES, ub_qpOASES, Alb_qpOASES, Aub_qpOASES, nWSR, &CPU_t, xOpt_qpOASES, yOpt_qpOASES, &guessedBounds, &guessedConstraints);
-            qp_solver.hotstart(H_qpOASES, g_qpOASES, cA_qpOASES, lb_qpOASES, ub_qpOASES, Alb_qpOASES, Aub_qpOASES, nWSR, &CPU_t, &guessedBounds, &guessedConstraints);
+            qp_solver.init(H_qpOASES, g_qpOASES, cA_qpOASES, lb_qpOASES, ub_qpOASES, Alb_qpOASES, Aub_qpOASES, nWSR, &CPU_t, xOpt_qpOASES, yOpt_qpOASES, &guessedBounds, &guessedConstraints);
+            //qp_solver.hotstart(H_qpOASES, g_qpOASES, cA_qpOASES, lb_qpOASES, ub_qpOASES, Alb_qpOASES, Aub_qpOASES, nWSR, &CPU_t, &guessedBounds, &guessedConstraints);
         }
 #endif
 

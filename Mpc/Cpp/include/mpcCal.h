@@ -8,10 +8,12 @@
 USING_NAMESPACE_QPOASES
 using namespace Eigen;
 
-// 定义常规矩阵类型
-#define Matrixr(r, c) Eigen::Matrix<real_t, r, c>
+// 定义常规矩阵类型(静态)
+#define MatrixSr(r, c) Eigen::Matrix<real_t, r, c>
 // 定义方阵类型（Square）
-#define MatrixSr(d) Eigen::Matrix<real_t, d, d>
+#define MatrixSsr(d) Eigen::Matrix<real_t, d, d>
+// 定义常规矩阵类型(动态)
+#define Matrixr Eigen::MatrixX<real_t>
 // 预编译选项，是否使用简单约束
 #define SIMPLE_CONSTRAIN 0
 
@@ -33,60 +35,60 @@ public:
 
     real_t xOpt_initialGuess[ctrlStep * uNum];
     // 离散状态空间方程
-    MatrixSr(xNum) A = MatrixSr(xNum)::Zero();
-    Matrixr(xNum, uNum) B = Matrixr(xNum, uNum)::Zero();
+    Matrixr A;
+    Matrixr B;
     // 状态权重矩阵Q，状态末端补偿矩阵R，输入权重矩阵R，平滑矩阵W
-    MatrixSr(xNum) Q = MatrixSr(xNum)::Identity();
-    MatrixSr(xNum) F = MatrixSr(xNum)::Identity();
-    MatrixSr(uNum) R = MatrixSr(uNum)::Zero();
-    MatrixSr(uNum) W = MatrixSr(uNum)::Zero();
+    Matrixr Q;
+    Matrixr F;
+    Matrixr R;
+    Matrixr W;
     // 状态向量
-    Matrixr(xNum, 1) Y = Matrixr(xNum, 1)::Zero(); // 目标向量
-    Matrixr(xNum, 1) X = Matrixr(xNum, 1)::Zero(); // 当前状态
-    Matrixr(uNum, 1) U = Matrixr(uNum, 1)::Zero(); // 输出向量
+    Matrixr Y; // 目标向量
+    Matrixr X; // 当前状态
+    Matrixr U; // 输出向量
     // 中间变量
-    MatrixSr(xNum) G = MatrixSr(xNum)::Zero();
-    Matrixr(ctrlStep* uNum, xNum) E = Matrixr(ctrlStep * uNum, xNum)::Zero();
-    Matrixr(uNum* ctrlStep, (ctrlStep + 1)* xNum) L = Matrixr(uNum * ctrlStep, (ctrlStep + 1) * xNum)::Zero();
-    MatrixSr(ctrlStep* uNum) H = MatrixSr(ctrlStep * uNum)::Zero();
-    MatrixSr(ctrlStep* uNum) extraH = MatrixSr(ctrlStep * uNum)::Zero();
-    Matrixr(ctrlStep* uNum, 1) extra_g = Matrixr(ctrlStep * uNum, 1)::Zero();
+    Matrixr G;
+    Matrixr E;
+    Matrixr L;
+    Matrixr H;
+    Matrixr extraH;
+    Matrixr extra_g;
     // 过程变量
-    Matrixr((ctrlStep + 1)* xNum, xNum) M = Matrixr((ctrlStep + 1) * xNum, xNum)::Identity();
-    Matrixr((ctrlStep + 1)* xNum, ctrlStep* uNum) C = Matrixr((ctrlStep + 1) * xNum, ctrlStep * uNum)::Zero();
-    Matrixr((ctrlStep + 1)* xNum, (ctrlStep + 1)* xNum) Q_bar;
-    Matrixr(ctrlStep* uNum, ctrlStep* uNum) R_bar;
-    Matrixr(ctrlStep* uNum, ctrlStep* uNum) W_bar;
-    Matrixr(ctrlStep* uNum, 1) g_new;
-    MatrixSr(ctrlStep* uNum) H_new;
+    Matrixr M;
+    Matrixr C;
+    Matrixr Q_bar;
+    Matrixr R_bar;
+    Matrixr W_bar;
+    Matrixr g_new;
+    Matrixr H_new;
     /*MatrixXd H_new;
     MatrixXd g_new;*/
     // 预测结果
-    Matrixr(xNum* (ctrlStep + 1), 1) Y_K = Matrixr(xNum * (ctrlStep + 1), 1)::Zero(); // qp求解给定
-    Matrixr(xNum, preStep + 1) X_K = Matrixr(xNum, preStep + 1)::Zero();              // qp求解状态
-    Matrixr(uNum * ctrlStep, preStep) U_K = Matrixr(uNum * ctrlStep, preStep)::Zero();                      // qp求解输出
-    Matrixr(uNum * ctrlStep, preStep) U_pre = Matrixr(uNum * ctrlStep, preStep)::Zero();                    // 上一次qp求解的输出
-    Matrixr(2 * xNum, 1) X_COMPARE = Matrixr(2 * xNum, 1)::Zero();                    // 对齐时间戳后的状态，预测在低位，实际在高位
+    Matrixr Y_K; // qp求解给定
+    Matrixr X_K;              // qp求解状态
+    Matrixr U_K;                      // qp求解输出
+    Matrixr U_pre;                    // 上一次qp求解的输出
+    Matrixr X_COMPARE;                    // 对齐时间戳后的状态，预测在低位，实际在高位
     // 约束矩阵
     // 输入约束
-    Matrixr(uNum* ctrlStep, 1) lb = Matrixr(uNum * ctrlStep, 1)::Constant((std::numeric_limits<real_t>::min)());
-    Matrixr(uNum* ctrlStep, 1) ub = Matrixr(uNum * ctrlStep, 1)::Constant((std::numeric_limits<real_t>::max)());
+    Matrixr lb;
+    Matrixr ub;
     /*MatrixXd lb;
     MatrixXd ub;*/
-//#if not SIMPLE_CONSTRAIN
+    //#if not SIMPLE_CONSTRAIN
     real_t cA_qpOASES[cNum * ctrlStep * uNum * ctrlStep];
     real_t Alb_qpOASES[cNum * ctrlStep];
     real_t Aub_qpOASES[cNum * ctrlStep];
     // box约束
-    Matrixr(cNum* ctrlStep, uNum* ctrlStep) cA = Matrixr(cNum * ctrlStep, uNum * ctrlStep)::Zero();
-    Matrixr(cNum* ctrlStep, 1) Alb = Matrixr(cNum * ctrlStep, 1)::Constant((std::numeric_limits<real_t>::min)());
-    Matrixr(cNum* ctrlStep, 1) Aub = Matrixr(cNum * ctrlStep, 1)::Constant((std::numeric_limits<real_t>::max)());
+    Matrixr cA;
+    Matrixr Alb;
+    Matrixr Aub;
     /*MatrixXd cA;
     MatrixXd Alb;
     MatrixXd Aub;*/
-    
-//#endif
-    // qp求解器
+
+    //#endif
+        // qp求解器
 #if SIMPLE_CONSTRAIN
     QProblemB qp_solver;
 #else
@@ -117,26 +119,84 @@ public:
         option.printLevel = PL_NONE; // 禁用qpOASES库的打印输出
         qp_solver.setOptions(option);
         qp_solver.setPrintLevel(PL_NONE);
-        /*H_new.resize(ctrlStep * uNum, ctrlStep * uNum);
-        H_new.setZero();
+
+        // 离散状态空间方程
+        A.resize(xNum, xNum);
+        B.resize(xNum, uNum);
+        // 状态权重矩阵Q，状态末端补偿矩阵R，输入权重矩阵R，平滑矩阵W
+        Q.resize(xNum, xNum);
+        F.resize(xNum, xNum);
+        R.resize(uNum, uNum);
+        W.resize(uNum, uNum);
+        // 状态向量
+        Y.resize(xNum, 1); // 目标向量
+        X.resize(xNum, 1); // 当前状态
+        U.resize(uNum, 1); // 输出向量
+        // 中间变量
+        G.resize(xNum, xNum);
+        E.resize(ctrlStep * uNum, xNum);
+        L.resize(uNum * ctrlStep, (ctrlStep + 1) * xNum);
+        H.resize(ctrlStep * uNum, ctrlStep * uNum);
+        extraH.resize(ctrlStep * uNum, ctrlStep * uNum);
+        extra_g.resize(ctrlStep * uNum, 1);
+        // 过程变量
+        M.resize((ctrlStep + 1) * xNum, xNum);
+        C.resize((ctrlStep + 1) * xNum, ctrlStep * uNum);
+        Q_bar.resize((ctrlStep + 1) * xNum, (ctrlStep + 1) * xNum);
+        R_bar.resize(ctrlStep * uNum, ctrlStep * uNum);
+        W_bar.resize(ctrlStep * uNum, ctrlStep * uNum);
         g_new.resize(ctrlStep * uNum, 1);
-        g_new.setZero();
+        H_new.resize(ctrlStep * uNum, ctrlStep * uNum);
+        // 预测结果
+        Y_K.resize(xNum * (ctrlStep + 1), 1); // qp求解给定
+        X_K.resize(xNum, preStep + 1);              // qp求解状态
+        U_K.resize(uNum * ctrlStep, preStep);                      // qp求解输出
+        U_pre.resize(uNum * ctrlStep, preStep);                    // 上一次qp求解的输出
+        X_COMPARE.resize(2 * xNum, 1);                    // 对齐时间戳后的状态，预测在低位，实际在高位
+        // 约束矩阵
+        // 输入约束
         lb.resize(uNum * ctrlStep, 1);
-        lb.Constant(std::numeric_limits<real_t>::min());
         ub.resize(uNum * ctrlStep, 1);
-        ub.Constant(std::numeric_limits<real_t>::max());
+        // box约束
         cA.resize(cNum * ctrlStep, uNum * ctrlStep);
-        cA.setZero();
         Alb.resize(cNum * ctrlStep, 1);
-        Alb.Constant(std::numeric_limits<real_t>::min());
         Aub.resize(cNum * ctrlStep, 1);
-        Aub.Constant(std::numeric_limits<real_t>::max());*/
+
+        A.setZero();
+        B.setZero();
+        Q.setIdentity();
+        F.setIdentity();
+        R.setZero();
+        W.setZero();
+        Y.setZero();
+        X.setZero();
+        U.setZero();
+        G.setZero();
+        E.setZero();
+        L.setZero();
+        H.setZero();
+        extraH.setZero();
+        extra_g.setZero();
+        M.setIdentity();
+        C.setZero();
+        Y_K.setZero();
+        X_K.setZero();
+        U_K.setZero();
+        U_pre.setZero();
+        X_COMPARE.setZero();
+        lb.setConstant((std::numeric_limits<real_t>::min)());
+        ub.setConstant((std::numeric_limits<real_t>::max)());
+        cA.setZero();
+        Alb.setConstant((std::numeric_limits<real_t>::min)());
+        Aub.setConstant((std::numeric_limits<real_t>::max)());
+
+
         for (int i = 0; i < ctrlStep * uNum; i++)
         {
             xOpt_qpOASES[i] = 0;
             xOpt_initialGuess[i] = 0;
         }
-        
+
         for (int i = 0; i < ctrlStep * uNum + ctrlStep * cNum; i++) {
             yOpt_qpOASES[i] = 0.0;
         }
@@ -144,12 +204,12 @@ public:
 #endif
 
     // qp求解得预测输出
-    Matrixr(uNum * ctrlStep, 1) prediction(Matrixr(xNum* (ctrlStep + 1), 1)& y_k, Matrixr(xNum, 1)& x_k)
+    Matrixr prediction(const Matrixr& y_k, const Matrixr& x_k)
     {
         real_t qp_out[ctrlStep * uNum];
-        
+
         g_new = E * x_k - L * y_k - W_bar * U_pre.block(0, 0, uNum * ctrlStep, 1) + extra_g;
-        
+
         H_new = H + extraH;
 
 #if SIMPLE_CONSTRAIN
@@ -205,8 +265,8 @@ public:
         qp_solver.getBounds(guessedBounds);
         qp_solver.getConstraints(guessedConstraints);
         //qp_solver.reset();
-        
-        Matrixr(uNum * ctrlStep, 1) result;
+
+        MatrixSr(uNum * ctrlStep, 1) result;
         for (int i = 0; i < uNum * ctrlStep; i++)
         {
             result(i, 0) = xOpt_qpOASES[i];
@@ -216,10 +276,10 @@ public:
     // mpc控制器参数矩阵生成
     void mpc_matrices()
     {
-        
-        M.block(0, 0, xNum, xNum) = Matrixr(xNum, xNum)::Identity();
-        
-        MatrixSr(xNum) tmp = MatrixSr(xNum)::Identity();
+
+        M.block(0, 0, xNum, xNum) = MatrixSr(xNum, xNum)::Identity();
+
+        MatrixSsr(xNum) tmp = MatrixSsr(xNum)::Identity();
         // 填充C矩阵和M矩阵
         for (int i = 1; i <= ctrlStep; i++)
         {
@@ -251,7 +311,7 @@ public:
         H = C.transpose() * Q_bar * C + R_bar + W_bar; // NP x NP
     }
     // mpc初始化
-    void mpc_init(MatrixSr(xNum) _A, Matrixr(xNum, uNum) _B, MatrixSr(xNum) _Q, MatrixSr(xNum) _F, MatrixSr(uNum) _R, MatrixSr(uNum) _W, real_t _Ts = 0)
+    void mpc_init(const Matrixr& _A,const Matrixr& _B,const Matrixr& _Q,const Matrixr& _F,const Matrixr& _R,const Matrixr& _W, real_t _Ts = 0)
     {
         if (_Ts <= 0)
         {
@@ -262,7 +322,7 @@ public:
         else
         {
             // 输入的是连续，需要做离散化
-            MatrixSr(xNum) AI = MatrixSr(xNum)::Identity();
+            MatrixSsr(xNum) AI = MatrixSsr(xNum)::Identity();
             this->A = AI + _Ts * _A;
             this->B = _Ts * _B;
         }
@@ -273,7 +333,7 @@ public:
         mpc_matrices();
     }
     // 控制器状态更新
-    void mpc_update(Matrixr(xNum, 1) _Y, Matrixr(xNum, 1) _X, int_t _nWSR = 10, real_t _cpu_t = 1)
+    void mpc_update(const Matrixr& _Y,const Matrixr& _X, int_t _nWSR = 10, real_t _cpu_t = 1)
     {
         this->Y = _Y;
         this->X = _X;
@@ -286,7 +346,7 @@ public:
         }
     }
     // 设置额外的代价
-    void setExtraCost(MatrixSr(uNum) _extraH, Matrixr(uNum, 1) _extra_g)
+    void setExtraCost(const Matrixr& _extraH,const Matrixr& _extra_g)
     {
         for (int i = 0; i < ctrlStep; i++)
         {
@@ -295,7 +355,7 @@ public:
         }
     }
     // 设置输入约束（上下限）
-    void setConstrain(Matrixr(uNum, 1) _lb, Matrixr(uNum, 1) _ub)
+    void setConstrain(const Matrixr& _lb,const Matrixr& _ub)
     {
         for (int i = 0; i < ctrlStep; i++)
         {
@@ -305,7 +365,7 @@ public:
     }
 #if not SIMPLE_CONSTRAIN
     // 设置box约束（约束矩阵以及上下限）
-    void setBoxConstrain(Matrixr(cNum, uNum) _cA, Matrixr(cNum, 1) _Alb, Matrixr(cNum, 1) _Aub)
+    void setBoxConstrain(const Matrixr& _cA,const Matrixr& _Alb,const Matrixr& _Aub)
     {
         this->cA.setZero();
         for (int i = 0; i < ctrlStep; i++)
@@ -320,12 +380,12 @@ public:
     void mpc_solve()
     {
         // 执行预测
-        Matrixr(xNum, 1) tmp_xk = X;
-        Matrixr(uNum * ctrlStep, 1) tmp_uk = Matrixr(uNum * ctrlStep, 1)::Zero();
+        MatrixSr(xNum, 1) tmp_xk = X;
+        MatrixSr(uNum * ctrlStep, 1) tmp_uk = MatrixSr(uNum * ctrlStep, 1)::Zero();
         for (int i = 0; i < preStep; i++)
         {
             tmp_uk = prediction(Y_K, tmp_xk);      // qp求解出当前的输出
-            tmp_xk = A * tmp_xk + B * tmp_uk.block(0,0,uNum,1);      // 预测下一周期的状态
+            tmp_xk = A * tmp_xk + B * tmp_uk.block(0, 0, uNum, 1);      // 预测下一周期的状态
             X_K.block(0, i + 1, xNum, 1) = tmp_xk; // 把新状态记录下来
             U_K.block(0, i, uNum * ctrlStep, 1) = tmp_uk;     // 把预测输出记录下来
         }
@@ -335,10 +395,10 @@ public:
     // 进行预测状态与实际状态的对齐存放(用于循环更新的过程中)
     void compare_storage()
     {
-        static Matrixr(xNum, preStep) preStorage = Matrixr(xNum, preStep)::Zero();
+        static MatrixSr(xNum, preStep) preStorage = MatrixSr(xNum, preStep)::Zero();
         static uint_t count = 0;
-        Matrixr(xNum, 1) get = Matrixr(xNum, 1)::Zero();
-        Matrixr(2 * xNum, 1) put = Matrixr(2 * xNum, 1)::Zero();
+        MatrixSr(xNum, 1) get = MatrixSr(xNum, 1)::Zero();
+        MatrixSr(2 * xNum, 1) put = MatrixSr(2 * xNum, 1)::Zero();
         if (count > (preStep - 1))
         {
             count = 0;
@@ -351,22 +411,22 @@ public:
         count++;
     }
     // 获取输出值
-    Matrixr(uNum, 1) getOutput()
+    Matrixr getOutput()
     {
         return U;
     }
     // 获取预测向量
-    Matrixr(xNum, preStep + 1) getPreState()
+    Matrixr getPreState()
     {
         return X_K;
     }
     // 获取输出向量
-    Matrixr(uNum * ctrlStep, preStep) getPreCtrl()
+    Matrixr getPreCtrl()
     {
         return U_K;
     }
     // 获取对齐的预测与实际状态向量
-    Matrixr(2 * uNum, 1) getCompareState()
+    Matrixr getCompareState()
     {
         return X_COMPARE;
     }

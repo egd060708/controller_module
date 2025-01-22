@@ -106,19 +106,20 @@ public:
 
 public:
 #if SIMPLE_CONSTRAIN
-    mpcCal() : qp_solver(ctrlStep* uNum, HST_POSDEF)
+    mpcCal(PrintLevel _pl) : qp_solver(ctrlStep* uNum, HST_POSDEF)
     {
         Options option;
-        option.printLevel = PL_NONE; // 禁用qpOASES库的打印输出
+        option.printLevel = _pl; // 禁用qpOASES库的打印输出
         qp_solver.setOptions(option);
     }
 #else
-    mpcCal() : qp_solver(ctrlStep* uNum, ctrlStep* cNum, HST_UNKNOWN)
+    mpcCal(PrintLevel _pl) : qp_solver(ctrlStep* uNum, ctrlStep* cNum, HST_UNKNOWN)
     {
         Options option;
-        option.printLevel = PL_NONE; // 禁用qpOASES库的打印输出
+        option.setToDefault();
+        option.printLevel = _pl; // 禁用qpOASES库的打印输出
         qp_solver.setOptions(option);
-        qp_solver.setPrintLevel(PL_NONE);
+        //qp_solver.setPrintLevel(PL_NONE);
 
         // 离散状态空间方程
         A.resize(xNum, xNum);

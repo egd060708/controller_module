@@ -393,6 +393,14 @@ public:
         U = U_K.block(0, 0, uNum, 1); // 选择第一个周期的输出作为最后输出
         U_pre = U_K; // 更新上一次求解的输出
     }
+    // 手动更新上一次求解的输出
+    void updateLastU(const Matrixr& _U_pre, const int& _start, const int& _length)
+    {
+        for (int i = 0; i < ctrlStep; i++)
+        {
+            this->U_pre.block(i * uNum + _start, 0, _length, 1) = _U_pre;
+        }
+    }
     // 进行预测状态与实际状态的对齐存放(用于循环更新的过程中)
     void compare_storage()
     {

@@ -205,7 +205,7 @@ public:
 #endif
 
     // qp求解得预测输出
-    Matrixr prediction(const Matrixr& y_k, const Matrixr& x_k)
+    Matrixr prediction(const Matrixr& y_k, const Matrixr& x_k, const uint8_t _useInitUpdate)
     {
         real_t qp_out[ctrlStep * uNum];
 
@@ -246,16 +246,24 @@ public:
         for (int i = 0; i < Aub.rows(); i++)
             for (int j = 0; j < Aub.cols(); j++)
                 Aub_qpOASES[i * Aub.cols() + j] = Aub(i, j);
+
+        qpOASES::returnValue ret;
         if (isModelUpdate == 1)
         {
             //qp_solver.init(H_qpOASES, g_qpOASES, cA_qpOASES, lb_qpOASES, ub_qpOASES, Alb_qpOASES, Aub_qpOASES, nWSR, &CPU_t, xOpt_initialGuess);
-            qp_solver.init(H_qpOASES, g_qpOASES, cA_qpOASES, lb_qpOASES, ub_qpOASES, Alb_qpOASES, Aub_qpOASES, nWSR, &CPU_t);
+            ret = qp_solver.init(H_qpOASES, g_qpOASES, cA_qpOASES, lb_qpOASES, ub_qpOASES, Alb_qpOASES, Aub_qpOASES, nWSR, &CPU_t);
             isModelUpdate = 0;
         }
         else
         {
-            //qp_solver.init(H_qpOASES, g_qpOASES, cA_qpOASES, lb_qpOASES, ub_qpOASES, Alb_qpOASES, Aub_qpOASES, nWSR, &CPU_t, xOpt_qpOASES, yOpt_qpOASES, &guessedBounds, &guessedConstraints);
-            qp_solver.hotstart(H_qpOASES, g_qpOASES, cA_qpOASES, lb_qpOASES, ub_qpOASES, Alb_qpOASES, Aub_qpOASES, nWSR, &CPU_t, &guessedBounds, &guessedConstraints);
+            if (_useInitUpdate == 1)
+            {
+                ret = qp_solver.init(H_qpOASES, g_qpOASES, cA_qpOASES, lb_qpOASES, ub_qpOASES, Alb_qpOASES, Aub_qpOASES, nWSR, &CPU_t, xOpt_qpOASES, yOpt_qpOASES, &guessedBounds, &guessedConstraints);
+            }
+            else
+            {
+                ret = qp_solver.hotstart(H_qpOASES, g_qpOASES, cA_qpOASES, lb_qpOASES, ub_qpOASES, Alb_qpOASES, Aub_qpOASES, nWSR, &CPU_t, &guessedBounds, &guessedConstraints);
+            }
         }
 #endif
 
@@ -267,10 +275,23 @@ public:
         qp_solver.getConstraints(guessedConstraints);
         //qp_solver.reset();
 
-        MatrixSr(uNum * ctrlStep, 1) result;
-        for (int i = 0; i < uNum * ctrlStep; i++)
+        if (ret != qpOASES::SUCCESSFUL_RETURN)
         {
-            result(i, 0) = xOpt_qpOASES[i];
+            std::cerr << "求解失败，错误码: " << qpOASES::MessageHandling::getErrorCodeMessage(ret) << ret << std::endl;
+            /*for (int i = 0; i < uNum; i++)
+            {
+                std::cout << i << ": " << xOpt_qpOASES[i] << std::endl;
+            }*/
+        }
+
+        MatrixSr(uNum * ctrlStep, 1) result;
+        result.setZero();
+        if (ret == qpOASES::SUCCESSFUL_RETURN)
+        {
+            for (int i = 0; i < uNum * ctrlStep; i++)
+            {
+                result(i, 0) = xOpt_qpOASES[i];
+            }
         }
         return result;
     }
@@ -378,14 +399,14 @@ public:
     }
 #endif
     // 控制器求解
-    void mpc_solve()
+    void mpc_solve(const uint8_t _useInitUpdate)
     {
         // 执行预测
         MatrixSr(xNum, 1) tmp_xk = X;
         MatrixSr(uNum * ctrlStep, 1) tmp_uk = MatrixSr(uNum * ctrlStep, 1)::Zero();
         for (int i = 0; i < preStep; i++)
         {
-            tmp_uk = prediction(Y_K, tmp_xk);      // qp求解出当前的输出
+            tmp_uk = prediction(Y_K, tmp_xk, _useInitUpdate);      // qp求解出当前的输出
             tmp_xk = A * tmp_xk + B * tmp_uk.block(0, 0, uNum, 1);      // 预测下一周期的状态
             X_K.block(0, i + 1, xNum, 1) = tmp_xk; // 把新状态记录下来
             U_K.block(0, i, uNum * ctrlStep, 1) = tmp_uk;     // 把预测输出记录下来

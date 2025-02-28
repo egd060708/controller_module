@@ -118,6 +118,7 @@ public:
         Options option;
         option.setToDefault();
         option.printLevel = _pl; // 禁用qpOASES库的打印输出
+        //option.enableRegularisation = BT_TRUE;
         qp_solver.setOptions(option);
         //qp_solver.setPrintLevel(PL_NONE);
 
@@ -247,7 +248,7 @@ public:
             for (int j = 0; j < Aub.cols(); j++)
                 Aub_qpOASES[i * Aub.cols() + j] = Aub(i, j);
 
-        qpOASES::returnValue ret;
+        qpOASES::returnValue ret = qpOASES::SUCCESSFUL_RETURN;
         if (isModelUpdate == 1)
         {
             //qp_solver.init(H_qpOASES, g_qpOASES, cA_qpOASES, lb_qpOASES, ub_qpOASES, Alb_qpOASES, Aub_qpOASES, nWSR, &CPU_t, xOpt_initialGuess);
@@ -275,14 +276,17 @@ public:
         qp_solver.getConstraints(guessedConstraints);
         //qp_solver.reset();
 
-        if (ret != qpOASES::SUCCESSFUL_RETURN)
-        {
-            std::cerr << "求解失败，错误码: " << qpOASES::MessageHandling::getErrorCodeMessage(ret) << ret << std::endl;
-            /*for (int i = 0; i < uNum; i++)
-            {
-                std::cout << i << ": " << xOpt_qpOASES[i] << std::endl;
-            }*/
-        }
+        //if (ret != qpOASES::SUCCESSFUL_RETURN)
+        //{
+        //    std::cerr << "求解失败，错误码: " << qpOASES::MessageHandling::getErrorCodeMessage(ret) << ret << std::endl;
+        //    /*for (int i = 0; i < uNum; i++)
+        //    {
+        //        std::cout << i << ": " << xOpt_qpOASES[i] << std::endl;
+        //    }*/
+        //    /*std::cout << "cA: " << this->cA.block(0, 0, cNum, uNum) << std::endl;
+        //    std::cout << "Alb: " << this->Alb.block(0, 0, cNum, 1).transpose() << std::endl;
+        //    std::cout << "Aub: " << this->Aub.block(0, 0, cNum, 1).transpose() << std::endl;*/
+        //}
 
         MatrixSr(uNum * ctrlStep, 1) result;
         result.setZero();

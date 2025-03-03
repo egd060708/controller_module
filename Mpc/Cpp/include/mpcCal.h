@@ -286,6 +286,8 @@ public:
         //    /*std::cout << "cA: " << this->cA.block(0, 0, cNum, uNum) << std::endl;
         //    std::cout << "Alb: " << this->Alb.block(0, 0, cNum, 1).transpose() << std::endl;
         //    std::cout << "Aub: " << this->Aub.block(0, 0, cNum, 1).transpose() << std::endl;*/
+        //    std::cout << "ub: " << this->ub.block(0, 0, cNum, 1).transpose() << std::endl;
+        //    std::cout << "lb: " << this->lb.block(0, 0, cNum, 1).transpose() << std::endl;
         //}
 
         MatrixSr(uNum * ctrlStep, 1) result;

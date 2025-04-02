@@ -18,7 +18,7 @@
 using namespace std;
 
 
-typedef uint32_t(*SystemTick_Fun)(void);//函数指针，用于接入不同单片机获取时间栈的函数
+typedef long long(*SystemTick_Fun)(void);//函数指针，用于接入不同单片机获取时间栈的函数
 
 typedef enum
 {
@@ -35,10 +35,10 @@ typedef enum class _PID_Mode
 class PIDtimer
 {
 public:
-    static uint8_t getMicroTick_regist(uint32_t(*getTick_fun)(void));//获取当前时间函数接口
+    static uint8_t getMicroTick_regist(long long(*getTick_fun)(void));//获取当前时间函数接口
     static SystemTick_Fun Get_SystemTick;   //获取时间的函数
     double dt = 0;				                //时间微分
-    uint32_t last_time = 0; 	                //记录上次时间
+    long long last_time = 0; 	                //记录上次时间
     uint8_t UpdataTimeStamp(void);          //时间栈更新
 
 };
@@ -82,6 +82,7 @@ public:
     double current = 0;
     double error = 0;
     double out = 0;
+    double integral = 0;
 
     double timeStep = 0;//如果被赋值，则以此为微分时间
 
@@ -94,7 +95,7 @@ private:
     double last_error = 0;
     double d_current = 0;
     double d_error = 0;
-    double integral = 0;
+    
 
 };
 

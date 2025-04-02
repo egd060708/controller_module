@@ -8,7 +8,7 @@ SystemTick_Fun PIDtimer::Get_SystemTick = NULL;//静态变量必须实现
  */
 uint8_t PIDtimer::UpdataTimeStamp(void)
 {
-    uint32_t now_time;
+    long long now_time;
 
     /*Check `Get_SystemTick` */
     if (PIDtimer::Get_SystemTick != NULL)
@@ -23,7 +23,7 @@ uint8_t PIDtimer::UpdataTimeStamp(void)
 
         /*Overflow*/
         if (now_time < last_time)
-            dt = (double)(now_time + (0xFFFFFFFF - last_time));
+            dt = (double)(now_time + (0xFFFFFFFFFFFFFFFF - last_time));
         else
             dt = (double)(now_time - last_time);
 
@@ -34,7 +34,7 @@ uint8_t PIDtimer::UpdataTimeStamp(void)
         return 0;
     }
     else {
-        dt = 0.001f;
+        dt = 0.001;
         return 1;
     }
 }
@@ -46,7 +46,7 @@ uint8_t PIDtimer::UpdataTimeStamp(void)
            0: error input param
  * @author
  */
-uint8_t PIDtimer::getMicroTick_regist(uint32_t(*getTick_fun)(void))
+uint8_t PIDtimer::getMicroTick_regist(long long(*getTick_fun)(void))
 {
     if (getTick_fun != NULL)
     {
@@ -156,9 +156,9 @@ double PIDmethod::Adjust(double _x)
     }
     else
     {
-        //if (this->UpdataTimeStamp())
-        //    return 0;//如果时间栈出错则不执行pid
-        this->dt = this->UpdataTimeStamp();
+        if (this->UpdataTimeStamp())
+           return 0;//如果时间栈出错则不执行pid
+        // this->dt = this->UpdataTimeStamp();
     }
 
     if (params_mode == Fit)
@@ -222,16 +222,16 @@ double PIDmethod::Adjust(double _x)
 
 double PIDmethod::Adjust(double _x, double extern_d)
 {
-
+    uint8_t is_time_ok = 0;
     if (timeStep > 0)
     {
         this->dt = timeStep;
     }
     else
     {
-        //if (this->UpdataTimeStamp())
-        //    return 0;//如果时间栈出错则不执行pid
-        this->dt = this->UpdataTimeStamp();
+        if (this->UpdataTimeStamp())
+           return 0;//如果时间栈出错则不执行pid
+        is_time_ok = this->UpdataTimeStamp();
     }
 
     if (params_mode == Fit)
@@ -253,13 +253,22 @@ double PIDmethod::Adjust(double _x, double extern_d)
 
     error = upper::constrain(target - current, Error_Max);
     /*error = target - current;*/
-    d_error = (error - last_error) / this->dt;
-    d_current = (current - last_current) / this->dt;
+    if(is_time_ok == 1)
+    {
+        d_error = (error - last_error) / this->dt;
+        d_current = (current - last_current) / this->dt;
+        integral += error * this->dt;
+    }
+    else
+    {
+        d_error = 0;
+        d_current = 0;
+        integral = 0;
+    }
+    
+    integral = upper::constrain(integral, I_Term_Max / fact_ki);
 
     P_Term = error * fact_kp;
-
-    integral += error * this->dt;
-    integral = upper::constrain(integral, I_Term_Max / fact_ki);
     I_Term = integral * fact_ki;
     if (abs(I_Term) > I_SeparThresh)
     {

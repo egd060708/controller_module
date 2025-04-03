@@ -1,6 +1,6 @@
 #include "../include/PIDmethod.h"
 
-SystemTick_Fun PIDtimer::Get_SystemTick = NULL;//静态变量必须实现
+SystemTick_Fun PIDtimer::Get_SystemTick = NULL; // 静态变量必须实现
 
 /**
  * @brief Update time stamp
@@ -17,7 +17,7 @@ uint8_t PIDtimer::UpdataTimeStamp(void)
         if (last_time == 0)
         {
             last_time = PIDtimer::Get_SystemTick();
-            return 1;//第一步先不跑
+            return 1; // 第一步先不跑
         }
         now_time = PIDtimer::Get_SystemTick();
 
@@ -33,7 +33,8 @@ uint8_t PIDtimer::UpdataTimeStamp(void)
 
         return 0;
     }
-    else {
+    else
+    {
         dt = 0.001;
         return 1;
     }
@@ -46,7 +47,7 @@ uint8_t PIDtimer::UpdataTimeStamp(void)
            0: error input param
  * @author
  */
-uint8_t PIDtimer::getMicroTick_regist(long long(*getTick_fun)(void))
+uint8_t PIDtimer::getMicroTick_regist(long long (*getTick_fun)(void))
 {
     if (getTick_fun != NULL)
     {
@@ -56,7 +57,6 @@ uint8_t PIDtimer::getMicroTick_regist(long long(*getTick_fun)(void))
     else
         return 0;
 }
-
 
 /*设置PID控制模式*/
 PIDmethod::PIDmethod(Params_Mode mode, double _timeStep)
@@ -101,7 +101,9 @@ void PIDmethod::Params_Config(PID_Mode mode, Fit_Params _fun_p, Fit_Params _fun_
     {
         fun_d = _fun_id;
     }
-    else {}
+    else
+    {
+    }
     I_Term_Max = _I_Term_Max;
     Output_Max = _Output_Max;
     Output_Min = _Output_Min;
@@ -136,7 +138,9 @@ void PIDmethod::Params_Config(PID_Mode mode, double _kp, double _kid, double _I_
     {
         kd = _kid;
     }
-    else {}
+    else
+    {
+    }
     I_Term_Max = _I_Term_Max;
     Output_Max = _Output_Max;
     Output_Min = _Output_Min;
@@ -157,7 +161,7 @@ double PIDmethod::Adjust(double _x)
     else
     {
         if (this->UpdataTimeStamp())
-           return 0;//如果时间栈出错则不执行pid
+            return 0; // 如果时间栈出错则不执行pid
         // this->dt = this->UpdataTimeStamp();
     }
 
@@ -175,7 +179,7 @@ double PIDmethod::Adjust(double _x)
     }
     else
     {
-        return 0;//参数出错不执行
+        return 0; // 参数出错不执行
     }
 
     error = upper::constrain(target - current, Error_Max);
@@ -186,13 +190,24 @@ double PIDmethod::Adjust(double _x)
     P_Term = error * fact_kp;
 
     integral += error * this->dt;
-    integral = upper::constrain(integral, I_Term_Max / fact_ki);
+
+    if (abs(fact_ki) > 1e-6)
+    {
+        integral = upper::constrain(integral, I_Term_Max / fact_ki);
+    }
+    else
+    {
+        integral = 0;
+    }
+
     I_Term = integral * fact_ki;
     if (abs(I_Term) > I_SeparThresh)
     {
         I_Term = 0;
     }
-    else {}
+    else
+    {
+    }
 
     if (d_of_current)
     {
@@ -214,7 +229,6 @@ double PIDmethod::Adjust(double _x)
         out = upper::constrain(out, Output_Min, Output_Max);
     }
 
-
     last_current = current;
     last_error = error;
     return out;
@@ -230,7 +244,7 @@ double PIDmethod::Adjust(double _x, double extern_d)
     else
     {
         if (this->UpdataTimeStamp())
-           return 0;//如果时间栈出错则不执行pid
+            return 0; // 如果时间栈出错则不执行pid
         is_time_ok = this->UpdataTimeStamp();
     }
 
@@ -248,12 +262,12 @@ double PIDmethod::Adjust(double _x, double extern_d)
     }
     else
     {
-        return 0;//参数出错不执行
+        return 0; // 参数出错不执行
     }
 
     error = upper::constrain(target - current, Error_Max);
     /*error = target - current;*/
-    if(is_time_ok == 1)
+    if (is_time_ok == 1)
     {
         d_error = (error - last_error) / this->dt;
         d_current = (current - last_current) / this->dt;
@@ -265,8 +279,15 @@ double PIDmethod::Adjust(double _x, double extern_d)
         d_current = 0;
         integral = 0;
     }
-    
-    integral = upper::constrain(integral, I_Term_Max / fact_ki);
+
+    if (abs(fact_ki) > 1e-6)
+    {
+        integral = upper::constrain(integral, I_Term_Max / fact_ki);
+    }
+    else
+    {
+        integral = 0;
+    }
 
     P_Term = error * fact_kp;
     I_Term = integral * fact_ki;
@@ -274,7 +295,9 @@ double PIDmethod::Adjust(double _x, double extern_d)
     {
         I_Term = 0;
     }
-    else {}
+    else
+    {
+    }
 
     D_Term = extern_d * fact_kd;
 
@@ -292,4 +315,3 @@ double PIDmethod::Adjust(double _x, double extern_d)
     last_error = error;
     return out;
 }
-

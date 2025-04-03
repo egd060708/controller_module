@@ -236,7 +236,6 @@ double PIDmethod::Adjust(double _x)
 
 double PIDmethod::Adjust(double _x, double extern_d)
 {
-    uint8_t is_time_ok = 0;
     if (timeStep > 0)
     {
         this->dt = timeStep;
@@ -245,7 +244,6 @@ double PIDmethod::Adjust(double _x, double extern_d)
     {
         if (this->UpdataTimeStamp())
             return 0; // 如果时间栈出错则不执行pid
-        is_time_ok = this->UpdataTimeStamp();
     }
 
     if (params_mode == Fit)
@@ -267,18 +265,9 @@ double PIDmethod::Adjust(double _x, double extern_d)
 
     error = upper::constrain(target - current, Error_Max);
     /*error = target - current;*/
-    if (is_time_ok == 1)
-    {
-        d_error = (error - last_error) / this->dt;
-        d_current = (current - last_current) / this->dt;
-        integral += error * this->dt;
-    }
-    else
-    {
-        d_error = 0;
-        d_current = 0;
-        integral = 0;
-    }
+    d_error = (error - last_error) / this->dt;
+    d_current = (current - last_current) / this->dt;
+    integral += error * this->dt;
 
     if (abs(fact_ki) > 1e-6)
     {

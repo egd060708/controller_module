@@ -146,10 +146,27 @@ void PIDmethod::Params_Config(PID_Mode mode, double _kp, double _kid, double _I_
     Output_Min = _Output_Min;
 }
 
-/**************************************** 拟合三次函数 *********************************************/
+/**************************************** 拟合多项式 *********************************************/
 double PIDmethod::fit_function(Fit_Params param, double x)
 {
-    return param.a * pow(x, 3) + param.b * pow(x, 2) + x * param.c + param.d;
+    if(this->fit_degree == 3)
+    {
+        return param.a * pow(x, 3) + param.b * pow(x, 2) + x * param.c + param.d;
+    }
+    else if(this->fit_degree == 5)
+    {
+        return param.a * pow(x, 5) + param.b * pow(x, 4) + param.c * pow(x, 3) + param.d * pow(x, 2) +\
+                param.e * x + param.f;
+    }
+    else if(this->fit_degree == 7)
+    {
+        return param.a * pow(x, 7) + param.b * pow(x, 6) + param.c * pow(x, 5) + param.d * pow(x, 4) +\
+                param.e * pow(x, 3) + param.f * pow(x, 2) + param.g * x + param.h;
+    }
+    else
+    {
+        return 0;
+    }
 }
 /****************************************** PID运算 **********************************************/
 double PIDmethod::Adjust(double _x)

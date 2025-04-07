@@ -87,6 +87,8 @@ public:
     double timeStep = 0;//如果被赋值，则以此为微分时间
 
     bool d_of_current = true;//是否使用微分先行
+
+    int fit_degree = 3;
 private:
     //线性拟合函数系数+自变量
     double fit_function(Fit_Params param, double x);

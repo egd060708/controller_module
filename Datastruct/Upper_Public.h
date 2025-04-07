@@ -7,6 +7,10 @@ typedef struct _Fit_Params
     double b = 0;/* 二次项 */
     double c = 0;/* 一次项 */
     double d = 0;/* 常数项 */
+    double e = 0;
+    double f = 0;
+    double g = 0;
+    double h = 0;
 }Fit_Params;
 
 namespace upper

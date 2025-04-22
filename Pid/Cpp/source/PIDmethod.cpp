@@ -321,3 +321,27 @@ double PIDmethod::Adjust(double _x, double extern_d)
     last_error = error;
     return out;
 }
+
+double PIDmethod::Adjust_Incremental()
+{
+    // 一进一出维持长度为3的error历史队列
+    error = upper::constrain(target - current, Error_Max);
+    error_buf.push_front(error);
+    error_buf.pop_back();
+
+    // 对每一项进行计算
+    this->P_Term = this->fact_kp * (error_buf[0]-error_buf[1]);
+    this->I_Term = this->fact_ki * error_buf[0];
+    this->D_Term = this->fact_kd * (error_buf[0]-2*error_buf[1]+error_buf[2]);
+    out = P_Term + I_Term + D_Term;
+    if (Output_Min >= Output_Max)
+    {
+        out = upper::constrain(out, Output_Max);
+    }
+    else
+    {
+        out = upper::constrain(out, Output_Min, Output_Max);
+    }
+    return out;
+}
+

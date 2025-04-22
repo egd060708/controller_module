@@ -14,6 +14,7 @@
 #include <math.h>
 #include <limits>//定义各种变量的储存最大值
 #include "../../../Datastruct/Upper_Public.h"
+#include <deque>
 
 using namespace std;
 
@@ -62,6 +63,7 @@ public:
     //结算
     double Adjust(double _x);//线性自变量，使用自己算的d项
     double Adjust(double _x, double extern_d);//线性自变量，使用外部计算的d项
+    double Adjust_Incremental();// 增量式全部基于误差计算，暂不引入额外参数
 
     Fit_Params fun_p = { 0 }, fun_i = { 0 }, fun_d = { 0 };//三次拟合参数
     double kp = 0, ki = 0, kd = 0;//普通参数
@@ -83,6 +85,8 @@ public:
     double error = 0;
     double out = 0;
     double integral = 0;
+
+    std::deque<double> error_buf = std::deque<double>(3,0); // 用于增量式pid，初始化长度为3的队列
 
     double timeStep = 0;//如果被赋值，则以此为微分时间
 

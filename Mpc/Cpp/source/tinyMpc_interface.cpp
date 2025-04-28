@@ -98,5 +98,6 @@ Matrixr tinympcInterface::_prediction(const Matrixr &y_k, const Matrixr &x_k)
         }
     }*/
     result.block(0, 0, uNum, 1) = work->u.col(0);
+    //std::cout << result.block(0, 0, uNum, 1) << std::endl;
     return result;
 }

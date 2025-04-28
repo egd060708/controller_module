@@ -1,4 +1,5 @@
 #include "../include/mpcMatrix.h"
+#include <iostream>
 
 /********************* Base *********************/
 

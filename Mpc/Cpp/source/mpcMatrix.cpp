@@ -124,11 +124,7 @@ void mpcBase::mpcUpdate(const Matrixr& _Y,const Matrixr& _X, int _nWSR, double _
 void mpcBase::mpcSolve()
 {
     // 执行预测
-    Matrixr tmp_xk;
-    tmp_xk = this->X;
-    Matrixr tmp_uk;
-    tmp_uk = _prediction(this->Y_K, tmp_xk);      // qp求解出当前的输出
-    this->U_K.block(0, 0, uNum * ctrlStep, 1) = tmp_uk;     // 把预测输出记录下来
+    this->U_K.block(0, 0, uNum * ctrlStep, 1) = _prediction(this->Y_K, this->X);     // 把预测输出记录下来
     this->U = this->U_K.block(0, 0, uNum, 1); // 选择第一个周期的输出作为最后输出
     this->U_pre = this->U_K; // 更新上一次求解的输出
 }

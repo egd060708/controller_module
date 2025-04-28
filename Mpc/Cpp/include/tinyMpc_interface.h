@@ -9,7 +9,7 @@ public:
     tinympcInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, int _verbose);
     ~tinympcInterface() {}
 
-    void setRegularisation(float _rho) { rho_value = _rho; }
+    void setRegularisation(double _rho) { rho_value = _rho; }
     void setStateConstrain(const Matrixr &_xlb, const Matrixr &_xub)
     {
         _x_min = _xlb;
@@ -22,7 +22,7 @@ private:
     // 打印使能
     int verbose = 0;
     // QR矩阵正则化参数
-    float rho_value = 1.0;
+    double rho_value = 0.;
     // 输入矩阵
     tinyMatrix _Adyn, _Bdyn, _Q, _R, _x_min, _x_max, _u_min, _u_max;
     // 初始状态

@@ -13,8 +13,8 @@ extern "C" {
 #endif
 
     typedef double tinytype;  // should be double if you want to generate code
-    typedef Matrix<tinytype, Dynamic, Dynamic> tinyMatrix;
-    typedef Matrix<tinytype, Dynamic, 1> tinyVector;
+    typedef Eigen::Matrix<tinytype, Dynamic, Dynamic> tinyMatrix;
+    typedef Eigen::Matrix<tinytype, Dynamic, 1> tinyVector;
 
     // typedef Matrix<tinytype, NSTATES, 1> tiny_VectorNx;
     // typedef Matrix<tinytype, NINPUTS, 1> tiny_VectorNu;
@@ -45,14 +45,6 @@ extern "C" {
         tinyMatrix Pinf;       // nx x nx
         tinyMatrix Quu_inv;    // nu x nu
         tinyMatrix AmBKt;      // nx x nx
-        tinyMatrix C1;
-        tinyMatrix C2;
-        
-        // Add sensitivity matrices for Taylor updates
-        tinyMatrix dKinf_drho;
-        tinyMatrix dPinf_drho;
-        tinyMatrix dC1_drho;
-        tinyMatrix dC2_drho;
     } TinyCache;
 
     /**
@@ -65,12 +57,6 @@ extern "C" {
         int check_termination;
         int en_state_bound;
         int en_input_bound;
-        
-        // Add adaptive rho parameters
-        int adaptive_rho;                  // Enable/disable adaptive rho (1/0)
-        tinytype adaptive_rho_min;         // Minimum value for rho
-        tinytype adaptive_rho_max;         // Maximum value for rho
-        int adaptive_rho_enable_clipping;  // Enable/disable clipping of rho (1/0)
     } TinySettings;
 
     /**
@@ -144,10 +130,6 @@ extern "C" {
         TinyCache *cache;       // Problem cache
         TinyWorkspace *work;    // Solver workspace
     } TinySolver;
-
-    // Add at the top with other definitions
-    #define BENCH_NX 12
-    #define BENCH_NU 4
 
 #ifdef __cplusplus
 }

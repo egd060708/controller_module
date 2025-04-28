@@ -35,14 +35,14 @@ class mpcBase
         // 等式约束
         Matrixr cE, Eb;
         // qp求解执行参数
-        int nWSR_static = 20; // 最大单轮qp迭代次数
-        int nWSR = 20;
-        double CPU_t_static = 0.002; // 最长CPU使用时间
-        double CPU_t = 0.002;
+        int nWSR_static = 1000; // 最大单轮qp迭代次数
+        int nWSR = 1000;
+        double CPU_t_static = 1.; // 最长CPU使用时间
+        double CPU_t = 1.;
         uint8_t isModelUpdate = 1; // 系统模型是否更新
 
         // 初始化
-        void mpcInit(const Matrixr& _A,const Matrixr& _B,const Matrixr& _Q,const Matrixr& _F,const Matrixr& _R,const Matrixr& _W, double _Ts = 0);
+        void mpcInit(const Matrixr& _A,const Matrixr& _B,const Matrixr& _Q,const Matrixr& _F,const Matrixr& _R,const Matrixr& _W, double _Ts);
         // 状态更新
         void mpcUpdate(const Matrixr& _Y,const Matrixr& _X, int _nWSR, double _cpu_t);
         // mpc问题求解

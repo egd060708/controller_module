@@ -34,3 +34,31 @@ private:
     // 重写预测函数
     Matrixr _prediction(const Matrixr &y_k, const Matrixr &x_k) override;
 };
+
+class qpoasesInterfaceSimple : public mpcMatrix
+{
+public:
+    // 构造函数
+    qpoasesInterfaceSimple(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, PrintLevel _pl);
+    // 析构函数
+    ~qpoasesInterfaceSimple();
+
+private:
+    // qp求解器
+    QProblemB qp_solver;
+    Bounds guessedBounds;
+    Constraints guessedConstraints;
+
+    // 输入qpOASES的数组
+    real_t* H_qpOASES;
+    real_t* g_qpOASES;
+    real_t* lb_qpOASES;
+    real_t* ub_qpOASES;
+    real_t* xOpt_qpOASES;
+    real_t* yOpt_qpOASES;
+    real_t* xOpt_initialGuess;
+    real_t* qp_out;
+
+    // 重写预测函数
+    Matrixr _prediction(const Matrixr& y_k, const Matrixr& x_k) override;
+};

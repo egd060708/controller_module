@@ -199,7 +199,7 @@ double solve_quadprog(Matrix<double>& G, Vector<double>& g0,
     
     /* compute the new solution value */
     f_value += 0.5 * (t2 * t2) * scalar_product(z, np);
-    A[i] = -i - 1;
+    A[i] = -static_cast<int>(i) - 1;
     
     if (!add_constraint(R, J, d, iq, R_norm))
     {	  

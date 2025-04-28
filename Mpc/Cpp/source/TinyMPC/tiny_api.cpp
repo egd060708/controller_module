@@ -109,11 +109,11 @@ int tiny_setup(TinySolver** solverp,
     work->status = 0;
     work->iter = 0;
 
-    // Initialize cache
-    status = tiny_precompute_and_set_cache(cache, Adyn, Bdyn, work->Q.asDiagonal(), work->R.asDiagonal(), nx, nu, rho, verbose);
-    if (status) {
-        return status;
-    }
+    //// Initialize cache
+    //status = tiny_precompute_and_set_cache(cache, Adyn, Bdyn, work->Q.asDiagonal(), work->R.asDiagonal(), nx, nu, rho, verbose);
+    //if (status) {
+    //    return status;
+    //}
 
     return 0;
 }

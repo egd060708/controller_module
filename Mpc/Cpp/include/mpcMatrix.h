@@ -20,6 +20,8 @@ class mpcBase
         Matrixr A, B;
         // 状态权重矩阵Q，状态末端补偿矩阵R，输入权重矩阵R，平滑矩阵W
         Matrixr Q, F, R, W;
+        // LQR反馈增益矩阵K，代价矩阵P
+        Matrixr K, P;
         // 状态向量
         Matrixr Y, X, U; // 目标向量、当前状态、输出向量
         // 预测结果
@@ -30,6 +32,8 @@ class mpcBase
         // 约束矩阵
         // 输入约束
         Matrixr lb, ub;
+        // 状态约束
+        Matrixr xlb, xub;
         // 不等式约束
         Matrixr cA, Alb, Aub;
         // 等式约束
@@ -48,11 +52,15 @@ class mpcBase
         // mpc问题求解
         void mpcSolve();
         // 设置输入约束
-        void setConstrain(const Matrixr& _lb,const Matrixr& _ub);
+        void setInputConstrain(const Matrixr& _lb,const Matrixr& _ub);
+        // 设置状态约束
+        void setStateConstrain(const Matrixr& _xlb, const Matrixr& _xub);
         // 设置不等式约束
         void setIeqConstrain(const Matrixr& _cA,const Matrixr& _Alb,const Matrixr& _Aub);
         // 设置等式约束
         void setEqConstrain(const Matrixr& _cE,const Matrixr& _Eb);
+        // 设置离线LQR反馈增益
+        void setLqrFeedback(const Matrixr& _K, const Matrixr& _P);
         // 手动更新上一次求解的输出
         void updateLastU(const Matrixr& _U_pre, const int& _start, const int& _length);
         // 获取输出值

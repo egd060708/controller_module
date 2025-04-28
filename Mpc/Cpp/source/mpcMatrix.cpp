@@ -1,4 +1,3 @@
-#include <limits>
 #include "../include/mpcMatrix.h"
 
 /********************* Base *********************/
@@ -22,6 +21,9 @@ mpcBase::mpcBase(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep)
     F.resize(_xNum, _xNum);
     R.resize(_uNum, _uNum);
     W.resize(_uNum, _uNum);
+    // LQR导出反馈增益K，P
+    K.resize(_uNum, _xNum);
+    P.resize(_xNum, _xNum);
     // 状态向量
     Y.resize(_xNum, 1); // 目标向量
     X.resize(_xNum, 1); // 当前状态
@@ -35,6 +37,9 @@ mpcBase::mpcBase(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep)
     // 输入约束
     lb.resize(_uNum * _ctrlStep, 1);
     ub.resize(_uNum * _ctrlStep, 1);
+    // 状态约束
+    xlb.resize(_xNum * _ctrlStep, 1);
+    xub.resize(_xNum * _ctrlStep, 1);
     // 不等式约束
     cA.resize(_cNum * _ctrlStep, _uNum * _ctrlStep);
     Alb.resize(_cNum * _ctrlStep, 1);
@@ -56,11 +61,13 @@ mpcBase::mpcBase(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep)
     X_K.setZero();
     U_K.setZero();
     U_pre.setZero();
-    lb.setConstant((std::numeric_limits<double>::min)());
-    ub.setConstant((std::numeric_limits<double>::max)());
+    lb.setConstant(-1e17);
+    ub.setConstant(1e17);
+    xlb.setConstant(-1e17);
+    xub.setConstant(1e17);
     cA.setZero();
-    Alb.setConstant((std::numeric_limits<double>::min)());
-    Aub.setConstant((std::numeric_limits<double>::max)());
+    Alb.setConstant(-1e17);
+    Aub.setConstant(1e17);
 }
 
 /**
@@ -134,12 +141,26 @@ void mpcBase::mpcSolve()
  * @param _lb 输入约束下界
  * @param _ub 输入约束上界
  */
-void mpcBase::setConstrain(const Matrixr& _lb,const Matrixr& _ub)
+void mpcBase::setInputConstrain(const Matrixr& _lb,const Matrixr& _ub)
 {
     for (int i = 0; i < ctrlStep; i++)
     {
         this->lb.block(i * uNum, 0, uNum, 1) = _lb;
         this->ub.block(i * uNum, 0, uNum, 1) = _ub;
+    }
+}
+
+/**
+ * @brief 设置状态约束
+ * @param _lb 状态约束下界
+ * @param _ub 状态约束上界
+ */
+void mpcBase::setStateConstrain(const Matrixr& _xlb, const Matrixr& _xub)
+{
+    for (int i = 0; i < ctrlStep; i++)
+    {
+        this->xlb.block(i * xNum, 0, xNum, 1) = _xlb;
+        this->xub.block(i * xNum, 0, xNum, 1) = _xub;
     }
 }
 
@@ -173,6 +194,17 @@ void mpcBase::setEqConstrain(const Matrixr& _cE,const Matrixr& _Eb)
         this->cE.block(i * eNum, i * uNum, eNum, uNum) = _cE;
         this->Eb.block(i * eNum, 0, eNum, 1) = _Eb;
     }
+}
+
+/**
+ * @brief 设置离线LQR反馈增益
+ * @param _K 反馈增益矩阵
+ * @param _P 代价矩阵
+ */
+void mpcBase::setLqrFeedback(const Matrixr& _K, const Matrixr& _P)
+{
+    this->K = _K;
+    this->P = _P;
 }
 
 /**

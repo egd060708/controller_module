@@ -21,18 +21,18 @@ namespace quadprogpp {
 enum MType { DIAG };
 
 template <typename T>
-class Vector
+class qpVector
 {
 public: 
-  Vector(); 
-  Vector(const unsigned int n);  
-  Vector(const T& a, const unsigned int n); //initialize to constant value 
-  Vector(const T* a, const unsigned int n); // Initialize to array 
-  Vector(const Vector &rhs); // copy constructor 
-  ~Vector(); // destructor
+  qpVector(); 
+  qpVector(const unsigned int n);  
+  qpVector(const T& a, const unsigned int n); //initialize to constant value 
+  qpVector(const T* a, const unsigned int n); // Initialize to array 
+  qpVector(const qpVector &rhs); // copy constructor 
+  ~qpVector(); // destructor
 	
   inline void set(const T* a, const unsigned int n);
-  Vector<T> extract(const std::set<unsigned int>& indexes) const;
+  qpVector<T> extract(const std::set<unsigned int>& indexes) const;
   inline T& operator[](const unsigned int& i); //i-th element 
   inline const T& operator[](const unsigned int& i) const; 
 	
@@ -40,37 +40,37 @@ public:
   inline void resize(const unsigned int n);
   inline void resize(const T& a, const unsigned int n);
 	
-  Vector<T>& operator=(const Vector<T>& rhs); //assignment 
-  Vector<T>& operator=(const T& a); //assign a to every element 
-  inline Vector<T>& operator+=(const Vector<T>& rhs);
-  inline Vector<T>& operator-=(const Vector<T>& rhs);
-  inline Vector<T>& operator*=(const Vector<T>& rhs);
-  inline Vector<T>& operator/=(const Vector<T>& rhs);
-  inline Vector<T>& operator^=(const Vector<T>& rhs);
-  inline Vector<T>& operator+=(const T& a);
-  inline Vector<T>& operator-=(const T& a);
-  inline Vector<T>& operator*=(const T& a);
-  inline Vector<T>& operator/=(const T& a);
-  inline Vector<T>& operator^=(const T& a);
+  qpVector<T>& operator=(const qpVector<T>& rhs); //assignment 
+  qpVector<T>& operator=(const T& a); //assign a to every element 
+  inline qpVector<T>& operator+=(const qpVector<T>& rhs);
+  inline qpVector<T>& operator-=(const qpVector<T>& rhs);
+  inline qpVector<T>& operator*=(const qpVector<T>& rhs);
+  inline qpVector<T>& operator/=(const qpVector<T>& rhs);
+  inline qpVector<T>& operator^=(const qpVector<T>& rhs);
+  inline qpVector<T>& operator+=(const T& a);
+  inline qpVector<T>& operator-=(const T& a);
+  inline qpVector<T>& operator*=(const T& a);
+  inline qpVector<T>& operator/=(const T& a);
+  inline qpVector<T>& operator^=(const T& a);
 private: 
   unsigned int n; // size of array. upper index is n-1 
   T* v; // storage for data
 }; 
 
 template <typename T> 
-Vector<T>::Vector() 
+qpVector<T>::qpVector() 
   : n(0), v(0) 
 {} 
 
 template <typename T> 
-Vector<T>::Vector(const unsigned int n) 
+qpVector<T>::qpVector(const unsigned int n) 
   : v(new T[n]) 
 {
   this->n = n;
 } 
 
 template <typename T> 
-Vector<T>::Vector(const T& a, const unsigned int n) 
+qpVector<T>::qpVector(const T& a, const unsigned int n) 
   : v(new T[n])
 { 
   this->n = n;
@@ -79,7 +79,7 @@ Vector<T>::Vector(const T& a, const unsigned int n)
 } 
 
 template <typename T> 
-Vector<T>::Vector(const T* a, const unsigned int n) 
+qpVector<T>::qpVector(const T* a, const unsigned int n) 
   : v(new T[n])
 { 
   this->n = n;
@@ -88,7 +88,7 @@ Vector<T>::Vector(const T* a, const unsigned int n)
 } 
 
 template <typename T> 
-Vector<T>::Vector(const Vector<T>& rhs) 
+qpVector<T>::qpVector(const qpVector<T>& rhs) 
   : v(new T[rhs.n])
 { 
   this->n = rhs.n;
@@ -97,14 +97,14 @@ Vector<T>::Vector(const Vector<T>& rhs)
 } 
 
 template <typename T> 
-Vector<T>::~Vector() 
+qpVector<T>::~qpVector() 
 { 
   if (v != 0) 
     delete[] (v); 
 } 
 
 template <typename T> 
-void Vector<T>::resize(const unsigned int n) 
+void qpVector<T>::resize(const unsigned int n) 
 {
   if (n == this->n)
     return;
@@ -115,7 +115,7 @@ void Vector<T>::resize(const unsigned int n)
 } 
 
 template <typename T> 
-void Vector<T>::resize(const T& a, const unsigned int n) 
+void qpVector<T>::resize(const T& a, const unsigned int n) 
 {
   resize(n);
   for (unsigned int i = 0; i < n; i++)
@@ -124,7 +124,7 @@ void Vector<T>::resize(const T& a, const unsigned int n)
 
 
 template <typename T> 
-inline Vector<T>& Vector<T>::operator=(const Vector<T>& rhs) 
+inline qpVector<T>& qpVector<T>::operator=(const qpVector<T>& rhs) 
 // postcondition: normal assignment via copying has been performed; 
 // if vector and rhs were different sizes, vector 
 // has been resized to match the size of rhs 
@@ -139,7 +139,7 @@ inline Vector<T>& Vector<T>::operator=(const Vector<T>& rhs)
 } 
 
 template <typename T> 
-inline Vector<T> & Vector<T>::operator=(const T& a) //assign a to every element 
+inline qpVector<T> & qpVector<T>::operator=(const T& a) //assign a to every element 
 { 
   for (unsigned int i = 0; i < n; i++) 
     v[i] = a; 
@@ -147,25 +147,25 @@ inline Vector<T> & Vector<T>::operator=(const T& a) //assign a to every element
 } 
 
 template <typename T> 
-inline T & Vector<T>::operator[](const unsigned int& i) //subscripting 
+inline T & qpVector<T>::operator[](const unsigned int& i) //subscripting 
 { 
   return v[i]; 
 }
 
 template <typename T>
-inline const T& Vector<T>::operator[](const unsigned int& i) const //subscripting 
+inline const T& qpVector<T>::operator[](const unsigned int& i) const //subscripting 
 { 
   return v[i]; 
 } 
 
 template <typename T> 
-inline unsigned int Vector<T>::size() const 
+inline unsigned int qpVector<T>::size() const 
 { 
   return n; 
 }
 
 template <typename T> 
-inline void Vector<T>::set(const T* a, unsigned int n) 
+inline void qpVector<T>::set(const T* a, unsigned int n) 
 { 
   resize(n);
   for (unsigned int i = 0; i < n; i++) 
@@ -173,9 +173,9 @@ inline void Vector<T>::set(const T* a, unsigned int n)
 } 
 
 template <typename T> 
-inline Vector<T> Vector<T>::extract(const std::set<unsigned int>& indexes) const
+inline qpVector<T> qpVector<T>::extract(const std::set<unsigned int>& indexes) const
 {
-  Vector<T> tmp(indexes.size());
+  qpVector<T> tmp(indexes.size());
   unsigned int i = 0;
 	
   for (std::set<unsigned int>::const_iterator el = indexes.begin(); el != indexes.end(); el++)
@@ -189,7 +189,7 @@ inline Vector<T> Vector<T>::extract(const std::set<unsigned int>& indexes) const
 }
 
 template <typename T> 
-inline Vector<T>& Vector<T>::operator+=(const Vector<T>& rhs)
+inline qpVector<T>& qpVector<T>::operator+=(const qpVector<T>& rhs)
 {
   if (this->size() != rhs.size())
     throw std::logic_error("Operator+=: vectors have different sizes");
@@ -201,7 +201,7 @@ inline Vector<T>& Vector<T>::operator+=(const Vector<T>& rhs)
 
 
 template <typename T> 
-inline Vector<T>& Vector<T>::operator+=(const T& a)
+inline qpVector<T>& qpVector<T>::operator+=(const T& a)
 {
   for (unsigned int i = 0; i < n; i++)
     v[i] += a;
@@ -210,17 +210,17 @@ inline Vector<T>& Vector<T>::operator+=(const T& a)
 }
 
 template <typename T>
-inline Vector<T> operator+(const Vector<T>& rhs)
+inline qpVector<T> operator+(const qpVector<T>& rhs)
 {
   return rhs;
 }
 
 template <typename T>
-inline Vector<T> operator+(const Vector<T>& lhs, const Vector<T>& rhs)
+inline qpVector<T> operator+(const qpVector<T>& lhs, const qpVector<T>& rhs)
 {
   if (lhs.size() != rhs.size())
     throw std::logic_error("Operator+: vectors have different sizes");
-  Vector<T> tmp(lhs.size());
+  qpVector<T> tmp(lhs.size());
   for (unsigned int i = 0; i < lhs.size(); i++)
     tmp[i] = lhs[i] + rhs[i];
 	
@@ -228,9 +228,9 @@ inline Vector<T> operator+(const Vector<T>& lhs, const Vector<T>& rhs)
 }
 
 template <typename T>
-inline Vector<T> operator+(const Vector<T>& lhs, const T& a)
+inline qpVector<T> operator+(const qpVector<T>& lhs, const T& a)
 {
-  Vector<T> tmp(lhs.size());
+  qpVector<T> tmp(lhs.size());
   for (unsigned int i = 0; i < lhs.size(); i++)
     tmp[i] = lhs[i] + a;
 		
@@ -238,9 +238,9 @@ inline Vector<T> operator+(const Vector<T>& lhs, const T& a)
 }
 
 template <typename T>
-inline Vector<T> operator+(const T& a, const Vector<T>& rhs)
+inline qpVector<T> operator+(const T& a, const qpVector<T>& rhs)
 {
-  Vector<T> tmp(rhs.size());
+  qpVector<T> tmp(rhs.size());
   for (unsigned int i = 0; i < rhs.size(); i++)
     tmp[i] = a + rhs[i];
 		
@@ -248,7 +248,7 @@ inline Vector<T> operator+(const T& a, const Vector<T>& rhs)
 }
 
 template <typename T> 
-inline Vector<T>& Vector<T>::operator-=(const Vector<T>& rhs)
+inline qpVector<T>& qpVector<T>::operator-=(const qpVector<T>& rhs)
 {
   if (this->size() != rhs.size())
     throw std::logic_error("Operator-=: vectors have different sizes");
@@ -260,7 +260,7 @@ inline Vector<T>& Vector<T>::operator-=(const Vector<T>& rhs)
 
 
 template <typename T> 
-inline Vector<T>& Vector<T>::operator-=(const T& a)
+inline qpVector<T>& qpVector<T>::operator-=(const T& a)
 {
   for (unsigned int i = 0; i < n; i++)
     v[i] -= a;
@@ -269,17 +269,17 @@ inline Vector<T>& Vector<T>::operator-=(const T& a)
 }
 
 template <typename T>
-inline Vector<T> operator-(const Vector<T>& rhs)
+inline qpVector<T> operator-(const qpVector<T>& rhs)
 {
   return (T)(-1) * rhs;
 }
 
 template <typename T>
-inline Vector<T> operator-(const Vector<T>& lhs, const Vector<T>& rhs)
+inline qpVector<T> operator-(const qpVector<T>& lhs, const qpVector<T>& rhs)
 {
   if (lhs.size() != rhs.size())
     throw std::logic_error("Operator-: vectors have different sizes");
-  Vector<T> tmp(lhs.size());
+  qpVector<T> tmp(lhs.size());
   for (unsigned int i = 0; i < lhs.size(); i++)
     tmp[i] = lhs[i] - rhs[i];
 	
@@ -287,9 +287,9 @@ inline Vector<T> operator-(const Vector<T>& lhs, const Vector<T>& rhs)
 }
 
 template <typename T>
-inline Vector<T> operator-(const Vector<T>& lhs, const T& a)
+inline qpVector<T> operator-(const qpVector<T>& lhs, const T& a)
 {
-  Vector<T> tmp(lhs.size());
+  qpVector<T> tmp(lhs.size());
   for (unsigned int i = 0; i < lhs.size(); i++)
     tmp[i] = lhs[i] - a;
 		
@@ -297,9 +297,9 @@ inline Vector<T> operator-(const Vector<T>& lhs, const T& a)
 }
 
 template <typename T>
-inline Vector<T> operator-(const T& a, const Vector<T>& rhs)
+inline qpVector<T> operator-(const T& a, const qpVector<T>& rhs)
 {
-  Vector<T> tmp(rhs.size());
+  qpVector<T> tmp(rhs.size());
   for (unsigned int i = 0; i < rhs.size(); i++)
     tmp[i] = a - rhs[i];
 		
@@ -307,7 +307,7 @@ inline Vector<T> operator-(const T& a, const Vector<T>& rhs)
 }
 
 template <typename T> 
-inline Vector<T>& Vector<T>::operator*=(const Vector<T>& rhs)
+inline qpVector<T>& qpVector<T>::operator*=(const qpVector<T>& rhs)
 {
   if (this->size() != rhs.size())
     throw std::logic_error("Operator*=: vectors have different sizes");
@@ -319,7 +319,7 @@ inline Vector<T>& Vector<T>::operator*=(const Vector<T>& rhs)
 
 
 template <typename T> 
-inline Vector<T>& Vector<T>::operator*=(const T& a)
+inline qpVector<T>& qpVector<T>::operator*=(const T& a)
 {
   for (unsigned int i = 0; i < n; i++)
     v[i] *= a;
@@ -328,11 +328,11 @@ inline Vector<T>& Vector<T>::operator*=(const T& a)
 }
 
 template <typename T>
-inline Vector<T> operator*(const Vector<T>& lhs, const Vector<T>& rhs)
+inline qpVector<T> operator*(const qpVector<T>& lhs, const qpVector<T>& rhs)
 {
   if (lhs.size() != rhs.size())
     throw std::logic_error("Operator*: vectors have different sizes");
-  Vector<T> tmp(lhs.size());
+  qpVector<T> tmp(lhs.size());
   for (unsigned int i = 0; i < lhs.size(); i++)
     tmp[i] = lhs[i] * rhs[i];
 	
@@ -340,9 +340,9 @@ inline Vector<T> operator*(const Vector<T>& lhs, const Vector<T>& rhs)
 }
 
 template <typename T>
-inline Vector<T> operator*(const Vector<T>& lhs, const T& a)
+inline qpVector<T> operator*(const qpVector<T>& lhs, const T& a)
 {
-  Vector<T> tmp(lhs.size());
+  qpVector<T> tmp(lhs.size());
   for (unsigned int i = 0; i < lhs.size(); i++)
     tmp[i] = lhs[i] * a;
 		
@@ -350,9 +350,9 @@ inline Vector<T> operator*(const Vector<T>& lhs, const T& a)
 }
 
 template <typename T>
-inline Vector<T> operator*(const T& a, const Vector<T>& rhs)
+inline qpVector<T> operator*(const T& a, const qpVector<T>& rhs)
 {
-  Vector<T> tmp(rhs.size());
+  qpVector<T> tmp(rhs.size());
   for (unsigned int i = 0; i < rhs.size(); i++)
     tmp[i] = a * rhs[i];
 		
@@ -360,7 +360,7 @@ inline Vector<T> operator*(const T& a, const Vector<T>& rhs)
 }
 
 template <typename T> 
-inline Vector<T>& Vector<T>::operator/=(const Vector<T>& rhs)
+inline qpVector<T>& qpVector<T>::operator/=(const qpVector<T>& rhs)
 {
   if (this->size() != rhs.size())
     throw std::logic_error("Operator/=: vectors have different sizes");
@@ -372,7 +372,7 @@ inline Vector<T>& Vector<T>::operator/=(const Vector<T>& rhs)
 
 
 template <typename T> 
-inline Vector<T>& Vector<T>::operator/=(const T& a)
+inline qpVector<T>& qpVector<T>::operator/=(const T& a)
 {
   for (unsigned int i = 0; i < n; i++)
     v[i] /= a;
@@ -381,11 +381,11 @@ inline Vector<T>& Vector<T>::operator/=(const T& a)
 }
 
 template <typename T>
-inline Vector<T> operator/(const Vector<T>& lhs, const Vector<T>& rhs)
+inline qpVector<T> operator/(const qpVector<T>& lhs, const qpVector<T>& rhs)
 {
   if (lhs.size() != rhs.size())
     throw std::logic_error("Operator/: vectors have different sizes");
-  Vector<T> tmp(lhs.size());
+  qpVector<T> tmp(lhs.size());
   for (unsigned int i = 0; i < lhs.size(); i++)
     tmp[i] = lhs[i] / rhs[i];
 	
@@ -393,9 +393,9 @@ inline Vector<T> operator/(const Vector<T>& lhs, const Vector<T>& rhs)
 }
 
 template <typename T>
-inline Vector<T> operator/(const Vector<T>& lhs, const T& a)
+inline qpVector<T> operator/(const qpVector<T>& lhs, const T& a)
 {
-  Vector<T> tmp(lhs.size());
+  qpVector<T> tmp(lhs.size());
   for (unsigned int i = 0; i < lhs.size(); i++)
     tmp[i] = lhs[i] / a;
 		
@@ -403,9 +403,9 @@ inline Vector<T> operator/(const Vector<T>& lhs, const T& a)
 }
 
 template <typename T>
-inline Vector<T> operator/(const T& a, const Vector<T>& rhs)
+inline qpVector<T> operator/(const T& a, const qpVector<T>& rhs)
 {
-  Vector<T> tmp(rhs.size());
+  qpVector<T> tmp(rhs.size());
   for (unsigned int i = 0; i < rhs.size(); i++)
     tmp[i] = a / rhs[i];
 		
@@ -413,11 +413,11 @@ inline Vector<T> operator/(const T& a, const Vector<T>& rhs)
 }
 
 template <typename T>
-inline Vector<T> operator^(const Vector<T>& lhs, const Vector<T>& rhs)
+inline qpVector<T> operator^(const qpVector<T>& lhs, const qpVector<T>& rhs)
 {
   if (lhs.size() != rhs.size())
     throw std::logic_error("Operator^: vectors have different sizes");
-  Vector<T> tmp(lhs.size());
+  qpVector<T> tmp(lhs.size());
   for (unsigned int i = 0; i < lhs.size(); i++)
     tmp[i] = pow(lhs[i], rhs[i]);
 	
@@ -425,9 +425,9 @@ inline Vector<T> operator^(const Vector<T>& lhs, const Vector<T>& rhs)
 }
 
 template <typename T>
-inline Vector<T> operator^(const Vector<T>& lhs, const T& a)
+inline qpVector<T> operator^(const qpVector<T>& lhs, const T& a)
 {
-  Vector<T> tmp(lhs.size());
+  qpVector<T> tmp(lhs.size());
   for (unsigned int i = 0; i < lhs.size(); i++)
     tmp[i] = pow(lhs[i], a);
 		
@@ -435,9 +435,9 @@ inline Vector<T> operator^(const Vector<T>& lhs, const T& a)
 }
 
 template <typename T>
-inline Vector<T> operator^(const T& a, const Vector<T>& rhs)
+inline qpVector<T> operator^(const T& a, const qpVector<T>& rhs)
 {
-  Vector<T> tmp(rhs.size());
+  qpVector<T> tmp(rhs.size());
   for (unsigned int i = 0; i < rhs.size(); i++)
     tmp[i] = pow(a, rhs[i]);
 		
@@ -445,7 +445,7 @@ inline Vector<T> operator^(const T& a, const Vector<T>& rhs)
 }
 
 template <typename T>
-inline Vector<T>& Vector<T>::operator^=(const Vector<T>& rhs)
+inline qpVector<T>& qpVector<T>::operator^=(const qpVector<T>& rhs)
 {
   if (this->size() != rhs.size())
     throw std::logic_error("Operator^=: vectors have different sizes");
@@ -456,7 +456,7 @@ inline Vector<T>& Vector<T>::operator^=(const Vector<T>& rhs)
 }
 
 template <typename T>
-inline Vector<T>& Vector<T>::operator^=(const T& a)
+inline qpVector<T>& qpVector<T>::operator^=(const T& a)
 {
   for (unsigned int i = 0; i < n; i++)
     v[i] = pow(v[i], a);
@@ -465,7 +465,7 @@ inline Vector<T>& Vector<T>::operator^=(const T& a)
 }
 
 template <typename T>
-inline bool operator==(const Vector<T>& v, const Vector<T>& w)
+inline bool operator==(const qpVector<T>& v, const qpVector<T>& w)
 {
   if (v.size() != w.size())
     throw std::logic_error("Vectors of different size are not confrontable");
@@ -476,7 +476,7 @@ inline bool operator==(const Vector<T>& v, const Vector<T>& w)
 }
 
 template <typename T>
-inline bool operator!=(const Vector<T>& v, const Vector<T>& w)
+inline bool operator!=(const qpVector<T>& v, const qpVector<T>& w)
 {
   if (v.size() != w.size())
     throw std::logic_error("Vectors of different size are not confrontable");
@@ -487,7 +487,7 @@ inline bool operator!=(const Vector<T>& v, const Vector<T>& w)
 }
 
 template <typename T>
-inline bool operator<(const Vector<T>& v, const Vector<T>& w)
+inline bool operator<(const qpVector<T>& v, const qpVector<T>& w)
 {
   if (v.size() != w.size())
     throw std::logic_error("Vectors of different size are not confrontable");
@@ -498,7 +498,7 @@ inline bool operator<(const Vector<T>& v, const Vector<T>& w)
 }
 
 template <typename T>
-inline bool operator<=(const Vector<T>& v, const Vector<T>& w)
+inline bool operator<=(const qpVector<T>& v, const qpVector<T>& w)
 {
   if (v.size() != w.size())
     throw std::logic_error("Vectors of different size are not confrontable");
@@ -509,7 +509,7 @@ inline bool operator<=(const Vector<T>& v, const Vector<T>& w)
 }
 
 template <typename T>
-inline bool operator>(const Vector<T>& v, const Vector<T>& w)
+inline bool operator>(const qpVector<T>& v, const qpVector<T>& w)
 {
   if (v.size() != w.size())
     throw std::logic_error("Vectors of different size are not confrontable");
@@ -520,7 +520,7 @@ inline bool operator>(const Vector<T>& v, const Vector<T>& w)
 }
 
 template <typename T>
-inline bool operator>=(const Vector<T>& v, const Vector<T>& w)
+inline bool operator>=(const qpVector<T>& v, const qpVector<T>& w)
 {
   if (v.size() != w.size())
     throw std::logic_error("Vectors of different size are not confrontable");
@@ -534,7 +534,7 @@ inline bool operator>=(const Vector<T>& v, const Vector<T>& w)
    Input/Output 
 */
 template <typename T>
-inline std::ostream& operator<<(std::ostream& os, const Vector<T>& v)
+inline std::ostream& operator<<(std::ostream& os, const qpVector<T>& v)
 {
   os << std::endl << v.size() << std::endl;
   for (unsigned int i = 0; i < v.size() - 1; i++)
@@ -545,7 +545,7 @@ inline std::ostream& operator<<(std::ostream& os, const Vector<T>& v)
 }
 
 template <typename T>
-std::istream& operator>>(std::istream& is, Vector<T>& v)
+std::istream& operator>>(std::istream& is, qpVector<T>& v)
 {
   int elements;
   char comma;
@@ -566,7 +566,7 @@ std::set<unsigned int> seq(unsigned int s, unsigned int e);
 std::set<unsigned int> singleton(unsigned int i);
 
 template <typename T>
-class CanonicalBaseVector : public Vector<T>
+class CanonicalBaseVector : public qpVector<T>
 {
 public:
   CanonicalBaseVector(unsigned int i, unsigned int n);
@@ -577,7 +577,7 @@ private:
 
 template <typename T>
 CanonicalBaseVector<T>::CanonicalBaseVector(unsigned int i, unsigned int n)
-  : Vector<T>((T)0, n), e(i)
+  : qpVector<T>((T)0, n), e(i)
 { (*this)[e] = (T)1; }
 
 template <typename T>
@@ -591,7 +591,7 @@ inline void CanonicalBaseVector<T>::reset(unsigned int i)
 #include <stdexcept>
 
 template <typename T>
-inline T sum(const Vector<T>& v)
+inline T sum(const qpVector<T>& v)
 {
   T tmp = (T)0;
   for (unsigned int i = 0; i < v.size(); i++)
@@ -601,7 +601,7 @@ inline T sum(const Vector<T>& v)
 }
 
 template <typename T>
-inline T prod(const Vector<T>& v)
+inline T prod(const qpVector<T>& v)
 {
   T tmp = (T)1;
   for (unsigned int i = 0; i < v.size(); i++)
@@ -611,7 +611,7 @@ inline T prod(const Vector<T>& v)
 }
 
 template <typename T>
-inline T mean(const Vector<T>& v)
+inline T mean(const qpVector<T>& v)
 {
   T sum = (T)0;
   for (unsigned int i = 0; i < v.size(); i++)
@@ -620,9 +620,9 @@ inline T mean(const Vector<T>& v)
 }
 
 template <typename T>
-inline T median(const Vector<T>& v)
+inline T median(const qpVector<T>& v)
 {
-  Vector<T> tmp = sort(v);
+  qpVector<T> tmp = sort(v);
   if (v.size() % 2 == 1) // it is an odd-sized vector
     return tmp[v.size() / 2];
   else
@@ -630,13 +630,13 @@ inline T median(const Vector<T>& v)
 }
 
 template <typename T>
-inline T stdev(const Vector<T>& v, bool sample_correction = false)
+inline T stdev(const qpVector<T>& v, bool sample_correction = false)
 {
   return sqrt(var(v, sample_correction));
 }
 
 template <typename T>
-inline T var(const Vector<T>& v, bool sample_correction = false)
+inline T var(const qpVector<T>& v, bool sample_correction = false)
 {
   T sum = (T)0, ssum = (T)0;
   unsigned int n = v.size();
@@ -651,28 +651,28 @@ inline T var(const Vector<T>& v, bool sample_correction = false)
     return n * ((ssum / n) - (sum / n) * (sum / n)) / (n - 1);
 }
 
-template <typename T>
-inline T max(const Vector<T>& v)
-{
-  T value = v[0];
-  for (unsigned int i = 1; i < v.size(); i++)
-    value = std::max(v[i], value);
-	
-  return value;
-}
+//template <typename T>
+//inline T max(const qpVector<T>& v)
+//{
+//  T value = v[0];
+//  for (unsigned int i = 1; i < v.size(); i++)
+//    value = (std::max)(v[i], value);
+//	
+//  return value;
+//}
+
+//template <typename T>
+//inline T min(const qpVector<T>& v)
+//{
+//  T value = v[0];
+//  for (unsigned int i = 1; i < v.size(); i++)
+//    value = (std::min)(v[i], value);
+//	
+//  return value;
+//}
 
 template <typename T>
-inline T min(const Vector<T>& v)
-{
-  T value = v[0];
-  for (unsigned int i = 1; i < v.size(); i++)
-    value = std::min(v[i], value);
-	
-  return value;
-}
-
-template <typename T>
-inline unsigned int index_max(const Vector<T>& v)
+inline unsigned int index_max(const qpVector<T>& v)
 {
   unsigned int max = 0;
   for (unsigned int i = 1; i < v.size(); i++)
@@ -683,7 +683,7 @@ inline unsigned int index_max(const Vector<T>& v)
 }
 
 template <typename T>
-inline unsigned int index_min(const Vector<T>& v)
+inline unsigned int index_min(const qpVector<T>& v)
 {
   unsigned int min = 0;
   for (unsigned int i = 1; i < v.size(); i++)
@@ -695,7 +695,7 @@ inline unsigned int index_min(const Vector<T>& v)
 
 
 template <typename T>
-inline T dot_prod(const Vector<T>& a, const Vector<T>& b)
+inline T dot_prod(const qpVector<T>& a, const qpVector<T>& b)
 {
   T sum = (T)0;
   if (a.size() != b.size())
@@ -711,9 +711,9 @@ inline T dot_prod(const Vector<T>& a, const Vector<T>& b)
 */
 
 template <typename T>
-inline Vector<T> exp(const Vector<T>& v)
+inline qpVector<T> exp(const qpVector<T>& v)
 {
-  Vector<T> tmp(v.size());
+  qpVector<T> tmp(v.size());
   for (unsigned int i = 0; i < v.size(); i++)
     tmp[i] = exp(v[i]);
 	
@@ -721,9 +721,9 @@ inline Vector<T> exp(const Vector<T>& v)
 }
 
 template <typename T>
-inline Vector<T> log(const Vector<T>& v)
+inline qpVector<T> log(const qpVector<T>& v)
 {
-  Vector<T> tmp(v.size());
+  qpVector<T> tmp(v.size());
   for (unsigned int i = 0; i < v.size(); i++)
     tmp[i] = log(v[i]);
 	
@@ -731,9 +731,9 @@ inline Vector<T> log(const Vector<T>& v)
 }
 
 template <typename T>
-inline Vector<T> vec_sqrt(const Vector<T>& v)
+inline qpVector<T> vec_sqrt(const qpVector<T>& v)
 {
-  Vector<T> tmp(v.size());
+  qpVector<T> tmp(v.size());
   for (unsigned int i = 0; i < v.size(); i++)
     tmp[i] = sqrt(v[i]);
 	
@@ -741,9 +741,9 @@ inline Vector<T> vec_sqrt(const Vector<T>& v)
 }
 
 template <typename T>
-inline Vector<T> pow(const Vector<T>& v, double a)
+inline qpVector<T> pow(const qpVector<T>& v, double a)
 {
-  Vector<T> tmp(v.size());
+  qpVector<T> tmp(v.size());
   for (unsigned int i = 0; i < v.size(); i++)
     tmp[i] = pow(v[i], a);
 	
@@ -751,9 +751,9 @@ inline Vector<T> pow(const Vector<T>& v, double a)
 }
 
 template <typename T>
-inline Vector<T> abs(const Vector<T>& v)
+inline qpVector<T> abs(const qpVector<T>& v)
 {
-  Vector<T> tmp(v.size());
+  qpVector<T> tmp(v.size());
   for (unsigned int i = 0; i < v.size(); i++)
     tmp[i] = (T)fabs(v[i]);
 	
@@ -761,9 +761,9 @@ inline Vector<T> abs(const Vector<T>& v)
 }
 
 template <typename T>
-inline Vector<T> sign(const Vector<T>& v)
+inline qpVector<T> sign(const qpVector<T>& v)
 {
-  Vector<T> tmp(v.size());
+  qpVector<T> tmp(v.size());
   for (unsigned int i = 0; i < v.size(); i++)
     tmp[i] = v[i] > 0 ? +1 : v[i] == 0 ? 0 : -1;
 	
@@ -771,7 +771,7 @@ inline Vector<T> sign(const Vector<T>& v)
 }
 
 template <typename T>
-inline unsigned int partition(Vector<T>& v, unsigned int begin, unsigned int end)
+inline unsigned int partition(qpVector<T>& v, unsigned int begin, unsigned int end)
 {
   unsigned int i = begin + 1, j = begin + 1;
   T pivot = v[begin];
@@ -790,7 +790,7 @@ inline unsigned int partition(Vector<T>& v, unsigned int begin, unsigned int end
 	
 
 template <typename T>
-inline void quicksort(Vector<T>& v, unsigned int begin, unsigned int end)
+inline void quicksort(qpVector<T>& v, unsigned int begin, unsigned int end)
 {
   if (end > begin)
     {
@@ -801,9 +801,9 @@ inline void quicksort(Vector<T>& v, unsigned int begin, unsigned int end)
 }
 
 template <typename T>
-inline Vector<T> sort(const Vector<T>& v)
+inline qpVector<T> sort(const qpVector<T>& v)
 {
-  Vector<T> tmp(v);
+  qpVector<T> tmp(v);
   
   quicksort<T>(tmp, 0, tmp.size() - 1);
   
@@ -811,10 +811,10 @@ inline Vector<T> sort(const Vector<T>& v)
 }
 
 template <typename T>
-inline Vector<double> rank(const Vector<T>& v)
+inline qpVector<double> rank(const qpVector<T>& v)
 {
-  Vector<T> tmp(v);
-  Vector<double> tmp_rank(0.0, v.size());	
+  qpVector<T> tmp(v);
+  qpVector<double> tmp_rank(0.0, v.size());	
 	
   for (unsigned int i = 0; i < tmp.size(); i++)
     {
@@ -842,17 +842,17 @@ inline Vector<double> rank(const Vector<T>& v)
 //enum MType { DIAG };
 
 template <typename T>
-class Matrix 
+class qpMatrix 
 {
 public:
-  Matrix(); // Default constructor
-  Matrix(const unsigned int n, const unsigned int m); // Construct a n x m matrix
-  Matrix(const T& a, const unsigned int n, const unsigned int m); // Initialize the content to constant a
-  Matrix(MType t, const T& a, const T& o, const unsigned int n, const unsigned int m);
-  Matrix(MType t, const Vector<T>& v, const T& o, const unsigned int n, const unsigned int m);
-  Matrix(const T* a, const unsigned int n, const unsigned int m); // Initialize to array 
-  Matrix(const Matrix<T>& rhs); // Copy constructor
-  ~Matrix(); // destructor
+  qpMatrix(); // Default constructor
+  qpMatrix(const unsigned int n, const unsigned int m); // Construct a n x m matrix
+  qpMatrix(const T& a, const unsigned int n, const unsigned int m); // Initialize the content to constant a
+  qpMatrix(MType t, const T& a, const T& o, const unsigned int n, const unsigned int m);
+  qpMatrix(MType t, const qpVector<T>& v, const T& o, const unsigned int n, const unsigned int m);
+  qpMatrix(const T* a, const unsigned int n, const unsigned int m); // Initialize to array 
+  qpMatrix(const qpMatrix<T>& rhs); // Copy constructor
+  ~qpMatrix(); // destructor
 	
   inline T* operator[](const unsigned int& i) { return v[i]; } // Subscripting: row i
   inline const T* operator[](const unsigned int& i) const { return v[i]; }; // const subsctipting
@@ -861,39 +861,39 @@ public:
   inline void resize(const T& a, const unsigned int n, const unsigned int m);
 	
 	
-  inline Vector<T> extractRow(const unsigned int i) const; 
-  inline Vector<T> extractColumn(const unsigned int j) const;
-  inline Vector<T> extractDiag() const;
-  inline Matrix<T> extractRows(const std::set<unsigned int>& indexes) const;
-  inline Matrix<T> extractColumns(const std::set<unsigned int>& indexes) const;
-  inline Matrix<T> extract(const std::set<unsigned int>& r_indexes, const std::set<unsigned int>& c_indexes) const;
+  inline qpVector<T> extractRow(const unsigned int i) const; 
+  inline qpVector<T> extractColumn(const unsigned int j) const;
+  inline qpVector<T> extractDiag() const;
+  inline qpMatrix<T> extractRows(const std::set<unsigned int>& indexes) const;
+  inline qpMatrix<T> extractColumns(const std::set<unsigned int>& indexes) const;
+  inline qpMatrix<T> extract(const std::set<unsigned int>& r_indexes, const std::set<unsigned int>& c_indexes) const;
 	
   inline void set(const T* a, unsigned int n, unsigned int m);
-  inline void set(const std::set<unsigned int>& r_indexes, const std::set<unsigned int>& c_indexes, const Matrix<T>& m);
-  inline void setRow(const unsigned int index, const Vector<T>& v);
-  inline void setRow(const unsigned int index, const Matrix<T>& v);
-  inline void setRows(const std::set<unsigned int>& indexes, const Matrix<T>& m);
-  inline void setColumn(const unsigned int index, const Vector<T>& v);
-  inline void setColumn(const unsigned int index, const Matrix<T>& v);
-  inline void setColumns(const std::set<unsigned int>& indexes, const Matrix<T>& m);
+  inline void set(const std::set<unsigned int>& r_indexes, const std::set<unsigned int>& c_indexes, const qpMatrix<T>& m);
+  inline void setRow(const unsigned int index, const qpVector<T>& v);
+  inline void setRow(const unsigned int index, const qpMatrix<T>& v);
+  inline void setRows(const std::set<unsigned int>& indexes, const qpMatrix<T>& m);
+  inline void setColumn(const unsigned int index, const qpVector<T>& v);
+  inline void setColumn(const unsigned int index, const qpMatrix<T>& v);
+  inline void setColumns(const std::set<unsigned int>& indexes, const qpMatrix<T>& m);
 	
 	
   inline unsigned int nrows() const { return n; } // number of rows
   inline unsigned int ncols() const { return m; } // number of columns
 	
-  inline Matrix<T>& operator=(const Matrix<T>& rhs); // Assignment operator
-  inline Matrix<T>& operator=(const T& a); // Assign to every element value a
-  inline Matrix<T>& operator+=(const Matrix<T>& rhs);
-  inline Matrix<T>& operator-=(const Matrix<T>& rhs);
-  inline Matrix<T>& operator*=(const Matrix<T>& rhs);
-  inline Matrix<T>& operator/=(const Matrix<T>& rhs);
-  inline Matrix<T>& operator^=(const Matrix<T>& rhs);
-  inline Matrix<T>& operator+=(const T& a);
-  inline Matrix<T>& operator-=(const T& a);
-  inline Matrix<T>& operator*=(const T& a);
-  inline Matrix<T>& operator/=(const T& a);
-  inline Matrix<T>& operator^=(const T& a);
-  inline operator Vector<T>();
+  inline qpMatrix<T>& operator=(const qpMatrix<T>& rhs); // Assignment operator
+  inline qpMatrix<T>& operator=(const T& a); // Assign to every element value a
+  inline qpMatrix<T>& operator+=(const qpMatrix<T>& rhs);
+  inline qpMatrix<T>& operator-=(const qpMatrix<T>& rhs);
+  inline qpMatrix<T>& operator*=(const qpMatrix<T>& rhs);
+  inline qpMatrix<T>& operator/=(const qpMatrix<T>& rhs);
+  inline qpMatrix<T>& operator^=(const qpMatrix<T>& rhs);
+  inline qpMatrix<T>& operator+=(const T& a);
+  inline qpMatrix<T>& operator-=(const T& a);
+  inline qpMatrix<T>& operator*=(const T& a);
+  inline qpMatrix<T>& operator/=(const T& a);
+  inline qpMatrix<T>& operator^=(const T& a);
+  inline operator qpVector<T>();
 private:
   unsigned int n; // number of rows
   unsigned int m; // number of columns
@@ -901,12 +901,12 @@ private:
 };
 
 template <typename T>
-Matrix<T>::Matrix() 
+qpMatrix<T>::qpMatrix() 
   : n(0), m(0), v(0)
 {}
 
 template <typename T>
-Matrix<T>::Matrix(unsigned int n, unsigned int m)
+qpMatrix<T>::qpMatrix(unsigned int n, unsigned int m)
   : v(new T*[n])
 {
   this->n = n; this->m = m;
@@ -916,7 +916,7 @@ Matrix<T>::Matrix(unsigned int n, unsigned int m)
 }
 
 template <typename T>
-Matrix<T>::Matrix(const T& a, unsigned int n, unsigned int m)
+qpMatrix<T>::qpMatrix(const T& a, unsigned int n, unsigned int m)
   : v(new T*[n])
 {
   this->n = n; this->m = m;
@@ -929,7 +929,7 @@ Matrix<T>::Matrix(const T& a, unsigned int n, unsigned int m)
 }
 
 template <class T> 
-Matrix<T>::Matrix(const T* a, unsigned int n, unsigned int m) 
+qpMatrix<T>::qpMatrix(const T* a, unsigned int n, unsigned int m) 
   : v(new T*[n])
 { 
   this->n = n; this->m = m;
@@ -942,7 +942,7 @@ Matrix<T>::Matrix(const T* a, unsigned int n, unsigned int m)
 } 
 
 template <class T> 
-Matrix<T>::Matrix(MType t, const T& a, const T& o, unsigned int n, unsigned int m) 
+qpMatrix<T>::qpMatrix(MType t, const T& a, const T& o, unsigned int n, unsigned int m) 
   : v(new T*[n])
 { 
   this->n = n; this->m = m;
@@ -960,12 +960,12 @@ Matrix<T>::Matrix(MType t, const T& a, const T& o, unsigned int n, unsigned int 
 	    v[i][j] = a;
       break;
     default:
-      throw std::logic_error("Matrix type not supported");
+      throw std::logic_error("qpMatrix type not supported");
     }
 } 
 
 template <class T> 
-Matrix<T>::Matrix(MType t, const Vector<T>& a, const T& o, unsigned int n, unsigned int m) 
+qpMatrix<T>::qpMatrix(MType t, const qpVector<T>& a, const T& o, unsigned int n, unsigned int m) 
   : v(new T*[n])
 { 
   this->n = n; this->m = m;
@@ -983,12 +983,12 @@ Matrix<T>::Matrix(MType t, const Vector<T>& a, const T& o, unsigned int n, unsig
 	    v[i][j] = a[i];
       break;
     default:
-      throw std::logic_error("Matrix type not supported");
+      throw std::logic_error("qpMatrix type not supported");
     }
 } 
 
 template <typename T>
-Matrix<T>::Matrix(const Matrix<T>& rhs)
+qpMatrix<T>::qpMatrix(const qpMatrix<T>& rhs)
   : v(new T*[rhs.n])
 {
   n = rhs.n; m = rhs.m;
@@ -1001,7 +1001,7 @@ Matrix<T>::Matrix(const Matrix<T>& rhs)
 }
 
 template <typename T> 
-Matrix<T>::~Matrix() 
+qpMatrix<T>::~qpMatrix() 
 { 
   if (v != 0) { 
     delete[] (v[0]); 
@@ -1010,7 +1010,7 @@ Matrix<T>::~Matrix()
 }
 				
 template <typename T> 
-inline Matrix<T>& Matrix<T>::operator=(const Matrix<T> &rhs) 
+inline qpMatrix<T>& qpMatrix<T>::operator=(const qpMatrix<T> &rhs) 
 // postcondition: normal assignment via copying has been performed; 
 // if matrix and rhs were different sizes, matrix 
 // has been resized to match the size of rhs 
@@ -1026,7 +1026,7 @@ inline Matrix<T>& Matrix<T>::operator=(const Matrix<T> &rhs)
 } 
 
 template <typename T> 
-inline Matrix<T>& Matrix<T>::operator=(const T& a) // assign a to every element 
+inline qpMatrix<T>& qpMatrix<T>::operator=(const T& a) // assign a to every element 
 { 
   for (unsigned int i = 0; i < n; i++)
     for (unsigned int j = 0; j < m; j++)
@@ -1036,7 +1036,7 @@ inline Matrix<T>& Matrix<T>::operator=(const T& a) // assign a to every element
 
 
 template <typename T> 
-inline void Matrix<T>::resize(const unsigned int n, const unsigned int m) 
+inline void qpMatrix<T>::resize(const unsigned int n, const unsigned int m) 
 {
   if (n == this->n && m == this->m)
     return;
@@ -1053,7 +1053,7 @@ inline void Matrix<T>::resize(const unsigned int n, const unsigned int m)
 } 
 
 template <typename T> 
-inline void Matrix<T>::resize(const T& a, const unsigned int n, const unsigned int m) 
+inline void qpMatrix<T>::resize(const T& a, const unsigned int n, const unsigned int m) 
 {
   resize(n, m);
   for (unsigned int i = 0; i < n; i++)
@@ -1064,21 +1064,21 @@ inline void Matrix<T>::resize(const T& a, const unsigned int n, const unsigned i
 
 
 template <typename T> 
-inline Vector<T> Matrix<T>::extractRow(const unsigned int i) const
+inline qpVector<T> qpMatrix<T>::extractRow(const unsigned int i) const
 {
   if (i >= n)
     throw std::logic_error("Error in extractRow: trying to extract a row out of matrix bounds");
-  Vector<T> tmp(v[i], m);
+  qpVector<T> tmp(v[i], m);
 	
   return tmp;
 }
 
 template <typename T> 
-inline Vector<T> Matrix<T>::extractColumn(const unsigned int j) const
+inline qpVector<T> qpMatrix<T>::extractColumn(const unsigned int j) const
 {
   if (j >= m)
     throw std::logic_error("Error in extractRow: trying to extract a row out of matrix bounds");
-  Vector<T> tmp(n);
+  qpVector<T> tmp(n);
 	
   for (unsigned int i = 0; i < n; i++)
     tmp[i] = v[i][j];
@@ -1087,11 +1087,11 @@ inline Vector<T> Matrix<T>::extractColumn(const unsigned int j) const
 }
 
 template <typename T>
-inline Vector<T> Matrix<T>::extractDiag() const
+inline qpVector<T> qpMatrix<T>::extractDiag() const
 {
-  unsigned int d = std::min(n, m);
+  unsigned int d = ((std::min))(n, m);
   
-  Vector<T> tmp(d);
+  qpVector<T> tmp(d);
 	
   for (unsigned int i = 0; i < d; i++)
     tmp[i] = v[i][i];
@@ -1101,9 +1101,9 @@ inline Vector<T> Matrix<T>::extractDiag() const
 }
 
 template <typename T> 
-inline Matrix<T> Matrix<T>::extractRows(const std::set<unsigned int>& indexes) const
+inline qpMatrix<T> qpMatrix<T>::extractRows(const std::set<unsigned int>& indexes) const
 {
-  Matrix<T> tmp(indexes.size(), m);
+  qpMatrix<T> tmp(indexes.size(), m);
   unsigned int i = 0;
 	
   for (std::set<unsigned int>::const_iterator el = indexes.begin(); el != indexes.end(); el++)
@@ -1121,9 +1121,9 @@ inline Matrix<T> Matrix<T>::extractRows(const std::set<unsigned int>& indexes) c
 }
 
 template <typename T> 
-inline Matrix<T> Matrix<T>::extractColumns(const std::set<unsigned int>& indexes) const
+inline qpMatrix<T> qpMatrix<T>::extractColumns(const std::set<unsigned int>& indexes) const
 {
-  Matrix<T> tmp(n, indexes.size());
+  qpMatrix<T> tmp(n, indexes.size());
   unsigned int j = 0;
 	
   for (std::set<unsigned int>::const_iterator el = indexes.begin(); el != indexes.end(); el++)
@@ -1141,9 +1141,9 @@ inline Matrix<T> Matrix<T>::extractColumns(const std::set<unsigned int>& indexes
 }
 
 template <typename T> 
-inline Matrix<T> Matrix<T>::extract(const std::set<unsigned int>& r_indexes, const std::set<unsigned int>& c_indexes) const
+inline qpMatrix<T> qpMatrix<T>::extract(const std::set<unsigned int>& r_indexes, const std::set<unsigned int>& c_indexes) const
 {
-  Matrix<T> tmp(r_indexes.size(), c_indexes.size());
+  qpMatrix<T> tmp(r_indexes.size(), c_indexes.size());
   unsigned int i = 0, j;
 	
   for (std::set<unsigned int>::const_iterator r_el = r_indexes.begin(); r_el != r_indexes.end(); r_el++)
@@ -1165,7 +1165,7 @@ inline Matrix<T> Matrix<T>::extract(const std::set<unsigned int>& r_indexes, con
 }
 
 template <typename T> 
-inline void Matrix<T>::setRow(unsigned int i, const Vector<T>& a)
+inline void qpMatrix<T>::setRow(unsigned int i, const qpVector<T>& a)
 {	
   if (i >= n)
     throw std::logic_error("Error in setRow: trying to set a row out of matrix bounds");
@@ -1176,7 +1176,7 @@ inline void Matrix<T>::setRow(unsigned int i, const Vector<T>& a)
 }
 
 template <typename T> 
-inline void Matrix<T>::setRow(unsigned int i, const Matrix<T>& a)
+inline void qpMatrix<T>::setRow(unsigned int i, const qpMatrix<T>& a)
 {	
   if (i >= n)
     throw std::logic_error("Error in setRow: trying to set a row out of matrix bounds");
@@ -1189,7 +1189,7 @@ inline void Matrix<T>::setRow(unsigned int i, const Matrix<T>& a)
 }
 
 template <typename T> 
-inline void Matrix<T>::setRows(const std::set<unsigned int>& indexes, const Matrix<T>& m)
+inline void qpMatrix<T>::setRows(const std::set<unsigned int>& indexes, const qpMatrix<T>& m)
 {
   unsigned int i = 0;
 	
@@ -1208,7 +1208,7 @@ inline void Matrix<T>::setRows(const std::set<unsigned int>& indexes, const Matr
 }
 
 template <typename T> 
-inline void Matrix<T>::setColumn(unsigned int j, const Vector<T>& a)
+inline void qpMatrix<T>::setColumn(unsigned int j, const qpVector<T>& a)
 {	
   if (j >= m)
     throw std::logic_error("Error in setColumn: trying to set a column out of matrix bounds");
@@ -1219,7 +1219,7 @@ inline void Matrix<T>::setColumn(unsigned int j, const Vector<T>& a)
 }
 
 template <typename T> 
-inline void Matrix<T>::setColumn(unsigned int j, const Matrix<T>& a)
+inline void qpMatrix<T>::setColumn(unsigned int j, const qpMatrix<T>& a)
 {	
   if (j >= m)
     throw std::logic_error("Error in setColumn: trying to set a column out of matrix bounds");
@@ -1233,7 +1233,7 @@ inline void Matrix<T>::setColumn(unsigned int j, const Matrix<T>& a)
 
 
 template <typename T> 
-inline void Matrix<T>::setColumns(const std::set<unsigned int>& indexes, const Matrix<T>& a)
+inline void qpMatrix<T>::setColumns(const std::set<unsigned int>& indexes, const qpMatrix<T>& a)
 {
   unsigned int j = 0;
 	
@@ -1252,7 +1252,7 @@ inline void Matrix<T>::setColumns(const std::set<unsigned int>& indexes, const M
 }
 
 template <typename T> 
-inline void Matrix<T>::set(const std::set<unsigned int>& r_indexes, const std::set<unsigned int>& c_indexes, const Matrix<T>& a)
+inline void qpMatrix<T>::set(const std::set<unsigned int>& r_indexes, const std::set<unsigned int>& c_indexes, const qpMatrix<T>& a)
 {
   unsigned int i = 0, j;
   if (c_indexes.size() != a.ncols() || r_indexes.size() != a.nrows())
@@ -1275,7 +1275,7 @@ inline void Matrix<T>::set(const std::set<unsigned int>& r_indexes, const std::s
 }
 
 template <typename T> 
-inline void Matrix<T>::set(const T* a, unsigned int n, unsigned int m)
+inline void qpMatrix<T>::set(const T* a, unsigned int n, unsigned int m)
 {
   if (this->n != n || this->m != m)
     resize(n, m);
@@ -1287,17 +1287,17 @@ inline void Matrix<T>::set(const T* a, unsigned int n, unsigned int m)
 
 
 template <typename T>
-Matrix<T> operator+(const Matrix<T>& rhs)
+qpMatrix<T> operator+(const qpMatrix<T>& rhs)
 {
   return rhs;
 }
 
 template <typename T>
-Matrix<T> operator+(const Matrix<T>& lhs, const Matrix<T>& rhs)
+qpMatrix<T> operator+(const qpMatrix<T>& lhs, const qpMatrix<T>& rhs)
 {
   if (lhs.ncols() != rhs.ncols() || lhs.nrows() != rhs.nrows())
     throw std::logic_error("Operator+: matrices have different sizes");
-  Matrix<T> tmp(lhs.nrows(), lhs.ncols());
+  qpMatrix<T> tmp(lhs.nrows(), lhs.ncols());
   for (unsigned int i = 0; i < lhs.nrows(); i++)
     for (unsigned int j = 0; j < lhs.ncols(); j++)
       tmp[i][j] = lhs[i][j] + rhs[i][j];
@@ -1306,9 +1306,9 @@ Matrix<T> operator+(const Matrix<T>& lhs, const Matrix<T>& rhs)
 }
 
 template <typename T>
-Matrix<T> operator+(const Matrix<T>& lhs, const T& a)
+qpMatrix<T> operator+(const qpMatrix<T>& lhs, const T& a)
 {
-  Matrix<T> tmp(lhs.nrows(), lhs.ncols());
+  qpMatrix<T> tmp(lhs.nrows(), lhs.ncols());
   for (unsigned int i = 0; i < lhs.nrows(); i++)
     for (unsigned int j = 0; j < lhs.ncols(); j++)
       tmp[i][j] = lhs[i][j] + a;
@@ -1317,9 +1317,9 @@ Matrix<T> operator+(const Matrix<T>& lhs, const T& a)
 }
 
 template <typename T>
-Matrix<T> operator+(const T& a, const Matrix<T>& rhs)
+qpMatrix<T> operator+(const T& a, const qpMatrix<T>& rhs)
 {
-  Matrix<T> tmp(rhs.nrows(), rhs.ncols());
+  qpMatrix<T> tmp(rhs.nrows(), rhs.ncols());
   for (unsigned int i = 0; i < rhs.nrows(); i++)
     for (unsigned int j = 0; j < rhs.ncols(); j++)
       tmp[i][j] = a + rhs[i][j];
@@ -1328,7 +1328,7 @@ Matrix<T> operator+(const T& a, const Matrix<T>& rhs)
 }
 
 template <typename T>
-inline Matrix<T>& Matrix<T>::operator+=(const Matrix<T>& rhs)
+inline qpMatrix<T>& qpMatrix<T>::operator+=(const qpMatrix<T>& rhs)
 {
   if (m != rhs.ncols() || n != rhs.nrows())
     throw std::logic_error("Operator+=: matrices have different sizes");
@@ -1340,7 +1340,7 @@ inline Matrix<T>& Matrix<T>::operator+=(const Matrix<T>& rhs)
 }
 
 template <typename T>
-inline Matrix<T>& Matrix<T>::operator+=(const T& a)
+inline qpMatrix<T>& qpMatrix<T>::operator+=(const T& a)
 {
   for (unsigned int i = 0; i < n; i++)
     for (unsigned int j = 0; j < m; j++)
@@ -1350,17 +1350,17 @@ inline Matrix<T>& Matrix<T>::operator+=(const T& a)
 }
 
 template <typename T>
-Matrix<T> operator-(const Matrix<T>& rhs)
+qpMatrix<T> operator-(const qpMatrix<T>& rhs)
 {	
   return (T)(-1) * rhs;
 }
 
 template <typename T>
-Matrix<T> operator-(const Matrix<T>& lhs, const Matrix<T>& rhs)
+qpMatrix<T> operator-(const qpMatrix<T>& lhs, const qpMatrix<T>& rhs)
 {
   if (lhs.ncols() != rhs.ncols() || lhs.nrows() != rhs.nrows())
     throw std::logic_error("Operator-: matrices have different sizes");
-  Matrix<T> tmp(lhs.nrows(), lhs.ncols());
+  qpMatrix<T> tmp(lhs.nrows(), lhs.ncols());
   for (unsigned int i = 0; i < lhs.nrows(); i++)
     for (unsigned int j = 0; j < lhs.ncols(); j++)
       tmp[i][j] = lhs[i][j] - rhs[i][j];
@@ -1369,9 +1369,9 @@ Matrix<T> operator-(const Matrix<T>& lhs, const Matrix<T>& rhs)
 }
 
 template <typename T>
-Matrix<T> operator-(const Matrix<T>& lhs, const T& a)
+qpMatrix<T> operator-(const qpMatrix<T>& lhs, const T& a)
 {
-  Matrix<T> tmp(lhs.nrows(), lhs.ncols());
+  qpMatrix<T> tmp(lhs.nrows(), lhs.ncols());
   for (unsigned int i = 0; i < lhs.nrows(); i++)
     for (unsigned int j = 0; j < lhs.ncols(); j++)
       tmp[i][j] = lhs[i][j] - a;
@@ -1380,9 +1380,9 @@ Matrix<T> operator-(const Matrix<T>& lhs, const T& a)
 }
 
 template <typename T>
-Matrix<T> operator-(const T& a, const Matrix<T>& rhs)
+qpMatrix<T> operator-(const T& a, const qpMatrix<T>& rhs)
 {
-  Matrix<T> tmp(rhs.nrows(), rhs.ncols());
+  qpMatrix<T> tmp(rhs.nrows(), rhs.ncols());
   for (unsigned int i = 0; i < rhs.nrows(); i++)
     for (unsigned int j = 0; j < rhs.ncols(); j++)
       tmp[i][j] = a - rhs[i][j];
@@ -1391,7 +1391,7 @@ Matrix<T> operator-(const T& a, const Matrix<T>& rhs)
 }
 
 template <typename T>
-inline Matrix<T>& Matrix<T>::operator-=(const Matrix<T>& rhs)
+inline qpMatrix<T>& qpMatrix<T>::operator-=(const qpMatrix<T>& rhs)
 {
   if (m != rhs.ncols() || n != rhs.nrows())
     throw std::logic_error("Operator-=: matrices have different sizes");
@@ -1403,7 +1403,7 @@ inline Matrix<T>& Matrix<T>::operator-=(const Matrix<T>& rhs)
 }
 
 template <typename T>
-inline Matrix<T>& Matrix<T>::operator-=(const T& a)
+inline qpMatrix<T>& qpMatrix<T>::operator-=(const T& a)
 {
   for (unsigned int i = 0; i < n; i++)
     for (unsigned int j = 0; j < m; j++)
@@ -1413,11 +1413,11 @@ inline Matrix<T>& Matrix<T>::operator-=(const T& a)
 }
 
 template <typename T>
-Matrix<T> operator*(const Matrix<T>& lhs, const Matrix<T>& rhs)
+qpMatrix<T> operator*(const qpMatrix<T>& lhs, const qpMatrix<T>& rhs)
 {
   if (lhs.ncols() != rhs.ncols() || lhs.nrows() != rhs.nrows())
     throw std::logic_error("Operator*: matrices have different sizes");
-  Matrix<T> tmp(lhs.nrows(), lhs.ncols());
+  qpMatrix<T> tmp(lhs.nrows(), lhs.ncols());
   for (unsigned int i = 0; i < lhs.nrows(); i++)
     for (unsigned int j = 0; j < lhs.ncols(); j++)
       tmp[i][j] = lhs[i][j] * rhs[i][j];
@@ -1426,9 +1426,9 @@ Matrix<T> operator*(const Matrix<T>& lhs, const Matrix<T>& rhs)
 }
 
 template <typename T>
-Matrix<T> operator*(const Matrix<T>& lhs, const T& a)
+qpMatrix<T> operator*(const qpMatrix<T>& lhs, const T& a)
 {
-  Matrix<T> tmp(lhs.nrows(), lhs.ncols());
+  qpMatrix<T> tmp(lhs.nrows(), lhs.ncols());
   for (unsigned int i = 0; i < lhs.nrows(); i++)
     for (unsigned int j = 0; j < lhs.ncols(); j++)
       tmp[i][j] = lhs[i][j] * a;
@@ -1437,9 +1437,9 @@ Matrix<T> operator*(const Matrix<T>& lhs, const T& a)
 }
 
 template <typename T>
-Matrix<T> operator*(const T& a, const Matrix<T>& rhs)
+qpMatrix<T> operator*(const T& a, const qpMatrix<T>& rhs)
 {
-  Matrix<T> tmp(rhs.nrows(), rhs.ncols());
+  qpMatrix<T> tmp(rhs.nrows(), rhs.ncols());
   for (unsigned int i = 0; i < rhs.nrows(); i++)
     for (unsigned int j = 0; j < rhs.ncols(); j++)
       tmp[i][j] = a * rhs[i][j];
@@ -1448,7 +1448,7 @@ Matrix<T> operator*(const T& a, const Matrix<T>& rhs)
 }
 
 template <typename T>
-inline Matrix<T>& Matrix<T>::operator*=(const Matrix<T>& rhs)
+inline qpMatrix<T>& qpMatrix<T>::operator*=(const qpMatrix<T>& rhs)
 {
   if (m != rhs.ncols() || n != rhs.nrows())
     throw std::logic_error("Operator*=: matrices have different sizes");
@@ -1460,7 +1460,7 @@ inline Matrix<T>& Matrix<T>::operator*=(const Matrix<T>& rhs)
 }
 
 template <typename T>
-inline Matrix<T>& Matrix<T>::operator*=(const T& a)
+inline qpMatrix<T>& qpMatrix<T>::operator*=(const T& a)
 {
   for (unsigned int i = 0; i < n; i++)
     for (unsigned int j = 0; j < m; j++)
@@ -1470,11 +1470,11 @@ inline Matrix<T>& Matrix<T>::operator*=(const T& a)
 }
 
 template <typename T>
-Matrix<T> operator/(const Matrix<T>& lhs, const Matrix<T>& rhs)
+qpMatrix<T> operator/(const qpMatrix<T>& lhs, const qpMatrix<T>& rhs)
 {
   if (lhs.ncols() != rhs.ncols() || lhs.nrows() != rhs.nrows())
     throw std::logic_error("Operator+: matrices have different sizes");
-  Matrix<T> tmp(lhs.nrows(), lhs.ncols());
+  qpMatrix<T> tmp(lhs.nrows(), lhs.ncols());
   for (unsigned int i = 0; i < lhs.nrows(); i++)
     for (unsigned int j = 0; j < lhs.ncols(); j++)
       tmp[i][j] = lhs[i][j] / rhs[i][j];
@@ -1483,9 +1483,9 @@ Matrix<T> operator/(const Matrix<T>& lhs, const Matrix<T>& rhs)
 }
 
 template <typename T>
-Matrix<T> operator/(const Matrix<T>& lhs, const T& a)
+qpMatrix<T> operator/(const qpMatrix<T>& lhs, const T& a)
 {
-  Matrix<T> tmp(lhs.nrows(), lhs.ncols());
+  qpMatrix<T> tmp(lhs.nrows(), lhs.ncols());
   for (unsigned int i = 0; i < lhs.nrows(); i++)
     for (unsigned int j = 0; j < lhs.ncols(); j++)
       tmp[i][j] = lhs[i][j] / a;
@@ -1494,9 +1494,9 @@ Matrix<T> operator/(const Matrix<T>& lhs, const T& a)
 }
 
 template <typename T>
-Matrix<T> operator/(const T& a, const Matrix<T>& rhs)
+qpMatrix<T> operator/(const T& a, const qpMatrix<T>& rhs)
 {
-  Matrix<T> tmp(rhs.nrows(), rhs.ncols());
+  qpMatrix<T> tmp(rhs.nrows(), rhs.ncols());
   for (unsigned int i = 0; i < rhs.nrows(); i++)
     for (unsigned int j = 0; j < rhs.ncols(); j++)
       tmp[i][j] = a / rhs[i][j];
@@ -1505,7 +1505,7 @@ Matrix<T> operator/(const T& a, const Matrix<T>& rhs)
 }
 
 template <typename T>
-inline Matrix<T>& Matrix<T>::operator/=(const Matrix<T>& rhs)
+inline qpMatrix<T>& qpMatrix<T>::operator/=(const qpMatrix<T>& rhs)
 {
   if (m != rhs.ncols() || n != rhs.nrows())
     throw std::logic_error("Operator+=: matrices have different sizes");
@@ -1517,7 +1517,7 @@ inline Matrix<T>& Matrix<T>::operator/=(const Matrix<T>& rhs)
 }
 
 template <typename T>
-inline Matrix<T>& Matrix<T>::operator/=(const T& a)
+inline qpMatrix<T>& qpMatrix<T>::operator/=(const T& a)
 {
   for (unsigned int i = 0; i < n; i++)
     for (unsigned int j = 0; j < m; j++)
@@ -1527,9 +1527,9 @@ inline Matrix<T>& Matrix<T>::operator/=(const T& a)
 }
 
 template <typename T>
-Matrix<T> operator^(const Matrix<T>& lhs, const T& a)
+qpMatrix<T> operator^(const qpMatrix<T>& lhs, const T& a)
 {
-  Matrix<T> tmp(lhs.nrows(), lhs.ncols());
+  qpMatrix<T> tmp(lhs.nrows(), lhs.ncols());
   for (unsigned int i = 0; i < lhs.nrows(); i++)
     for (unsigned int j = 0; j < lhs.ncols(); j++)
       tmp[i][j] = pow(lhs[i][j], a);
@@ -1538,7 +1538,7 @@ Matrix<T> operator^(const Matrix<T>& lhs, const T& a)
 }
 
 template <typename T>
-inline Matrix<T>& Matrix<T>::operator^=(const Matrix<T>& rhs)
+inline qpMatrix<T>& qpMatrix<T>::operator^=(const qpMatrix<T>& rhs)
 {
   if (m != rhs.ncols() || n != rhs.nrows())
     throw std::logic_error("Operator^=: matrices have different sizes");
@@ -1551,7 +1551,7 @@ inline Matrix<T>& Matrix<T>::operator^=(const Matrix<T>& rhs)
 
 
 template <typename T>
-inline Matrix<T>& Matrix<T>::operator^=(const T& a)
+inline qpMatrix<T>& qpMatrix<T>::operator^=(const T& a)
 {
   for (unsigned int i = 0; i < n; i++)
     for (unsigned int j = 0; j < m; j++)
@@ -1561,7 +1561,7 @@ inline Matrix<T>& Matrix<T>::operator^=(const T& a)
 }
 
 template <typename T>
-inline Matrix<T>::operator Vector<T>()
+inline qpMatrix<T>::operator qpVector<T>()
 {
   if (n > 1 && m > 1)
     throw std::logic_error("Error matrix cast to vector: trying to cast a multi-dimensional matrix");
@@ -1572,7 +1572,7 @@ inline Matrix<T>::operator Vector<T>()
 }
 
 template <typename T>
-inline bool operator==(const Matrix<T>& a, const Matrix<T>& b)
+inline bool operator==(const qpMatrix<T>& a, const qpMatrix<T>& b)
 {
   if (a.nrows() != b.nrows() || a.ncols() != b.ncols())
     throw std::logic_error("Matrices of different size are not confrontable");
@@ -1584,7 +1584,7 @@ inline bool operator==(const Matrix<T>& a, const Matrix<T>& b)
 }
 
 template <typename T>
-inline bool operator!=(const Matrix<T>& a, const Matrix<T>& b)
+inline bool operator!=(const qpMatrix<T>& a, const qpMatrix<T>& b)
 {
   if (a.nrows() != b.nrows() || a.ncols() != b.ncols())
     throw std::logic_error("Matrices of different size are not confrontable");
@@ -1601,7 +1601,7 @@ inline bool operator!=(const Matrix<T>& a, const Matrix<T>& b)
    Input/Output 
 */
 template <typename T>
-std::ostream& operator<<(std::ostream& os, const Matrix<T>& m)
+std::ostream& operator<<(std::ostream& os, const qpMatrix<T>& m)
 {
   os << std::endl << m.nrows() << " " << m.ncols() << std::endl;
   for (unsigned int i = 0; i < m.nrows(); i++)
@@ -1615,7 +1615,7 @@ std::ostream& operator<<(std::ostream& os, const Matrix<T>& m)
 }
 
 template <typename T>
-std::istream& operator>>(std::istream& is, Matrix<T>& m)
+std::istream& operator>>(std::istream& is, qpMatrix<T>& m)
 {
   int rows, cols;
   char comma;
@@ -1648,12 +1648,12 @@ T dist(const T& a, const T& b)
 }
 
 template <typename T>
-void svd(const Matrix<T>& A, Matrix<T>& U, Vector<T>& W, Matrix<T>& V)
+void svd(const qpMatrix<T>& A, qpMatrix<T>& U, qpVector<T>& W, qpMatrix<T>& V)
 {
   int m = A.nrows(), n = A.ncols(), i, j, k, l, jj, nm;
   const unsigned int max_its = 30;
   bool flag;
-  Vector<T> rv1(n);
+  qpVector<T> rv1(n);
   U = A;
   W.resize(n);
   V.resize(n, n);
@@ -1725,7 +1725,7 @@ void svd(const Matrix<T>& A, Matrix<T>& U, Vector<T>& W, Matrix<T>& V)
 		U[i][k] *= scale;
 	    }
 	}
-      anorm = std::max(anorm, fabs(W[i]) + fabs(rv1[i]));
+      anorm = ((std::max))(anorm, fabs(W[i]) + fabs(rv1[i]));
     }
   // Accumulation of right-hand transformations
   for (i = n - 1; i >= 0; i--)
@@ -1753,7 +1753,7 @@ void svd(const Matrix<T>& A, Matrix<T>& U, Vector<T>& W, Matrix<T>& V)
       l = i;
     }
   // Accumulation of left-hand transformations
-  for (i = std::min(m, n) - 1; i >= 0; i--)
+  for (i = ((std::min))(m, n) - 1; i >= 0; i--)
     {
       l = i + 1;
       g = W[i];
@@ -1892,29 +1892,29 @@ void svd(const Matrix<T>& A, Matrix<T>& U, Vector<T>& W, Matrix<T>& V)
 }
 
 template <typename T>
-Matrix<T> pinv(const Matrix<T>& A)
+qpMatrix<T> pinv(const qpMatrix<T>& A)
 {
-  Matrix<T> U, V, x, tmp(A.ncols(), A.nrows());
-  Vector<T> W;
+  qpMatrix<T> U, V, x, tmp(A.ncols(), A.nrows());
+  qpVector<T> W;
   CanonicalBaseVector<T> e(0, A.nrows());
   svd(A, U, W, V);
   for (unsigned int i = 0; i < A.nrows(); i++)
     {
       e.reset(i);
-      tmp.setColumn(i, dot_prod(dot_prod(dot_prod(V, Matrix<double>(DIAG, 1.0 / W, 0.0, W.size(), W.size())), t(U)), e));
+      tmp.setColumn(i, dot_prod(dot_prod(dot_prod(V, qpMatrix<double>(DIAG, 1.0 / W, 0.0, W.size(), W.size())), t(U)), e));
     }
 		
   return tmp;
 }
 
 template <typename T>
-int lu(const Matrix<T>& A, Matrix<T>& LU, Vector<unsigned int>& index)
+int lu(const qpMatrix<T>& A, qpMatrix<T>& LU, qpVector<unsigned int>& index)
 {
   if (A.ncols() != A.nrows())
     throw std::logic_error("Error in LU decomposition: matrix must be squared");
   int i, p, j, k, n = A.ncols(), ex;
   T val, tmp;
-  Vector<T> d(n);
+  qpVector<T> d(n);
   LU = A;
   index.resize(n);
 	
@@ -1924,7 +1924,7 @@ int lu(const Matrix<T>& A, Matrix<T>& LU, Vector<unsigned int>& index)
       index[i] = i;
       val = (T)0.0;
       for (j = 0; j < n; j++)
-	val = std::max(val, (T)fabs(LU[i][j]));
+	val = (std::max)(val, (T)fabs(LU[i][j]));
       if (val == (T)0.0)
 	std::logic_error("Error in LU decomposition: matrix was singular");
       d[i] = val;
@@ -1968,14 +1968,14 @@ int lu(const Matrix<T>& A, Matrix<T>& LU, Vector<unsigned int>& index)
 }
 
 template <typename T>
-Vector<T> lu_solve(const Matrix<T>& LU, const Vector<T>& b, Vector<unsigned int>& index)
+qpVector<T> lu_solve(const qpMatrix<T>& LU, const qpVector<T>& b, qpVector<unsigned int>& index)
 {
   if (LU.ncols() != LU.nrows())
     throw std::logic_error("Error in LU solve: LU matrix should be squared");
   unsigned int n = LU.ncols();
   if (b.size() != n)
     throw std::logic_error("Error in LU solve: b vector must be of the same dimensions of LU matrix");
-  Vector<T> x((T)0.0, n);
+  qpVector<T> x((T)0.0, n);
   int i, j, p;
   T sum;
 	
@@ -2002,19 +2002,19 @@ Vector<T> lu_solve(const Matrix<T>& LU, const Vector<T>& b, Vector<unsigned int>
 }
 
 template <typename T>
-void lu_solve(const Matrix<T>& LU, Vector<T>& x, const Vector<T>& b, Vector<unsigned int>& index)
+void lu_solve(const qpMatrix<T>& LU, qpVector<T>& x, const qpVector<T>& b, qpVector<unsigned int>& index)
 {
   x = lu_solve(LU, b, index);
 }
 
 template <typename T>
-Matrix<T> lu_inverse(const Matrix<T>& A)
+qpMatrix<T> lu_inverse(const qpMatrix<T>& A)
 {
   if (A.ncols() != A.nrows())
     throw std::logic_error("Error in LU invert: matrix must be squared");	
   unsigned int n = A.ncols();
-  Matrix<T> A1(n, n), LU;
-  Vector<unsigned int> index;
+  qpMatrix<T> A1(n, n), LU;
+  qpVector<unsigned int> index;
 	
   lu(A, LU, index);
   CanonicalBaseVector<T> e(0, n);
@@ -2028,13 +2028,13 @@ Matrix<T> lu_inverse(const Matrix<T>& A)
 }
 
 template <typename T>
-T lu_det(const Matrix<T>& A)
+T lu_det(const qpMatrix<T>& A)
 {
   if (A.ncols() != A.nrows())
     throw std::logic_error("Error in LU determinant: matrix must be squared");	
   unsigned int d;
-  Matrix<T> LU;
-  Vector<unsigned int> index;
+  qpMatrix<T> LU;
+  qpVector<unsigned int> index;
 	
   d = lu(A, LU, index);
 	
@@ -2042,7 +2042,7 @@ T lu_det(const Matrix<T>& A)
 }
 
 template <typename T>
-void cholesky(const Matrix<T> A, Matrix<T>& LL) 
+void cholesky(const qpMatrix<T> A, qpMatrix<T>& LL) 
 {
   if (A.ncols() != A.nrows())
     throw std::logic_error("Error in Cholesky decomposition: matrix must be squared");
@@ -2072,23 +2072,23 @@ void cholesky(const Matrix<T> A, Matrix<T>& LL)
 }
 
 template <typename T>
-Matrix<T> cholesky(const Matrix<T> A) 
+qpMatrix<T> cholesky(const qpMatrix<T> A) 
 {
-  Matrix<T> LL;
+  qpMatrix<T> LL;
   cholesky(A, LL);
 	
   return LL;
 }
 
 template <typename T>
-Vector<T> cholesky_solve(const Matrix<T>& LL, const Vector<T>& b)
+qpVector<T> cholesky_solve(const qpMatrix<T>& LL, const qpVector<T>& b)
 {
   if (LL.ncols() != LL.nrows())
     throw std::logic_error("Error in Cholesky solve: matrix must be squared");
   unsigned int n = LL.ncols();
   if (b.size() != n)
     throw std::logic_error("Error in Cholesky decomposition: b vector must be of the same dimensions of LU matrix");
-  Vector<T> x, y;
+  qpVector<T> x, y;
 	
   /* Solve L * y = b */
   forward_elimination(LL, y, b);
@@ -2099,13 +2099,13 @@ Vector<T> cholesky_solve(const Matrix<T>& LL, const Vector<T>& b)
 }
 
 template <typename T>
-void cholesky_solve(const Matrix<T>& LL, Vector<T>& x, const Vector<T>& b)
+void cholesky_solve(const qpMatrix<T>& LL, qpVector<T>& x, const qpVector<T>& b)
 {
   x = cholesky_solve(LL, b);
 }
 
 template <typename T>
-void forward_elimination(const Matrix<T>& L, Vector<T>& y, const Vector<T> b)
+void forward_elimination(const qpMatrix<T>& L, qpVector<T>& y, const qpVector<T> b)
 {
   if (L.ncols() != L.nrows())
     throw std::logic_error("Error in Forward elimination: matrix must be squared (lower triangular)");
@@ -2125,16 +2125,16 @@ void forward_elimination(const Matrix<T>& L, Vector<T>& y, const Vector<T> b)
 }
 
 template <typename T>
-Vector<T> forward_elimination(const Matrix<T>& L, const Vector<T> b)
+qpVector<T> forward_elimination(const qpMatrix<T>& L, const qpVector<T> b)
 {
-  Vector<T> y;
+  qpVector<T> y;
   forward_elimination(L, y, b);
 	
   return y;
 }
 
 template <typename T>
-void backward_elimination(const Matrix<T>& U, Vector<T>& x, const Vector<T>& y)
+void backward_elimination(const qpMatrix<T>& U, qpVector<T>& x, const qpVector<T>& y)
 {
   if (U.ncols() != U.nrows())
     throw std::logic_error("Error in Backward elimination: matrix must be squared (upper triangular)");
@@ -2154,9 +2154,9 @@ void backward_elimination(const Matrix<T>& U, Vector<T>& x, const Vector<T>& y)
 }
 
 template <typename T>
-Vector<T> backward_elimination(const Matrix<T>& U, const Vector<T> y)
+qpVector<T> backward_elimination(const qpMatrix<T>& U, const qpVector<T> y)
 {
-  Vector<T> x;
+  qpVector<T> x;
   forward_elimination(U, x, y);
 	
   return x;
@@ -2171,7 +2171,7 @@ Vector<T> backward_elimination(const Matrix<T>& U, const Vector<T> y)
 /* Random */
 
 template <typename T>
-void random(Matrix<T>& m)
+void random(qpMatrix<T>& m)
 {
   for (unsigned int i = 0; i < m.nrows(); i++)
     for (unsigned int j = 0; j < m.ncols(); j++)
@@ -2183,9 +2183,9 @@ void random(Matrix<T>& m)
 */
 
 template <typename T>
-Vector<T> sum(const Matrix<T>& m)
+qpVector<T> sum(const qpMatrix<T>& m)
 {
-  Vector<T> tmp((T)0, m.ncols());
+  qpVector<T> tmp((T)0, m.ncols());
   for (unsigned int j = 0; j < m.ncols(); j++)
     for (unsigned int i = 0; i < m.nrows(); i++)
       tmp[j] += m[i][j];
@@ -2193,9 +2193,9 @@ Vector<T> sum(const Matrix<T>& m)
 }
 
 template <typename T>
-Vector<T> r_sum(const Matrix<T>& m)
+qpVector<T> r_sum(const qpMatrix<T>& m)
 {
-  Vector<T> tmp((T)0, m.nrows());
+  qpVector<T> tmp((T)0, m.nrows());
   for (unsigned int i = 0; i < m.nrows(); i++)
     for (unsigned int j = 0; j < m.ncols(); j++)
       tmp[i] += m[i][j];
@@ -2203,7 +2203,7 @@ Vector<T> r_sum(const Matrix<T>& m)
 }
 
 template <typename T>
-T all_sum(const Matrix<T>& m)
+T all_sum(const qpMatrix<T>& m)
 {
   T tmp = (T)0;
   for (unsigned int i = 0; i < m.nrows(); i++)
@@ -2213,9 +2213,9 @@ T all_sum(const Matrix<T>& m)
 }
 
 template <typename T>
-Vector<T> prod(const Matrix<T>& m)
+qpVector<T> prod(const qpMatrix<T>& m)
 {
-  Vector<T> tmp((T)1, m.ncols());
+  qpVector<T> tmp((T)1, m.ncols());
   for (unsigned int j = 0; j < m.ncols(); j++)
     for (unsigned int i = 0; i < m.nrows(); i++)
       tmp[j] *= m[i][j];
@@ -2223,9 +2223,9 @@ Vector<T> prod(const Matrix<T>& m)
 }
 
 template <typename T>
-Vector<T> r_prod(const Matrix<T>& m)
+qpVector<T> r_prod(const qpMatrix<T>& m)
 {
-  Vector<T> tmp((T)1, m.nrows());
+  qpVector<T> tmp((T)1, m.nrows());
   for (unsigned int i = 0; i < m.nrows(); i++)
     for (unsigned int j = 0; j < m.ncols(); j++)
       tmp[i] *= m[i][j];
@@ -2233,7 +2233,7 @@ Vector<T> r_prod(const Matrix<T>& m)
 }
 
 template <typename T>
-T all_prod(const Matrix<T>& m)
+T all_prod(const qpMatrix<T>& m)
 {
   T tmp = (T)1;
   for (unsigned int i = 0; i < m.nrows(); i++)
@@ -2243,9 +2243,9 @@ T all_prod(const Matrix<T>& m)
 }
 
 template <typename T>
-Vector<T> mean(const Matrix<T>& m)
+qpVector<T> mean(const qpMatrix<T>& m)
 {
-  Vector<T> res((T)0, m.ncols());
+  qpVector<T> res((T)0, m.ncols());
   for (unsigned int j = 0; j < m.ncols(); j++)
     {
       for (unsigned int i = 0; i < m.nrows(); i++)
@@ -2257,9 +2257,9 @@ Vector<T> mean(const Matrix<T>& m)
 }
 
 template <typename T>
-Vector<T> r_mean(const Matrix<T>& m)
+qpVector<T> r_mean(const qpMatrix<T>& m)
 {
-  Vector<T> res((T)0, m.rows());
+  qpVector<T> res((T)0, m.rows());
   for (unsigned int i = 0; i < m.nrows(); i++)
     {
       for (unsigned int j = 0; j < m.ncols(); j++)
@@ -2271,7 +2271,7 @@ Vector<T> r_mean(const Matrix<T>& m)
 }
 
 template <typename T>
-T all_mean(const Matrix<T>& m)
+T all_mean(const qpMatrix<T>& m)
 {
   T tmp = (T)0;
   for (unsigned int i = 0; i < m.nrows(); i++)
@@ -2281,9 +2281,9 @@ T all_mean(const Matrix<T>& m)
 }
 
 template <typename T>
-Vector<T> var(const Matrix<T>& m, bool sample_correction = false)
+qpVector<T> var(const qpMatrix<T>& m, bool sample_correction = false)
 {
-  Vector<T> res((T)0, m.ncols());
+  qpVector<T> res((T)0, m.ncols());
   unsigned int n = m.nrows();
   double sum, ssum;
   for (unsigned int j = 0; j < m.ncols(); j++)
@@ -2304,15 +2304,15 @@ Vector<T> var(const Matrix<T>& m, bool sample_correction = false)
 }
 
 template <typename T>
-Vector<T> stdev(const Matrix<T>& m, bool sample_correction = false)
+qpVector<T> stdev(const qpMatrix<T>& m, bool sample_correction = false)
 {
   return vec_sqrt(var(m, sample_correction));
 }
 
 template <typename T>
-Vector<T> r_var(const Matrix<T>& m, bool sample_correction = false)
+qpVector<T> r_var(const qpMatrix<T>& m, bool sample_correction = false)
 {
-  Vector<T> res((T)0, m.nrows());
+  qpVector<T> res((T)0, m.nrows());
   double sum, ssum;
   unsigned int n = m.ncols();
   for (unsigned int i = 0; i < m.nrows(); i++)
@@ -2333,69 +2333,69 @@ Vector<T> r_var(const Matrix<T>& m, bool sample_correction = false)
 }
 
 template <typename T>
-Vector<T> r_stdev(const Matrix<T>& m, bool sample_correction = false)
+qpVector<T> r_stdev(const qpMatrix<T>& m, bool sample_correction = false)
 {
   return vec_sqrt(r_var(m, sample_correction));
 }
 
-template <typename T>
-Vector<T> max(const Matrix<T>& m)
-{
-  Vector<T> res(m.ncols());
-  double value;
-  for (unsigned int j = 0; j < m.ncols(); j++)
-    {
-      value = m[0][j];
-      for (unsigned int i = 1; i < m.nrows(); i++)
-	value = std::max(m[i][j], value);
-      res[j] = value;
-    }
-	
-  return res;
-}
+//template <typename T>
+//qpVector<T> max(const qpMatrix<T>& m)
+//{
+//  qpVector<T> res(m.ncols());
+//  double value;
+//  for (unsigned int j = 0; j < m.ncols(); j++)
+//    {
+//      value = m[0][j];
+//      for (unsigned int i = 1; i < m.nrows(); i++)
+//	value = (std::max)(m[i][j], value);
+//      res[j] = value;
+//    }
+//	
+//  return res;
+//}
 
 template <typename T>
-Vector<T> r_max(const Matrix<T>& m)
+qpVector<T> r_max(const qpMatrix<T>& m)
 {
-  Vector<T> res(m.nrows());
+  qpVector<T> res(m.nrows());
   double value;
   for (unsigned int i = 0; i < m.nrows(); i++)
     {
       value = m[i][0];
       for (unsigned int j = 1; j < m.ncols(); j++)
-	value = std::max(m[i][j], value);
+	value = (std::max)(m[i][j], value);
       res[i] = value;
     }
 	
   return res;
 }
 
-template <typename T>
-Vector<T> min(const Matrix<T>& m)
-{
-  Vector<T> res(m.ncols());
-  double value;
-  for (unsigned int j = 0; j < m.ncols(); j++)
-    {
-      value = m[0][j];
-      for (unsigned int i = 1; i < m.nrows(); i++)
-	value = std::min(m[i][j], value);
-      res[j] = value;
-    }
-	
-  return res;
-}
+//template <typename T>
+//qpVector<T> min(const qpMatrix<T>& m)
+//{
+//  qpVector<T> res(m.ncols());
+//  double value;
+//  for (unsigned int j = 0; j < m.ncols(); j++)
+//    {
+//      value = m[0][j];
+//      for (unsigned int i = 1; i < m.nrows(); i++)
+//	value = (std::min)(m[i][j], value);
+//      res[j] = value;
+//    }
+//	
+//  return res;
+//}
 
 template <typename T>
-Vector<T> r_min(const Matrix<T>& m)
+qpVector<T> r_min(const qpMatrix<T>& m)
 {
-  Vector<T> res(m.nrows());
+  qpVector<T> res(m.nrows());
   double value;
   for (unsigned int i = 0; i < m.nrows(); i++)
     {
       value = m[i][0];
       for (unsigned int j = 1; j < m.ncols(); j++)
-	value = std::min(m[i][j], value);
+	value = (std::min)(m[i][j], value);
       res[i] = value;
     }
 	
@@ -2409,9 +2409,9 @@ Vector<T> r_min(const Matrix<T>& m)
 */
 
 template <typename T>
-Matrix<T> exp(const Matrix<T>&m)
+qpMatrix<T> exp(const qpMatrix<T>&m)
 {
-  Matrix<T> tmp(m.nrows(), m.ncols());
+  qpMatrix<T> tmp(m.nrows(), m.ncols());
 	
   for (unsigned int i = 0; i < m.nrows(); i++)
     for (unsigned int j = 0; j < m.ncols(); j++)
@@ -2421,9 +2421,9 @@ Matrix<T> exp(const Matrix<T>&m)
 }
 
 template <typename T>
-Matrix<T> mat_sqrt(const Matrix<T>&m)
+qpMatrix<T> mat_sqrt(const qpMatrix<T>&m)
 {
-  Matrix<T> tmp(m.nrows(), m.ncols());
+  qpMatrix<T> tmp(m.nrows(), m.ncols());
 	
   for (unsigned int i = 0; i < m.nrows(); i++)
     for (unsigned int j = 0; j < m.ncols(); j++)
@@ -2433,13 +2433,13 @@ Matrix<T> mat_sqrt(const Matrix<T>&m)
 }
 
 /**
-   Matrix operators
+   qpMatrix operators
 */
 
 template <typename T>
-Matrix<T> kron(const Vector<T>& b, const Vector<T>& a)
+qpMatrix<T> kron(const qpVector<T>& b, const qpVector<T>& a)
 {
-  Matrix<T> tmp(b.size(), a.size());
+  qpMatrix<T> tmp(b.size(), a.size());
   for (unsigned int i = 0; i < b.size(); i++)
     for (unsigned int j = 0; j < a.size(); j++)
       tmp[i][j] = a[j] * b[i];
@@ -2448,9 +2448,9 @@ Matrix<T> kron(const Vector<T>& b, const Vector<T>& a)
 }
 
 template <typename T>
-Matrix<T> t(const Matrix<T>& a)
+qpMatrix<T> t(const qpMatrix<T>& a)
 {
-  Matrix<T> tmp(a.ncols(), a.nrows());
+  qpMatrix<T> tmp(a.ncols(), a.nrows());
   for (unsigned int i = 0; i < a.nrows(); i++)
     for (unsigned int j = 0; j < a.ncols(); j++)
       tmp[j][i] = a[i][j];
@@ -2459,11 +2459,11 @@ Matrix<T> t(const Matrix<T>& a)
 }
 
 template <typename T>
-Matrix<T> dot_prod(const Matrix<T>& a, const Matrix<T>& b)
+qpMatrix<T> dot_prod(const qpMatrix<T>& a, const qpMatrix<T>& b)
 {
   if (a.ncols() != b.nrows())
     throw std::logic_error("Error matrix dot product: dimensions of the matrices are not compatible");
-  Matrix<T> tmp(a.nrows(), b.ncols());
+  qpMatrix<T> tmp(a.nrows(), b.ncols());
   for (unsigned int i = 0; i < tmp.nrows(); i++)
     for (unsigned int j = 0; j < tmp.ncols(); j++)
       {
@@ -2476,11 +2476,11 @@ Matrix<T> dot_prod(const Matrix<T>& a, const Matrix<T>& b)
 }
 
 template <typename T>
-Matrix<T> dot_prod(const Matrix<T>& a, const Vector<T>& b)
+qpMatrix<T> dot_prod(const qpMatrix<T>& a, const qpVector<T>& b)
 {
   if (a.ncols() != b.size())
     throw std::logic_error("Error matrix dot product: dimensions of the matrix and the vector are not compatible");
-  Matrix<T> tmp(a.nrows(), 1);
+  qpMatrix<T> tmp(a.nrows(), 1);
   for (unsigned int i = 0; i < tmp.nrows(); i++)
     {
       tmp[i][0] = (T)0;
@@ -2492,11 +2492,11 @@ Matrix<T> dot_prod(const Matrix<T>& a, const Vector<T>& b)
 }
 
 template <typename T>
-Matrix<T> dot_prod(const Vector<T>& a, const Matrix<T>& b)
+qpMatrix<T> dot_prod(const qpVector<T>& a, const qpMatrix<T>& b)
 {
   if (a.size() != b.nrows())
     throw std::logic_error("Error matrix dot product: dimensions of the vector and matrix are not compatible");
-  Matrix<T> tmp(1, b.ncols());
+  qpMatrix<T> tmp(1, b.ncols());
   for (unsigned int j = 0; j < tmp.ncols(); j++)
     {
       tmp[0][j] = (T)0;
@@ -2508,9 +2508,9 @@ Matrix<T> dot_prod(const Vector<T>& a, const Matrix<T>& b)
 }
 
 template <typename T>
-inline Matrix<double> rank(const Matrix<T> m)
+inline qpMatrix<double> rank(const qpMatrix<T> m)
 {
-  Matrix<double> tmp(m.nrows(), m.ncols());
+  qpMatrix<double> tmp(m.nrows(), m.ncols());
   for (unsigned int j = 0; j < m.ncols(); j++)
     tmp.setColumn(j, rank<T>(m.extractColumn(j)));
   
@@ -2518,9 +2518,9 @@ inline Matrix<double> rank(const Matrix<T> m)
 }
 
 template <typename T>
-inline Matrix<double> r_rank(const Matrix<T> m)
+inline qpMatrix<double> r_rank(const qpMatrix<T> m)
 {
-  Matrix<double> tmp(m.nrows(), m.ncols());
+  qpMatrix<double> tmp(m.nrows(), m.ncols());
   for (unsigned int i = 0; i < m.nrows(); i++)
     tmp.setRow(i, rank<T>(m.extractRow(i)));
   

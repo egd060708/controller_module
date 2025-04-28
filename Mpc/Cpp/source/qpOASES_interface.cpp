@@ -8,6 +8,7 @@ qpoasesInterface::qpoasesInterface(int _xNum, int _uNum, int _cNum, int _eNum, i
     Options option;
     option.setToMPC();
     option.printLevel = _pl; // 禁用qpOASES库的打印输出
+    //option.enableRegularisation = BT_TRUE;
     qp_solver.setOptions(option);
 
     // 动态分配数组内存

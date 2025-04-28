@@ -9,8 +9,8 @@ public:
     ~quadprogInterface() {}
 
 private:
-    quadprogpp::Matrix<double> _G, _CE, _CI;
-    quadprogpp::Vector<double> _g0, _ce0, _ci0, _x;
+    quadprogpp::qpMatrix<double> _G, _CE, _CI;
+    quadprogpp::qpVector<double> _g0, _ce0, _ci0, _x;
     int n,m,q,p;
     // 重写预测函数
     Matrixr _prediction(const Matrixr &y_k, const Matrixr &x_k) override;

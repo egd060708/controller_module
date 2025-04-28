@@ -66,10 +66,10 @@ s.t.
 
 namespace quadprogpp {
 
-double solve_quadprog(Matrix<double>& G, Vector<double>& g0, 
-                      const Matrix<double>& CE, const Vector<double>& ce0,  
-                      const Matrix<double>& CI, const Vector<double>& ci0, 
-                      Vector<double>& x);
+double solve_quadprog(qpMatrix<double>& G, qpVector<double>& g0, 
+                      const qpMatrix<double>& CE, const qpVector<double>& ce0,  
+                      const qpMatrix<double>& CI, const qpVector<double>& ci0, 
+                      qpVector<double>& x);
 
 }  // namespace quadprogpp
 

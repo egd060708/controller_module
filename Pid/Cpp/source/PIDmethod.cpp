@@ -218,7 +218,7 @@ double PIDmethod::Adjust(double _x)
     }
 
     I_Term = integral * fact_ki;
-    if (abs(I_Term) > I_SeparThresh)
+    if (abs(error) > I_SeparThresh)
     {
         I_Term = 0;
     }
@@ -297,7 +297,7 @@ double PIDmethod::Adjust(double _x, double extern_d)
 
     P_Term = error * fact_kp;
     I_Term = integral * fact_ki;
-    if (abs(I_Term) > I_SeparThresh)
+    if (abs(error) > I_SeparThresh)
     {
         I_Term = 0;
     }

@@ -6,7 +6,7 @@
 class tinympcInterface : public mpcBase
 {
 public:
-    tinympcInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, int _speed_up, int _verbose);
+    tinympcInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, double _rho, int _speed_up, int _verbose);
     ~tinympcInterface() {}
 
     void setRegularisation(double _rho) { rho_value = _rho; }

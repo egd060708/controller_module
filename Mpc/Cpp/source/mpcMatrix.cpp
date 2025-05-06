@@ -249,6 +249,20 @@ mpcMatrix::mpcMatrix(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep)
     W_bar.resize(_ctrlStep * _uNum, _ctrlStep * _uNum);
     g_new.resize(_ctrlStep * _uNum, 1);
     H_new.resize(_ctrlStep * _uNum, _ctrlStep * _uNum);
+
+    G.setZero();
+    E.setZero();
+    L.setZero();
+    H.setZero();
+    extraH.setZero();
+    extra_g.setZero();
+    M.setZero();
+    C.setZero();
+    Q_bar.setZero();
+    R_bar.setZero();
+    W_bar.setZero();
+    g_new.setZero();
+    H_new.setZero();
 }
 
 /**
@@ -288,7 +302,6 @@ void mpcMatrix::_mpc_matrices()
         tmp = this->A * tmp;
         this->M.block(rowStart, 0, xNum, xNum) = tmp;
     }
-
     // 构建kron积
     this->Q_bar.setZero();
     this->R_bar.setZero();

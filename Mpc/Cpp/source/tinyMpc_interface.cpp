@@ -1,6 +1,6 @@
 #include "../include/tinyMpc_interface.h"
 
-tinympcInterface::tinympcInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, int _speed_up, int _verbose)
+tinympcInterface::tinympcInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, double _rho, int _speed_up, int _verbose)
     : mpcBase(_xNum, _uNum, _cNum, _eNum, _ctrlStep)
 {
     this->_Adyn.resize(xNum, xNum);
@@ -18,6 +18,7 @@ tinympcInterface::tinympcInterface(int _xNum, int _uNum, int _cNum, int _eNum, i
     this->_u_min.setConstant(-1e17);
     this->_u_max.setConstant(1e17);
     this->_x0.resize(xNum, 1);
+    rho_value = _rho;
     verbose = _verbose;
     speed_up = _speed_up;
 
@@ -28,6 +29,7 @@ tinympcInterface::tinympcInterface(int _xNum, int _uNum, int _cNum, int _eNum, i
 
     // Update whichever settings we'd like
     solver->settings->max_iter = this->nWSR_static;
+    solver->settings->en_state_bound = 0;
 
     // Alias solver->work for brevity
     work = solver->work;

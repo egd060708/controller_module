@@ -1,7 +1,7 @@
 #include "../include/osqpE_interface.h"
 
 
-osqpeInterface::osqpeInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep)
+osqpeInterface::osqpeInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, bool _verbose)
     : mpcMatrix(_xNum, _uNum, _cNum, _eNum, _ctrlStep)
 {
     n = uNum * ctrlStep;
@@ -21,21 +21,34 @@ osqpeInterface::osqpeInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _
         linearMatrix.insert(q + i, i) = 1;
     }
 
-    solver.settings()->setVerbosity(false);
-    solver.settings()->setWarmStart(true);
+    for (int i = 0; i < H_new.rows(); i++)
+    {
+        for (int j = 0; j < H_new.cols(); j++) 
+        {
+            //if (i <= j)
+            //{
+                hessian.insert(i, j) = 1e-30;
+            //}
+        }
+    }
+
+    for (int i = 0; i < cA.rows(); i++) 
+    {
+        for (int j = 0; j < cA.cols(); j++)
+        {
+            //if (i <= j)
+            //{
+                linearMatrix.insert(i, j) = 1e-30;
+            //}
+        }
+    }
+
+    hessian.makeCompressed();
+    linearMatrix.makeCompressed();
+    solver.settings()->setVerbosity(_verbose);
+    solver.settings()->setWarmStart(true);// 默认使能热启动
     solver.data()->setNumberOfVariables(n);
     solver.data()->setNumberOfConstraints(p);
-
-    //solver.data()->setHessianMatrix(hessian);
-    //solver.data()->setGradient(gradient);
-    //solver.data()->setLinearConstraintsMatrix(linearMatrix);
-    //solver.data()->setLowerBound(lowerBound);
-    //solver.data()->setUpperBound(upperBound);
-    /*solver.initSolver();*/
-}
-
-void osqpeInterface::_matrix_transfer()
-{
     
 }
 
@@ -54,24 +67,28 @@ Matrixr osqpeInterface::_prediction(const Matrixr &y_k, const Matrixr &x_k)
     lowerBound.block(q,0,n,1) = lb;
     upperBound.block(0,0,q,1) = Aub;
     upperBound.block(q,0,n,1) = ub;
-    //std::cout << "444444444444444444444" << std::endl;
-    for (int i = 0; i < H_new.rows(); i++)
-        for (int j = 0; j < H_new.cols(); j++)
-            if (H_new(i, j) != 0)
-            {
-                hessian.coeffRef(i, j) = H_new(i, j);
-            }
-            
 
-    for (int i = 0; i < cA.rows(); i++)
-        for (int j = 0; j < cA.cols(); j++)
-            if (cA(i, j) != 0)
+    for (int k = 0; k < hessian.outerSize(); ++k)
+    {
+        for (Eigen::SparseMatrix<double>::InnerIterator it(hessian, k); it; ++it)
+        {
+            it.valueRef() = H_new(it.row(), it.col()) + 1e-30;
+        }
+    }
+
+    for (int l = 0; l < linearMatrix.outerSize(); ++l)
+    {
+        for (Eigen::SparseMatrix<double>::InnerIterator it(linearMatrix, l); it; ++it)
+        {
+            if (it.row() < q)
             {
-                linearMatrix.coeffRef(i, j) = cA(i, j);
+                it.valueRef() = cA(it.row(), it.col()) + 1e-30;
             }
-            
-    //std::cout << "333333333333333333333" << std::endl;
+        }
+    }
+
     if (!solver.isInitialized()) {
+
         solver.data()->setHessianMatrix(hessian);
         solver.data()->setGradient(gradient);
         solver.data()->setLinearConstraintsMatrix(linearMatrix);
@@ -84,19 +101,18 @@ Matrixr osqpeInterface::_prediction(const Matrixr &y_k, const Matrixr &x_k)
         }
     }
     else {
-        //solver.updateHessianMatrix(hessian);
+        solver.updateHessianMatrix(hessian);
         solver.updateGradient(gradient);
         solver.updateLinearConstraintsMatrix(linearMatrix);
         solver.updateLowerBound(lowerBound);
         solver.updateUpperBound(upperBound);
+        
     }
-    //std::cout << "111111111111111" << std::endl;
-    
-    
-    if (solver.solveProblem() != OsqpEigen::ErrorExitFlag::NoError)
+
+    if (solver.solveProblem() == OsqpEigen::ErrorExitFlag::NoError)
     {
         result = solver.getSolution();
     }
-    //std::cout << "222222222222222" << std::endl;
+
     return result;
 }

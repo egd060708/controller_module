@@ -6,7 +6,7 @@
 class osqpeInterface : public mpcMatrix
 {
 public:
-    osqpeInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep);
+    osqpeInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, bool _verbose);
     ~osqpeInterface(){}
 private:
     // 求解器
@@ -22,7 +22,4 @@ private:
 
     // 重写预测函数
     Matrixr _prediction(const Matrixr &y_k, const Matrixr &x_k) override;
-
-    // 转换矩阵
-    void _matrix_transfer();
 };

@@ -1,5 +1,13 @@
 #include "../include/quadprog_interface.h"
 
+/**
+ * @brief qp++接口构造
+ * @param _xNum 状态维度
+ * @param _uNum 输入维度
+ * @param _cNum 不等式约束维度
+ * @param _eNum 等式约束维度
+ * @param _ctrlStep 控制周期=预测周期
+ */
 quadprogInterface::quadprogInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep)
     : mpcMatrix(_xNum, _uNum, _cNum, _eNum, _ctrlStep)
 {
@@ -17,6 +25,11 @@ quadprogInterface::quadprogInterface(int _xNum, int _uNum, int _cNum, int _eNum,
     _x.resize(n);
 }
 
+/**
+ * @brief mpc预测求解
+ * @param y_k 期望状态
+ * @param x_k 当前轨迹
+ */
 Matrixr quadprogInterface::_prediction(const Matrixr &y_k, const Matrixr &x_k)
 {
     // 生成预测矩阵

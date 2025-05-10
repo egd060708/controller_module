@@ -1,6 +1,17 @@
 #include "../include/tinyMpc_interface.h"
 
-tinympcInterface::tinympcInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, double _rho, int _speed_up, int _verbose)
+/**
+ * @brief tinyMPC接口构造
+ * @param _xNum 状态维度
+ * @param _uNum 输入维度
+ * @param _cNum 不等式约束维度
+ * @param _eNum 等式约束维度
+ * @param _ctrlStep 控制周期=预测周期
+ * @param _rho 学习率
+ * @param _speed_up 使用离线lqr加速模式
+ * @param _verbose 是否使能打印
+ */
+tinympcInterface::tinympcInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, double _rho=1., int _speed_up=1, int _verbose=0)
     : mpcBase(_xNum, _uNum, _cNum, _eNum, _ctrlStep)
 {
     this->_Adyn.resize(xNum, xNum);
@@ -36,6 +47,11 @@ tinympcInterface::tinympcInterface(int _xNum, int _uNum, int _cNum, int _eNum, i
     this->isModelUpdate = 0;
 }
 
+/**
+ * @brief mpc预测求解
+ * @param y_k 期望状态
+ * @param x_k 当前轨迹
+ */
 Matrixr tinympcInterface::_prediction(const Matrixr &y_k, const Matrixr &x_k)
 {
     

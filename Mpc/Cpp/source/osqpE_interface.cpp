@@ -1,7 +1,15 @@
 #include "../include/osqpE_interface.h"
 
-
-osqpeInterface::osqpeInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, bool _verbose)
+/**
+ * @brief osqp-eigen接口构造
+ * @param _xNum 状态维度
+ * @param _uNum 输入维度
+ * @param _cNum 不等式约束维度
+ * @param _eNum 等式约束维度
+ * @param _ctrlStep 控制周期=预测周期
+ * @param _verbose 是否使能打印
+ */
+osqpeInterface::osqpeInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, bool _verbose=false)
     : mpcMatrix(_xNum, _uNum, _cNum, _eNum, _ctrlStep)
 {
     n = uNum * ctrlStep;
@@ -25,10 +33,10 @@ osqpeInterface::osqpeInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _
     {
         for (int j = 0; j < H_new.cols(); j++) 
         {
-            //if (i <= j)
-            //{
+            if (i <= j) // hessian矩阵是对称阵，可以只填充上三角
+            {
                 hessian.insert(i, j) = 1e-30;
-            //}
+            }
         }
     }
 
@@ -52,6 +60,11 @@ osqpeInterface::osqpeInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _
     
 }
 
+/**
+ * @brief mpc预测求解
+ * @param y_k 期望状态
+ * @param x_k 当前轨迹
+ */
 Matrixr osqpeInterface::_prediction(const Matrixr &y_k, const Matrixr &x_k)
 {
     Matrixr result;

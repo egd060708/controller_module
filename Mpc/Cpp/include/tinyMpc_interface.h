@@ -9,6 +9,7 @@ public:
     tinympcInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, double _rho, int _speed_up, int _verbose);
     ~tinympcInterface() {}
 
+    // 设置学习率
     void setRegularisation(double _rho) { rho_value = _rho; }
 
 private:

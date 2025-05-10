@@ -1,6 +1,15 @@
 #include "../include/qpOASES_interface.h"
-#include <iostream>
+// #include <iostream>
 
+/**
+ * @brief qpoases接口构造
+ * @param _xNum 状态维度
+ * @param _uNum 输入维度
+ * @param _cNum 不等式约束维度
+ * @param _eNum 等式约束维度
+ * @param _ctrlStep 控制周期=预测周期
+ * @param _pl 打印等级
+ */
 qpoasesInterface::qpoasesInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, PrintLevel _pl)
     : mpcMatrix(_xNum, _uNum, _cNum, _eNum, _ctrlStep),
       qp_solver(_ctrlStep * _uNum, _ctrlStep * _cNum, HST_UNKNOWN)
@@ -25,6 +34,10 @@ qpoasesInterface::qpoasesInterface(int _xNum, int _uNum, int _cNum, int _eNum, i
     qp_out = new real_t[ctrlStep * uNum];
 }
 
+/**
+ * @brief 析构函数
+ * @param None
+ */
 qpoasesInterface::~qpoasesInterface()
 {
     delete H_qpOASES;
@@ -40,6 +53,11 @@ qpoasesInterface::~qpoasesInterface()
     delete qp_out;
 }
 
+/**
+ * @brief mpc预测求解
+ * @param y_k 期望状态
+ * @param x_k 当前轨迹
+ */
 Matrixr qpoasesInterface::_prediction(const Matrixr &y_k, const Matrixr &x_k)
 {
     // 生成预测矩阵

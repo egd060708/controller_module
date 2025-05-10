@@ -15,7 +15,6 @@ private:
     int* hsp = NULL;
     int* hsi = NULL;
     double* hsv = NULL;
-    Eigen::MatrixXd ieqcA;
     Eigen::SparseMatrix<double> As;
     int* asp = NULL;
     int* asi = NULL;

@@ -1,8 +1,8 @@
 #include "../include/osqp_interface.h"
 #include <iostream>
 
-osqpInterface::osqpInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep)
-    : mpcMatrix(_xNum, _uNum, _cNum, _eNum, _ctrlStep)
+osqpInterface::osqpInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, uint8_t _flat_mode)
+    : mpcMatrix(_xNum, _uNum, _cNum, _eNum, _ctrlStep, _flat_mode)
 {
     n = uNum * ctrlStep;
     m = eNum * ctrlStep;
@@ -89,7 +89,8 @@ Matrixr osqpInterface::_prediction(const Matrixr &y_k, const Matrixr &x_k)
     {
         this->_matrix_transfer();
     }
-    g_new = E * x_k - L * y_k - W_bar * U_pre.block(0, 0, uNum * ctrlStep, 1) + extra_g;
+    // g_new = E * x_k - L * y_k - W_bar * U_pre.block(0, 0, uNum * ctrlStep, 1) + extra_g;
+    this->_update_qp(y_k,x_k);
     std::cout << "1111111111111111111" << std::endl;
 
     // 转换为osqp适用的向量

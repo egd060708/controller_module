@@ -6,7 +6,7 @@
 class osqpeInterface : public mpcMatrix
 {
 public:
-    osqpeInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, bool _verbose);
+    osqpeInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, uint8_t _flat_mode=0, bool _verbose=false);
     ~osqpeInterface(){}
 private:
     // 求解器

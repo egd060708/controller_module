@@ -6,7 +6,7 @@
 class osqpInterface : public mpcMatrix
 {
 public:
-    osqpInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep);
+    osqpInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, uint8_t _flat_mode=0);
     ~osqpInterface();
     void osqpInit();
 private:

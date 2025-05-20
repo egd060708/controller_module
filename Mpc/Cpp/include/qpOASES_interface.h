@@ -8,7 +8,7 @@ class qpoasesInterface : public mpcMatrix
 {
 public:
     // 构造函数
-    qpoasesInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, PrintLevel _pl);
+    qpoasesInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, uint8_t _flat_mode=0, PrintLevel _pl=PL_NONE);
     // 析构函数
     ~qpoasesInterface();
 
@@ -39,7 +39,7 @@ class qpoasesInterfaceSimple : public mpcMatrix
 {
 public:
     // 构造函数
-    qpoasesInterfaceSimple(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, PrintLevel _pl);
+    qpoasesInterfaceSimple(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, uint8_t _flat_mode = 0, PrintLevel _pl = PL_NONE);
     // 析构函数
     ~qpoasesInterfaceSimple();
 

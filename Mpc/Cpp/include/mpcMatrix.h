@@ -46,7 +46,7 @@ class mpcBase
         uint8_t isModelUpdate = 1; // 系统模型是否更新
 
         // 初始化
-        void mpcInit(const Matrixr& _A,const Matrixr& _B,const Matrixr& _Q,const Matrixr& _F,const Matrixr& _R,const Matrixr& _W, double _Ts);
+        virtual void mpcInit(const Matrixr& _A,const Matrixr& _B,const Matrixr& _Q,const Matrixr& _F,const Matrixr& _R,const Matrixr& _W, double _Ts = 0);
         // 状态更新
         void mpcUpdate(const Matrixr& _Y,const Matrixr& _X, int _nWSR, double _cpu_t);
         // mpc问题求解
@@ -84,18 +84,26 @@ class mpcMatrix : public mpcBase
 {
     public:
         // 构造函数
-        mpcMatrix(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep);
+        mpcMatrix(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, uint8_t _flat_mode = 0);
         // 二次型描述矩阵
         Matrixr G, E, L, H;
         Matrixr extraH, extra_g;
         // 预测矩阵
         Matrixr M, C;
+        // 参数矩阵
         Matrixr Q_bar, R_bar, W_bar, g_new, H_new;
+        // 用于第二类输入平滑的矩阵
+        Matrixr Iup, Idown, Wup, Wn;
 
+        // 重写初始化
+        void mpcInit(const Matrixr& _A, const Matrixr& _B, const Matrixr& _Q, const Matrixr& _F, const Matrixr& _R, const Matrixr& _W, double _Ts = 0) override;
         // 设置额外代价
         void setExtraCost(const Matrixr& _extraH,const Matrixr& _extra_g);
     protected:
+        // 输入平滑的方式
+        uint8_t flat_mode = 0;// 0为不设平滑，1为预测整体与上一次平滑，2为每一步预测平滑
         // mpc矩阵生成
         void _mpc_matrices();
-
+        // 更新qp矩阵
+        void _update_qp(const Matrixr& y_k, const Matrixr& x_k);
 };

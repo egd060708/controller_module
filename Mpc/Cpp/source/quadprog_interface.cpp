@@ -8,8 +8,8 @@
  * @param _eNum 等式约束维度
  * @param _ctrlStep 控制周期=预测周期
  */
-quadprogInterface::quadprogInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep)
-    : mpcMatrix(_xNum, _uNum, _cNum, _eNum, _ctrlStep)
+quadprogInterface::quadprogInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, uint8_t _flat_mode)
+    : mpcMatrix(_xNum, _uNum, _cNum, _eNum, _ctrlStep, _flat_mode)
 {
     n = uNum * ctrlStep;
     m = eNum * ctrlStep;
@@ -34,8 +34,7 @@ Matrixr quadprogInterface::_prediction(const Matrixr &y_k, const Matrixr &x_k)
 {
     // 生成预测矩阵
     this->_mpc_matrices();
-    g_new = E * x_k - L * y_k - W_bar * U_pre.block(0, 0, uNum * ctrlStep, 1) + extra_g;
-    H_new = H + extraH;
+    this->_update_qp(y_k, x_k);
 
     // 由于eigen库的矩阵是按列存储，因此需要手动转换为数组
     for (int i = 0; i < H_new.rows(); i++)

@@ -1,3 +1,11 @@
+/*! @file	tinyMpc_interface.h
+ *  @brief	tinyMpc接口
+ *	@author	zzr
+ *  @email	2231625449@qq.com
+ *  @date	2025.5
+ *
+ *	@usage See mpcMatrix for details
+ */
 #pragma once
 
 #include "mpcMatrix.h"
@@ -6,7 +14,7 @@
 class tinympcInterface : public mpcBase
 {
 public:
-    tinympcInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, double _rho, int _speed_up, int _verbose);
+    tinympcInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, double _rho = 1., int _speed_up = 1, int _verbose = 0);
     ~tinympcInterface() {}
 
     // 设置学习率

@@ -1,3 +1,19 @@
+/*! @file	mpcMatrix.h
+ *  @brief	MPC问题矩阵封装基类
+ *	@author	zzr
+ *  @email	2231625449@qq.com
+ *  @date	2025.5
+ *
+ *	@usage
+ *      1、mpcInit
+ *      2、setLqrFeedback(options)
+ *	    3、setInputConstrain
+ *      4、setIeqConstrain(options)
+ *      5、setEqConstrain(options)
+ *      6、mpcUpdate
+ *      7、mpcSolve
+ *      8、getOutput
+ */
 #pragma once
 
 #include <Eigen/Dense>

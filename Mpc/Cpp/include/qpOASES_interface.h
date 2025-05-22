@@ -1,3 +1,11 @@
+/*! @file	qpOASES_interface.h
+ *  @brief	qpOASES接口
+ *	@author	zzr
+ *  @email	2231625449@qq.com
+ *  @date	2025.5
+ *
+ *	@usage See mpcMatrix for details
+ */
 #pragma once
 
 #include "mpcMatrix.h"

@@ -1,3 +1,11 @@
+/*! @file	quadprog_interface.cpp
+ *  @brief	QuadProg++接口
+ *	@author	zzr
+ *  @email	2231625449@qq.com
+ *  @date	2025.5
+ *
+ *	@usage See mpcMatrix for details
+ */
 #include "../include/quadprog_interface.h"
 
 /**
@@ -6,6 +14,7 @@
  * @param _uNum 输入维度
  * @param _cNum 不等式约束维度
  * @param _eNum 等式约束维度
+ * @param _flat_mode 0为不设平滑，1为预测整体与上一次平滑，2为每一步预测平滑
  * @param _ctrlStep 控制周期=预测周期
  */
 quadprogInterface::quadprogInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, uint8_t _flat_mode)

@@ -1,3 +1,11 @@
+/*! @file	tinyMpc_interface.cpp
+ *  @brief	tinyMpc接口
+ *	@author	zzr
+ *  @email	2231625449@qq.com
+ *  @date	2025.5
+ *
+ *	@usage See mpcMatrix for details
+ */
 #include "../include/tinyMpc_interface.h"
 
 /**
@@ -11,7 +19,7 @@
  * @param _speed_up 使用离线lqr加速模式
  * @param _verbose 是否使能打印
  */
-tinympcInterface::tinympcInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, double _rho=1., int _speed_up=1, int _verbose=0)
+tinympcInterface::tinympcInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, double _rho, int _speed_up, int _verbose)
     : mpcBase(_xNum, _uNum, _cNum, _eNum, _ctrlStep)
 {
     this->_Adyn.resize(xNum, xNum);

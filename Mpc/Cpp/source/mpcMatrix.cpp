@@ -1,5 +1,20 @@
+/*! @file	mpcMatrix.cpp
+ *  @brief	MPC问题矩阵封装基类
+ *	@author	zzr
+ *  @email	2231625449@qq.com
+ *  @date	2025.5
+ *
+ *	@usage
+ *      1、mpcInit
+ *      2、setLqrFeedback(options)
+ *	    3、setInputConstrain
+ *      4、setIeqConstrain(options)
+ *      5、setEqConstrain(options)
+ *      6、mpcUpdate
+ *      7、mpcSolve
+ *      8、getOutput
+ */
 #include "../include/mpcMatrix.h"
-#include <iostream>
 
 /********************* Base *********************/
 
@@ -230,6 +245,7 @@ void mpcBase::updateLastU(const Matrixr& _U_pre, const int& _start, const int& _
  * @param _cNum 不等式约束维度
  * @param _eNum 等式约束维度
  * @param _ctrlStep 控制周期=预测周期
+ * @param _flat_mode 0为不设平滑，1为预测整体与上一次平滑，2为每一步预测平滑
  */
 mpcMatrix::mpcMatrix(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, uint8_t _flat_mode)
     : mpcBase(_xNum, _uNum, _cNum, _eNum, _ctrlStep)

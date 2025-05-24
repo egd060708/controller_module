@@ -19,11 +19,11 @@
 #include <Eigen/Dense>
 
 // 定义常规矩阵类型(静态)
-#define MatrixSr(r, c) Eigen::Matrix<double, r, c>
+#define MatrixSr(r, c) Eigen::Matrix<double, r, c, Eigen::ColMajor>
 // 定义方阵类型（Square）
-#define MatrixSsr(d) Eigen::Matrix<double, d, d>
+#define MatrixSsr(d) Eigen::Matrix<double, d, d, Eigen::ColMajor>
 // 定义常规矩阵类型(动态)
-#define Matrixr Eigen::MatrixXd
+#define Matrixr Eigen::Matrix<double, -1, -1, Eigen::ColMajor>
 
 class mpcBase
 {

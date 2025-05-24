@@ -107,7 +107,7 @@ void mpcBase::mpcInit(const Matrixr& _A,const Matrixr& _B,const Matrixr& _Q,cons
     else
     {
         // 输入的是连续，需要做离散化(使用简单的一阶离散)
-        Eigen::MatrixXd AI;
+        Matrixr AI;
         AI.resize(xNum, xNum);
         AI.setIdentity();
         this->A = AI + _Ts * _A;
@@ -325,7 +325,7 @@ void mpcMatrix::mpcInit(const Matrixr& _A, const Matrixr& _B, const Matrixr& _Q,
     else
     {
         // 输入的是连续，需要做离散化(使用简单的一阶离散)
-        Eigen::MatrixXd AI;
+        Matrixr AI;
         AI.resize(xNum, xNum);
         AI.setIdentity();
         this->A = AI + _Ts * _A;

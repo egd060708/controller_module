@@ -7,6 +7,7 @@
  *	@usage See mpcMatrix for details
  */
 #include "../include/tinyMpc_interface.h"
+#include <iostream>
 
 /**
  * @brief tinyMPC接口构造
@@ -112,6 +113,8 @@ Matrixr tinympcInterface::_prediction(const Matrixr &y_k, const Matrixr &x_k)
 
     // 2. Solve MPC problem
     tiny_solve(solver);
+
+    //std::cout << "iters: " << work->iter << std::endl;
 
     Matrixr result;
     result.resize(uNum * ctrlStep, 1);

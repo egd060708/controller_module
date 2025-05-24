@@ -21,8 +21,6 @@
 #ifndef EIGEN_INTEROP_HEADERS_SYCL_H
 #define EIGEN_INTEROP_HEADERS_SYCL_H
 
-#include "../../InternalHeaderCheck.h"
-
 namespace Eigen {
 
 #if !defined(EIGEN_DONT_VECTORIZE_SYCL)
@@ -35,6 +33,7 @@ struct sycl_packet_traits : default_packet_traits {
     Vectorizable = 1,
     AlignedOnScalar = 1,
     size = lengths,
+    HasHalfPacket = 0,
     HasDiv = 1,
     HasLog = 1,
     HasExp = 1,

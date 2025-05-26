@@ -74,6 +74,11 @@ void osqpInterface::osqpInit()
     exitflag = osqp_setup(&solver, qp_P, qp_q, qp_A, qp_l, qp_u, p, n, settings);
     if (!exitflag)
         isSetUp = true;
+    /* Get the default codegen options */
+    OSQPCodegenDefines* defs = OSQPCodegenDefines_new();
+    /* Sample with both vector and matrix updates */
+    defs->embedded_mode = 2;
+    exitflag = osqp_codegen(solver, "./osqp_generate/", "mpc_mat_", defs);
 }
 
 /**

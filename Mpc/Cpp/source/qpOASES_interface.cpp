@@ -26,6 +26,7 @@ qpoasesInterface::qpoasesInterface(int _xNum, int _uNum, int _cNum, int _eNum, i
     Options option;
     option.setToMPC();
     option.printLevel = _pl; // 禁用qpOASES库的打印输出
+    
     //option.enableRegularisation = BT_TRUE;
     qp_solver.setOptions(option);
 
@@ -106,6 +107,8 @@ Matrixr qpoasesInterface::_prediction(const Matrixr &y_k, const Matrixr &x_k)
 
     qpOASES::returnValue ret = qpOASES::SUCCESSFUL_RETURN;
     //ret = qp_solver.init(H_qpOASES, g_qpOASES, cA_qpOASES, lb_qpOASES, ub_qpOASES, Alb_qpOASES, Aub_qpOASES, nWSR, &CPU_t);
+    //std::cout << "inCPUT: " << CPU_t << std::endl;
+    //std::cout << "inNWSR: " << nWSR << std::endl;
     if (isModelUpdate == 1)
     {
         // qp_solver.init(H_qpOASES, g_qpOASES, cA_qpOASES, lb_qpOASES, ub_qpOASES, Alb_qpOASES, Aub_qpOASES, nWSR, &CPU_t, xOpt_initialGuess);
@@ -117,7 +120,8 @@ Matrixr qpoasesInterface::_prediction(const Matrixr &y_k, const Matrixr &x_k)
         //ret = qp_solver.hotstart(H_qpOASES, g_qpOASES, cA_qpOASES, lb_qpOASES, ub_qpOASES, Alb_qpOASES, Aub_qpOASES, nWSR, &CPU_t, &guessedBounds, &guessedConstraints);
         ret = qp_solver.init(H_qpOASES, g_qpOASES, cA_qpOASES, lb_qpOASES, ub_qpOASES, Alb_qpOASES, Aub_qpOASES, nWSR, &CPU_t);
     }
-
+    //std::cout << "ouCPUT: " << CPU_t << std::endl;
+    //std::cout << "ouNWSR: " << nWSR << std::endl;
     nWSR = nWSR_static;
     CPU_t = CPU_t_static;
     qp_solver.getPrimalSolution(xOpt_qpOASES);

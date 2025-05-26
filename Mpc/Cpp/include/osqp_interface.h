@@ -2,24 +2,30 @@
 #include "mpcMatrix.h"
 #include "osqp.h"
 #include <Eigen/Sparse>
+#include <vector>
 
 class osqpInterface : public mpcMatrix
 {
 public:
-    osqpInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, uint8_t _flat_mode=0);
+    osqpInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, uint8_t _flat_mode=0, int _verbose=0);
     ~osqpInterface();
     void osqpInit();
 private:
     // 转换矩阵，用于从eigen稠密阵转换成稀疏矩阵
-    Eigen::SparseMatrix<double> Hs;
-    int* hsp = NULL;
-    int* hsi = NULL;
-    double* hsv = NULL;
-    Eigen::SparseMatrix<double> As;
-    int* asp = NULL;
-    int* asi = NULL;
-    double* asv = NULL;
+    //Eigen::SparseMatrix<double> Hs;
+    //int* hsp = NULL;
+    //int* hsi = NULL;
+    //double* hsv = NULL;
+    //Eigen::SparseMatrix<double> As;
+    //int* asp = NULL;
+    //int* asi = NULL;
+    //double* asv = NULL;
     int n,m,q,p;
+    Matrixr As;
+    std::vector<double> Hvalues;
+    std::vector<OSQPInt> Hrow_indices, Hcol_ptr;
+    std::vector<double> Avalues;
+    std::vector<OSQPInt> Arow_indices, Acol_ptr;
 
     /* Exitflag */
     OSQPInt exitflag = 0;
@@ -44,4 +50,13 @@ private:
 
     // 独立矩阵处理函数
     void _matrix_transfer();
+
+    // 稠密矩阵转csc稀疏矩阵
+    void denseToCSC(
+        const Matrixr& dense,
+        std::vector<double>& values,
+        std::vector<OSQPInt>& row_indices,
+        std::vector<OSQPInt>& col_ptr,
+        bool is_up_traingle
+    );
 };

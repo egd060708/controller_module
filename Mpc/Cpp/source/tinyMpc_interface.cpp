@@ -7,7 +7,7 @@
  *	@usage See mpcMatrix for details
  */
 #include "../include/tinyMpc_interface.h"
-#include <iostream>
+//#include <iostream>
 
 /**
  * @brief tinyMPC接口构造

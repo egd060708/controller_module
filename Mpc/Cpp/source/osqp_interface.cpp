@@ -7,6 +7,7 @@
  *	@usage See mpcMatrix for details
  */
 #include "../include/osqp_interface.h"
+//#include "mpc_mat_workspace.h"
 //#include <iostream>
 
 /**
@@ -42,6 +43,7 @@ osqpInterface::osqpInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ct
 
     settings = OSQPSettings_new();
     settings->verbose = _verbose;
+//	solver = &mpc_mat_solver;
 }
 
 /**
@@ -72,13 +74,15 @@ void osqpInterface::osqpInit()
     settings->time_limit = this->CPU_t_static;
     settings->max_iter = this->nWSR_static;
     exitflag = osqp_setup(&solver, qp_P, qp_q, qp_A, qp_l, qp_u, p, n, settings);
+//	solver->settings->max_iter = this->nWSR_static;
+//	solver->settings->time_limit = this->CPU_t_static;
     if (!exitflag)
         isSetUp = true;
     /* Get the default codegen options */
     OSQPCodegenDefines* defs = OSQPCodegenDefines_new();
     /* Sample with both vector and matrix updates */
-    defs->embedded_mode = 2;
-    exitflag = osqp_codegen(solver, "./osqp_generate/", "mpc_mat_", defs);
+//    defs->embedded_mode = 2;
+//    exitflag = osqp_codegen(solver, "./osqp_generate/", "mpc_mat_", defs);
 }
 
 /**

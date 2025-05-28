@@ -48,6 +48,16 @@ public:
 			}
 		return result;
 	}
+
+	/* 模型生成函数(矩阵) 形参：自变量*/
+	Eigen::MatrixXd modelGenerateMat(double _x){
+		Eigen::Matrix<double, order+1, rows*cols> xMat;
+		for (int i = 0; i < order + 1; i++) {
+			xMat.row(i) = Eigen::VectorXd::Constant(rows * cols, powf(_x, i));
+		}
+		return (model * xMat).view(rows, cols);
+	}
+
 	/* 设置拟合方程参数，自动按照方程个数进行循环写入 */
 	void setFunctions(double _functions[rows*cols*(order + 1)])
 	{

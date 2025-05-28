@@ -3,6 +3,12 @@ project(Test)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# 设置默认优化等级（影响所有构建类型）
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
+# 设置默认优化标志（影响所有编译器）
+set(CMAKE_BUILD_TYPE "Release")  # 自动包含 -O3
+
 add_subdirectory(Mpc/Cpp)
 # add_subdirectory(Pid/Cpp)
 

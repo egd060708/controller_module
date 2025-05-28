@@ -1,5 +1,10 @@
 # 设置 Eigen 库的头文件路径
-set(INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
+set(INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include" 
+                "${CMAKE_CURRENT_SOURCE_DIR}/include/osqp100/osqp" 
+                "${CMAKE_CURRENT_SOURCE_DIR}/include/OsqpEigen100"
+                "${CMAKE_CURRENT_SOURCE_DIR}/include/qpOASES"
+                "${CMAKE_CURRENT_SOURCE_DIR}/include/QuadProg"
+                "${CMAKE_CURRENT_SOURCE_DIR}/include/TinyMPC")
 
 # 所有源文件形成变量
 aux_source_directory(source MPC_interface)

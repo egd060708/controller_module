@@ -69,6 +69,8 @@ osqpInterface::~osqpInterface()
 void osqpInterface::osqpInit()
 {
     this->_matrix_transfer();
+    denseToCSC(H_new, Hvalues, Hrow_indices, Hcol_ptr, true);
+    denseToCSC(As, Avalues, Arow_indices, Acol_ptr, false);
     qp_P = OSQPCscMatrix_new(H_new.rows(), H_new.cols(), Hvalues.size(), Hvalues.data(), Hrow_indices.data(), Hcol_ptr.data());
     qp_A = OSQPCscMatrix_new(As.rows(), As.cols(), Avalues.size(), Avalues.data(), Arow_indices.data(), Acol_ptr.data());
     settings->time_limit = this->CPU_t_static;
@@ -99,6 +101,8 @@ Matrixr osqpInterface::_prediction(const Matrixr &y_k, const Matrixr &x_k)
     else
     {
         this->_matrix_transfer();
+        denseToCSCvel(H_new, Hvalues, true);
+        denseToCSCvel(As, Avalues, false);
     }
     this->_update_qp(y_k,x_k);
 
@@ -155,8 +159,8 @@ void osqpInterface::_matrix_transfer()
     H_new = H + extraH;
 
     As.block(n, 0, q, n) = cA;
-    denseToCSC(H_new, Hvalues, Hrow_indices, Hcol_ptr, true);
-    denseToCSC(As, Avalues, Arow_indices, Acol_ptr, false);
+    // denseToCSC(H_new, Hvalues, Hrow_indices, Hcol_ptr, true);
+    // denseToCSC(As, Avalues, Arow_indices, Acol_ptr, false);
 }
 
 /**
@@ -179,24 +183,71 @@ void osqpInterface::denseToCSC(
     col_ptr.clear();
     col_ptr.push_back(0); // col_ptr[0] = 0
 
-    for (int j = 0; j < cols; ++j) { // 遍历列
-        for (int i = 0; i < rows; ++i) { // 遍历行
-            //if (dense[i][j] != 0.0) { // 非零元素
-            if (is_up_traingle) // 上三角矩阵
-            {
-                if (j >= i)
-                {
-                    values.push_back(dense(i, j));
-                    row_indices.push_back(i); // 0-based行索引
-                }
-            }
-            else
-            {
+    if (is_up_traingle)
+    {
+        for (int j = 0; j < cols; ++j) { // 遍历列
+            for (int i = 0; i <= j; ++i) { // 遍历行
                 values.push_back(dense(i, j));
                 row_indices.push_back(i); // 0-based行索引
             }
-            //}
+            col_ptr.push_back(values.size()); // 记录当前列的结束位置
         }
-        col_ptr.push_back(values.size()); // 记录当前列的结束位置
+
+    }
+    else
+    {
+        for (int j = 0; j < cols; ++j) { // 遍历列
+            for (int i = 0; i < rows; ++i) { // 遍历行
+                values.push_back(dense(i, j));
+                row_indices.push_back(i); // 0-based行索引
+            }
+            col_ptr.push_back(values.size()); // 记录当前列的结束位置
+        }
+    }
+
+    // for (int j = 0; j < cols; ++j) { // 遍历列
+    //     for (int i = 0; i < rows; ++i) { // 遍历行
+    //         //if (dense[i][j] != 0.0) { // 非零元素
+    //         if (is_up_traingle) // 上三角矩阵
+    //         {
+    //             if (j >= i)
+    //             {
+    //                 values.push_back(dense(i, j));
+    //                 row_indices.push_back(i); // 0-based行索引
+    //             }
+    //         }
+    //         else
+    //         {
+    //             values.push_back(dense(i, j));
+    //             row_indices.push_back(i); // 0-based行索引
+    //         }
+    //         //}
+    //     }
+    //     col_ptr.push_back(values.size()); // 记录当前列的结束位置
+    // }
+}
+
+void osqpInterface::denseToCSCvel(const Matrixr& dense, std::vector<double>& values, bool is_up_traingle)
+{
+    int rows = dense.rows();
+    if (rows == 0) return;
+    int cols = dense.cols();
+    int index = 0;
+    if (is_up_traingle)
+    {
+        for (int j = 0; j < cols; ++j) { // 遍历列
+            for (int i = 0; i <= j; ++i) { // 遍历行
+                values[index++] = dense(i, j);
+            }
+        }
+
+    }
+    else
+    {
+        for (int j = 0; j < cols; ++j) { // 遍历列
+            for (int i = 0; i < rows; ++i) { // 遍历行
+                values[index++] = dense(i, j);
+            }
+        }
     }
 }

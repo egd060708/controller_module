@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\mpcCal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\mpcMatrix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\osqpE_interface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\osqp_interface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\qpOASES_interface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\quadprog_interface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\tinyMpc_interface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\qpOASES\BLASReplacement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\qpOASES\Bounds.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\qpOASES\Constraints.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\qpOASES\Flipper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\qpOASES\Indexlist.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\qpOASES\LAPACKReplacement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\qpOASES\Matrices.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\qpOASES\MessageHandling.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\qpOASES\OQPinterface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\qpOASES\Options.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\qpOASES\QProblem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\qpOASES\QProblemB.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\qpOASES\SQProblem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\qpOASES\SQProblemSchur.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\qpOASES\SolutionAnalysis.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\qpOASES\SparseSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\qpOASES\SubjectTo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\qpOASES\Utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\QuadProg\Array.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\QuadProg\QuadProg++.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\TinyMPC\admm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\source\TinyMPC\tiny_api.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Git_Project\github\WheelBipe_Simulate\libs\controller_module\Mpc\Cpp\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{EA765B79-ABA5-3204-A832-3B8663411522}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,74 +1,11 @@
 #include <iostream>
 #include <chrono>
+#include <thread>
 #include "qpOASES_interface.h"
 #include "tinyMpc_interface.h"
 #include "quadprog_interface.h"
 #include "osqp_interface.h"
 #include "model_fit.h"
-
-double model_A[4 * 10 * 10];
-double model_B[4 * 10 * 4];
-double model_K[4 * 4 * 10];
-double model_P[4 * 10 * 10];
-double Q[10];
-double R[4];
-double F[10];
-double W[4];
-double ub[4];
-double lb[4];
-
-int main()
-{
-    //qpoasesInterface mpcCal(10,4,4,0,2);// qpOASES
-    //tinympcInterface mpcCal(10, 4, 4, 0, 3, 1., 1);// tinyMPC
-    //quadprogInterface mpcCal(10, 4, 4, 0, 10);//qp++
-    osqpInterface mpcCal(10, 4, 4, 0, 2,0,0);//osqp
-    Eigen::Vector<double,10> X = Eigen::Vector<double,10>::Constant(0);
-    Eigen::Vector<double,10> Y = Eigen::Vector<double,10>::Constant(0);
-    double avc_length = 0.2;
-    modelFit<10, 10, 3> fitA;
-    modelFit<10, 4, 3> fitB;
-    modelFit<4, 10, 3> fitK;
-    modelFit<10, 10, 3> fitP;
-    fitA.setFunctions(model_A);
-    fitB.setFunctions(model_B);
-    fitK.setFunctions(model_K);
-    fitP.setFunctions(model_P);
-    while(1)
-    {
-        // 记录开始时间
-        auto start = std::chrono::high_resolution_clock::now();
-        Eigen::MatrixXd A = fitA.modelGenerate(avc_length);
-        Eigen::MatrixXd B = fitB.modelGenerate(avc_length);
-        Eigen::MatrixXd K = fitK.modelGenerate(avc_length);
-        Eigen::MatrixXd P = fitP.modelGenerate(avc_length);
-        Eigen::VectorXd Qv = Eigen::Map<Eigen::Vector<double, 10>>(Q);
-        Eigen::VectorXd Rv = Eigen::Map<Eigen::Vector<double, 4>>(R);
-        Eigen::VectorXd Fv = Qv;
-        Eigen::VectorXd Wv = Eigen::Map<Eigen::Vector<double, 4>>(W);
-        Eigen::VectorXd lbv = Eigen::Map<Eigen::Vector<double, 4>>(lb);
-        Eigen::VectorXd ubv = Eigen::Map<Eigen::Vector<double, 4>>(ub);
-        Eigen::VectorXd Albv = lbv;
-        Eigen::VectorXd Aubv = ubv;
-        Eigen::MatrixXd cA;
-        cA.resize(4, 4);
-        cA.setIdentity();
-        mpcCal.mpcInit(A,B,Qv.asDiagonal(),P,Rv.asDiagonal(),Wv.asDiagonal(),0);
-        mpcCal.setInputConstrain(lbv,ubv);
-        mpcCal.setIeqConstrain(cA,Albv,Aubv);
-        mpcCal.setLqrFeedback(K,P);
-        mpcCal.mpcUpdate(Y,X,50,2e-3);
-        mpcCal.mpcSolve();
-        Eigen::VectorXd output = mpcCal.getOutput();
-        // 记录结束时间
-        auto end = std::chrono::high_resolution_clock::now();
-        // 计算时间差（单位：毫秒）
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
-        std::cout << "runtime: " << duration << " us" << std::endl;
-        std::cout << "output: " << output.transpose() << std::endl;
-    }
-    return 0;
-}
 
 /*MPC模型参数*/
 double model_A[4 * 10 * 10] = {
@@ -381,5 +318,66 @@ double R[4] = {
 
 double F[10];
 double W[4] = {1e-6,1e-6,1e-6,1e-6};
-double lb[4] = { -2.5,-2.5,-40,-40 };
-double ub[4] = { 2.5, 2.5, 40, 40 };
+double lb[4] = { -4.5,-4.5,-40,-40 };
+double ub[4] = { 4.5, 4.5, 40, 40 };
+
+int main()
+{
+    // qpoasesInterface mpcCal(10,4,4,0,2);// qpOASES
+    // tinympcInterface mpcCal(10, 4, 4, 0, 3, 1., 1);// tinyMPC
+    // quadprogInterface mpcCal(10, 4, 4, 0, 10);//qp++
+    osqpInterface mpcCal(10, 4, 4, 0, 2,0,0);//osqp
+    Eigen::Vector<double,10> X = Eigen::Vector<double,10>::Constant(0);
+    Eigen::Vector<double,10> Y = Eigen::Vector<double,10>::Constant(0);
+    Y(1) = 2.;
+    X(8) = -0.1;
+    double avc_length = 0.2;
+    modelFit<10, 10, 3> fitA;
+    modelFit<10, 4, 3> fitB;
+    modelFit<4, 10, 3> fitK;
+    modelFit<10, 10, 3> fitP;
+    fitA.setFunctions(model_A);
+    fitB.setFunctions(model_B);
+    fitK.setFunctions(model_K);
+    fitP.setFunctions(model_P);
+    while(1)
+    {
+        // // 记录开始时间
+        // auto start = std::chrono::high_resolution_clock::now();
+        Eigen::MatrixXd A = fitA.modelGenerate(avc_length);
+        Eigen::MatrixXd B = fitB.modelGenerate(avc_length);
+        Eigen::MatrixXd K = fitK.modelGenerate(avc_length);
+        Eigen::MatrixXd P = fitP.modelGenerate(avc_length);
+        Eigen::VectorXd Qv = Eigen::Map<Eigen::Vector<double, 10>>(Q);
+        Eigen::VectorXd Rv = Eigen::Map<Eigen::Vector<double, 4>>(R);
+        Eigen::VectorXd Fv = Qv;
+        Eigen::VectorXd Wv = Eigen::Map<Eigen::Vector<double, 4>>(W);
+        Eigen::VectorXd lbv = Eigen::Map<Eigen::Vector<double, 4>>(lb);
+        Eigen::VectorXd ubv = Eigen::Map<Eigen::Vector<double, 4>>(ub);
+        Eigen::VectorXd Albv = lbv;
+        Eigen::VectorXd Aubv = ubv;
+        Eigen::MatrixXd cA;
+        cA.resize(4, 4);
+        cA.setIdentity();
+        // // 记录开始时间
+        // auto start = std::chrono::high_resolution_clock::now();
+        mpcCal.mpcInit(A,B,Qv.asDiagonal(),P,Rv.asDiagonal(),Wv.asDiagonal(),0);
+        mpcCal.setInputConstrain(lbv,ubv);
+        mpcCal.setIeqConstrain(cA,Albv,Aubv);
+        mpcCal.setLqrFeedback(K,P);
+        mpcCal.mpcUpdate(Y,X,50,2e-3);
+        // 记录开始时间
+        auto start = std::chrono::high_resolution_clock::now();
+        mpcCal.mpcSolve();
+        Eigen::VectorXd output = mpcCal.getOutput();
+        // 记录结束时间
+        auto end = std::chrono::high_resolution_clock::now();
+        // 计算时间差（单位：毫秒）
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+        std::cout << "runtime: " << duration << " us" << std::endl;
+        std::cout << "output: " << output.transpose() << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(500)); // 暂停1秒
+    }
+    return 0;
+}
+

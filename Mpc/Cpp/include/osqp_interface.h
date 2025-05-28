@@ -59,4 +59,11 @@ private:
         std::vector<OSQPInt>& col_ptr,
         bool is_up_traingle
     );
+
+    // 稠密矩阵值转稀疏矩阵向量
+    void denseToCSCvel(
+        const Matrixr& dense,
+        std::vector<double>& values,
+        bool is_up_traingle
+    );
 };

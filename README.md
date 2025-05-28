@@ -9,4 +9,5 @@ controller code library
    - 基于qpOASES求解库的接口qpOASES_interface
    - 基于quadprog++求解库的接口quadprog_interface
    - 基于tinyMpc求解库的接口tinyMpc_interface
+   - 基于osqp求解库的接口osqp_interface
    - 基于osqp-eigen求解库的接口osqpE_interface

@@ -5,14 +5,16 @@
  *  @date	2025.5
  *
  *	@usage
- *      1、mpcInit
- *      2、setLqrFeedback(options)
- *	    3、setInputConstrain
- *      4、setIeqConstrain(options)
- *      5、setEqConstrain(options)
- *      6、mpcUpdate
- *      7、mpcSolve
- *      8、getOutput
+ *      1、mpcInit=setStateSpace+setWeightParams
+ *      2、setStateSpace(options)
+ *      3、setWeightParams(options)
+ *      4、setLqrFeedback(options)
+ *	    5、setInputConstrain
+ *      6、setIeqConstrain(options)
+ *      7、setEqConstrain(options)
+ *      8、mpcUpdate
+ *      9、mpcSolve
+ *      10、getOutput
  */
 #include "../include/mpcMatrix.h"
 

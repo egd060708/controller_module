@@ -98,6 +98,19 @@ mpcBase::mpcBase(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep)
  */
 void mpcBase::mpcInit(const Matrixr& _A,const Matrixr& _B,const Matrixr& _Q,const Matrixr& _F,const Matrixr& _R,const Matrixr& _W, double _Ts)
 {
+    
+    this->setStateSpace(_A,_B,_Ts);
+    this->setWeightParams(_Q,_F,_R,_W);
+}
+
+/**
+ * @brief 独立更新状态空间
+ * @param _A 设置状态空间方程A矩阵
+ * @param _B 设置状态空间方程B矩阵
+ * @param _Ts 离散周期，若为0，则默认输入的_A,_B已经为离散状态空间方程，否则，做一阶线性化处理
+ */
+void mpcBase::setStateSpace(const Matrixr& _A,const Matrixr& _B, double _Ts)
+{
     if (_Ts <= 0)
     {
         // 输入的是离散
@@ -114,6 +127,17 @@ void mpcBase::mpcInit(const Matrixr& _A,const Matrixr& _B,const Matrixr& _Q,cons
         this->B = _Ts * _B;
         // TODO：做更精准的离散化
     }
+}
+
+/**
+ * @brief 独立更新权重参数
+ * @param _Q 状态权重矩阵
+ * @param _F 终端补偿权重矩阵
+ * @param _R 输入权重矩阵
+ * @param _W 输入平滑权重矩阵
+ */
+void mpcBase::setWeightParams(const Matrixr& _Q,const Matrixr& _F,const Matrixr& _R,const Matrixr& _W)
+{
     this->Q = _Q;
     this->F = _F;
     this->R = _R;
@@ -304,34 +328,71 @@ void mpcMatrix::setExtraCost(const Matrixr& _extraH,const Matrixr& _extra_g)
     }
 }
 
+// /**
+//  * @brief 初始化
+//  * @param _A 设置状态空间方程A矩阵
+//  * @param _B 设置状态空间方程B矩阵
+//  * @param _Q 状态权重矩阵
+//  * @param _F 终端补偿权重矩阵
+//  * @param _R 输入权重矩阵
+//  * @param _W 输入平滑权重矩阵
+//  * @param _Ts 离散周期，若为0，则默认输入的_A,_B已经为离散状态空间方程，否则，做一阶线性化处理
+//  */
+// void mpcMatrix::mpcInit(const Matrixr& _A, const Matrixr& _B, const Matrixr& _Q, const Matrixr& _F, const Matrixr& _R, const Matrixr& _W, double _Ts)
+// {
+//     if (_Ts <= 0)
+//     {
+//         // 输入的是离散
+//         this->A = _A;
+//         this->B = _B;
+//     }
+//     else
+//     {
+//         // 输入的是连续，需要做离散化(使用简单的一阶离散)
+//         Matrixr AI;
+//         AI.resize(xNum, xNum);
+//         AI.setIdentity();
+//         this->A = AI + _Ts * _A;
+//         this->B = _Ts * _B;
+//         // TODO：做更精准的离散化
+//     }
+//     this->Q = _Q;
+//     this->F = _F;
+//     this->R = _R;
+//     this->W = _W;
+
+//     // 构建kron积
+//     for (int i = 0; i < ctrlStep; i++)
+//     {
+//         this->Q_bar.block(i * xNum, i * xNum, xNum, xNum) = this->Q;
+//         this->R_bar.block(i * uNum, i * uNum, uNum, uNum) = this->R;
+//         if (this->flat_mode != 0)
+//         {
+//             this->W_bar.block(i * uNum, i * uNum, uNum, uNum) = this->W;
+//         }
+//         if (this->flat_mode==2 && i < (ctrlStep - 1))
+//         {
+//             this->Iup.block(i * uNum, i * uNum + uNum, uNum, uNum).setIdentity();
+//             this->Idown.block(i * uNum + uNum, i * uNum, uNum, uNum).setIdentity();
+//             this->Wup.block(i * uNum, i * uNum + uNum, uNum, uNum) = this->W;
+//         }
+//     }
+//     this->Q_bar.block((ctrlStep-1) * xNum, (ctrlStep-1) * xNum, xNum, xNum) = this->F;
+//     if (this->flat_mode == 2)
+//     {
+//         this->Wn = this->W_bar + this->Iup * this->W_bar * this->Idown - 2 * this->Wup;
+//     }
+// }
+
 /**
- * @brief 初始化
- * @param _A 设置状态空间方程A矩阵
- * @param _B 设置状态空间方程B矩阵
+ * @brief 独立更新权重参数
  * @param _Q 状态权重矩阵
  * @param _F 终端补偿权重矩阵
  * @param _R 输入权重矩阵
  * @param _W 输入平滑权重矩阵
- * @param _Ts 离散周期，若为0，则默认输入的_A,_B已经为离散状态空间方程，否则，做一阶线性化处理
  */
-void mpcMatrix::mpcInit(const Matrixr& _A, const Matrixr& _B, const Matrixr& _Q, const Matrixr& _F, const Matrixr& _R, const Matrixr& _W, double _Ts)
+void mpcMatrix::setWeightParams(const Matrixr& _Q,const Matrixr& _F,const Matrixr& _R,const Matrixr& _W)
 {
-    if (_Ts <= 0)
-    {
-        // 输入的是离散
-        this->A = _A;
-        this->B = _B;
-    }
-    else
-    {
-        // 输入的是连续，需要做离散化(使用简单的一阶离散)
-        Matrixr AI;
-        AI.resize(xNum, xNum);
-        AI.setIdentity();
-        this->A = AI + _Ts * _A;
-        this->B = _Ts * _B;
-        // TODO：做更精准的离散化
-    }
     this->Q = _Q;
     this->F = _F;
     this->R = _R;

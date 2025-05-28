@@ -63,6 +63,10 @@ class mpcBase
 
         // 初始化
         virtual void mpcInit(const Matrixr& _A,const Matrixr& _B,const Matrixr& _Q,const Matrixr& _F,const Matrixr& _R,const Matrixr& _W, double _Ts = 0);
+        // 独立更新状态空间
+        virtual void setStateSpace(const Matrixr& _A,const Matrixr& _B, double _Ts = 0);
+        // 独立更新权重参数
+        virtual void setWeightParams(const Matrixr& _Q,const Matrixr& _F,const Matrixr& _R,const Matrixr& _W);
         // 状态更新
         void mpcUpdate(const Matrixr& _Y,const Matrixr& _X, int _nWSR, double _cpu_t);
         // mpc问题求解
@@ -111,8 +115,9 @@ class mpcMatrix : public mpcBase
         // 用于第二类输入平滑的矩阵
         Matrixr Iup, Idown, Wup, Wn;
 
-        // 重写初始化
-        void mpcInit(const Matrixr& _A, const Matrixr& _B, const Matrixr& _Q, const Matrixr& _F, const Matrixr& _R, const Matrixr& _W, double _Ts = 0) override;
+        // 重写权重更新
+        // void mpcInit(const Matrixr& _A, const Matrixr& _B, const Matrixr& _Q, const Matrixr& _F, const Matrixr& _R, const Matrixr& _W, double _Ts = 0) override;
+        void setWeightParams(const Matrixr& _Q,const Matrixr& _F,const Matrixr& _R,const Matrixr& _W) override;
         // 设置额外代价
         void setExtraCost(const Matrixr& _extraH,const Matrixr& _extra_g);
     protected:

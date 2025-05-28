@@ -340,30 +340,36 @@ int main()
     fitB.setFunctions(model_B);
     fitK.setFunctions(model_K);
     fitP.setFunctions(model_P);
+    Eigen::MatrixXd A = fitA.modelGenerateMat(avc_length);
+    Eigen::MatrixXd B = fitB.modelGenerateMat(avc_length);
+    Eigen::MatrixXd K = fitK.modelGenerateMat(avc_length);
+    Eigen::MatrixXd P = fitP.modelGenerateMat(avc_length);
+    Eigen::VectorXd Qv = Eigen::Map<Eigen::Vector<double, 10>>(Q);
+    Eigen::VectorXd Rv = Eigen::Map<Eigen::Vector<double, 4>>(R);
+    Eigen::VectorXd Fv = Qv;
+    Eigen::VectorXd Wv = Eigen::Map<Eigen::Vector<double, 4>>(W);
+    Eigen::VectorXd lbv = Eigen::Map<Eigen::Vector<double, 4>>(lb);
+    Eigen::VectorXd ubv = Eigen::Map<Eigen::Vector<double, 4>>(ub);
+    Eigen::VectorXd Albv = lbv;
+    Eigen::VectorXd Aubv = ubv;
+    Eigen::MatrixXd cA;
+    mpcCal.mpcInit(A,B,Qv.asDiagonal(),P,Rv.asDiagonal(),Wv.asDiagonal(),0);
     while(1)
     {
         // 记录开始时间
         auto start = std::chrono::high_resolution_clock::now();
-        Eigen::MatrixXd A = fitA.modelGenerateMat(avc_length);
-        Eigen::MatrixXd B = fitB.modelGenerateMat(avc_length);
-        Eigen::MatrixXd K = fitK.modelGenerateMat(avc_length);
-        Eigen::MatrixXd P = fitP.modelGenerateMat(avc_length);
-        // 记录结束时间
-        auto end = std::chrono::high_resolution_clock::now();
-        Eigen::VectorXd Qv = Eigen::Map<Eigen::Vector<double, 10>>(Q);
-        Eigen::VectorXd Rv = Eigen::Map<Eigen::Vector<double, 4>>(R);
-        Eigen::VectorXd Fv = Qv;
-        Eigen::VectorXd Wv = Eigen::Map<Eigen::Vector<double, 4>>(W);
-        Eigen::VectorXd lbv = Eigen::Map<Eigen::Vector<double, 4>>(lb);
-        Eigen::VectorXd ubv = Eigen::Map<Eigen::Vector<double, 4>>(ub);
-        Eigen::VectorXd Albv = lbv;
-        Eigen::VectorXd Aubv = ubv;
-        Eigen::MatrixXd cA;
+        A = fitA.modelGenerateMat(avc_length);
+        B = fitB.modelGenerateMat(avc_length);
+        K = fitK.modelGenerateMat(avc_length);
+        P = fitP.modelGenerateMat(avc_length);
+        // // 记录结束时间
+        // auto end = std::chrono::high_resolution_clock::now();
+        mpcCal.setStateSpace(A,B,0);
         cA.resize(4, 4);
         cA.setIdentity();
         // // 记录开始时间
         // auto start = std::chrono::high_resolution_clock::now();
-        mpcCal.mpcInit(A,B,Qv.asDiagonal(),P,Rv.asDiagonal(),Wv.asDiagonal(),0);
+
         mpcCal.setInputConstrain(lbv,ubv);
         mpcCal.setIeqConstrain(cA,Albv,Aubv);
         mpcCal.setLqrFeedback(K,P);
@@ -372,8 +378,8 @@ int main()
         // auto start = std::chrono::high_resolution_clock::now();
         mpcCal.mpcSolve();
         Eigen::VectorXd output = mpcCal.getOutput();
-        // // 记录结束时间
-        // auto end = std::chrono::high_resolution_clock::now();
+        // 记录结束时间
+        auto end = std::chrono::high_resolution_clock::now();
         // 计算时间差（单位：毫秒）
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
         std::cout << "runtime: " << duration << " us" << std::endl;

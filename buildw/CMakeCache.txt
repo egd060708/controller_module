@@ -80,7 +80,7 @@ CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO:STRING=/debug /INCREMENTAL
 CMAKE_FIND_PACKAGE_REDIRECTS_DIR:STATIC=D:/Git_Project/github/WheelBipe_Simulate/libs/controller_module/buildw/CMakeFiles/pkgRedirects
 
 //Install path prefix, prepended onto install directories.
-CMAKE_INSTALL_PREFIX:PATH=D:/Git_Project/github/WheelBipe_Simulate/libs/controller_module/install
+CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/Test
 
 //Path to a program.
 CMAKE_LINKER:FILEPATH=D:/VS/2022/Community/VC/Tools/MSVC/14.39.33519/bin/Hostx64/x64/link.exe

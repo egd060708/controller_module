@@ -24,7 +24,7 @@ events:
       The output was:
       0
       适用于 .NET Framework MSBuild 版本 17.9.5+33de0b227
-      生成启动时间为 2025/5/28 17:26:21。
+      生成启动时间为 2025/5/28 20:12:15。
       
       节点 1 上的项目“D:\\Git_Project\\github\\WheelBipe_Simulate\\libs\\controller_module\\buildw\\CMakeFiles\\3.30.0-rc1\\CompilerIdC\\CompilerIdC.vcxproj”(默认目标)。
       PrepareForBuild:
@@ -53,7 +53,7 @@ events:
           0 个警告
           0 个错误
       
-      已用时间 00:00:00.57
+      已用时间 00:00:00.66
       
       
       Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.exe"
@@ -79,7 +79,7 @@ events:
       The output was:
       0
       适用于 .NET Framework MSBuild 版本 17.9.5+33de0b227
-      生成启动时间为 2025/5/28 17:26:21。
+      生成启动时间为 2025/5/28 20:12:16。
       
       节点 1 上的项目“D:\\Git_Project\\github\\WheelBipe_Simulate\\libs\\controller_module\\buildw\\CMakeFiles\\3.30.0-rc1\\CompilerIdCXX\\CompilerIdCXX.vcxproj”(默认目标)。
       PrepareForBuild:
@@ -108,7 +108,7 @@ events:
           0 个警告
           0 个错误
       
-      已用时间 00:00:00.54
+      已用时间 00:00:00.59
       
       
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
@@ -127,8 +127,8 @@ events:
     checks:
       - "Detecting C compiler ABI info"
     directories:
-      source: "D:/Git_Project/github/WheelBipe_Simulate/libs/controller_module/buildw/CMakeFiles/CMakeScratch/TryCompile-6sgajp"
-      binary: "D:/Git_Project/github/WheelBipe_Simulate/libs/controller_module/buildw/CMakeFiles/CMakeScratch/TryCompile-6sgajp"
+      source: "D:/Git_Project/github/WheelBipe_Simulate/libs/controller_module/buildw/CMakeFiles/CMakeScratch/TryCompile-shi4mo"
+      binary: "D:/Git_Project/github/WheelBipe_Simulate/libs/controller_module/buildw/CMakeFiles/CMakeScratch/TryCompile-shi4mo"
     cmakeVariables:
       CMAKE_C_FLAGS: "/DWIN32 /D_WINDOWS /W3"
       CMAKE_EXE_LINKER_FLAGS: "/machine:x64"
@@ -136,40 +136,40 @@ events:
       variable: "CMAKE_C_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'D:/Git_Project/github/WheelBipe_Simulate/libs/controller_module/buildw/CMakeFiles/CMakeScratch/TryCompile-6sgajp'
+        Change Dir: 'D:/Git_Project/github/WheelBipe_Simulate/libs/controller_module/buildw/CMakeFiles/CMakeScratch/TryCompile-shi4mo'
         
-        Run Build Command(s): D:/VS/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_302b1.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): D:/VS/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_141ff.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         适用于 .NET Framework MSBuild 版本 17.9.5+33de0b227
-        生成启动时间为 2025/5/28 17:26:22。
+        生成启动时间为 2025/5/28 20:12:17。
         
-        节点 1 上的项目“D:\\Git_Project\\github\\WheelBipe_Simulate\\libs\\controller_module\\buildw\\CMakeFiles\\CMakeScratch\\TryCompile-6sgajp\\cmTC_302b1.vcxproj”(默认目标)。
+        节点 1 上的项目“D:\\Git_Project\\github\\WheelBipe_Simulate\\libs\\controller_module\\buildw\\CMakeFiles\\CMakeScratch\\TryCompile-shi4mo\\cmTC_141ff.vcxproj”(默认目标)。
         PrepareForBuild:
-          正在创建目录“cmTC_302b1.dir\\Debug\\”。
+          正在创建目录“cmTC_141ff.dir\\Debug\\”。
           已启用结构化输出。编译器诊断的格式设置将反映错误层次结构。有关详细信息，请参阅 https://aka.ms/cpp/structured-output。
-          正在创建目录“D:\\Git_Project\\github\\WheelBipe_Simulate\\libs\\controller_module\\buildw\\CMakeFiles\\CMakeScratch\\TryCompile-6sgajp\\Debug\\”。
-          正在创建目录“cmTC_302b1.dir\\Debug\\cmTC_302b1.tlog\\”。
+          正在创建目录“D:\\Git_Project\\github\\WheelBipe_Simulate\\libs\\controller_module\\buildw\\CMakeFiles\\CMakeScratch\\TryCompile-shi4mo\\Debug\\”。
+          正在创建目录“cmTC_141ff.dir\\Debug\\cmTC_141ff.tlog\\”。
         InitializeBuildStatus:
-          正在创建“cmTC_302b1.dir\\Debug\\cmTC_302b1.tlog\\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
-          正在对“cmTC_302b1.dir\\Debug\\cmTC_302b1.tlog\\unsuccessfulbuild”执行 Touch 任务。
+          正在创建“cmTC_141ff.dir\\Debug\\cmTC_141ff.tlog\\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+          正在对“cmTC_141ff.dir\\Debug\\cmTC_141ff.tlog\\unsuccessfulbuild”执行 Touch 任务。
         ClCompile:
-          D:\\VS\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_302b1.dir\\Debug\\\\" /Fd"cmTC_302b1.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\usefulTools\\Cmake\\share\\cmake-3.30\\Modules\\CMakeCCompilerABI.c"
+          D:\\VS\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_141ff.dir\\Debug\\\\" /Fd"cmTC_141ff.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\usefulTools\\Cmake\\share\\cmake-3.30\\Modules\\CMakeCCompilerABI.c"
           用于 x64 的 Microsoft (R) C/C++ 优化编译器 19.39.33521 版
           版权所有(C) Microsoft Corporation。保留所有权利。
-          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_302b1.dir\\Debug\\\\" /Fd"cmTC_302b1.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\usefulTools\\Cmake\\share\\cmake-3.30\\Modules\\CMakeCCompilerABI.c"
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_141ff.dir\\Debug\\\\" /Fd"cmTC_141ff.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TC /errorReport:queue "D:\\usefulTools\\Cmake\\share\\cmake-3.30\\Modules\\CMakeCCompilerABI.c"
           CMakeCCompilerABI.c
         Link:
-          D:\\VS\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\Git_Project\\github\\WheelBipe_Simulate\\libs\\controller_module\\buildw\\CMakeFiles\\CMakeScratch\\TryCompile-6sgajp\\Debug\\cmTC_302b1.exe" /INCREMENTAL /ILK:"cmTC_302b1.dir\\Debug\\cmTC_302b1.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/Git_Project/github/WheelBipe_Simulate/libs/controller_module/buildw/CMakeFiles/CMakeScratch/TryCompile-6sgajp/Debug/cmTC_302b1.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/Git_Project/github/WheelBipe_Simulate/libs/controller_module/buildw/CMakeFiles/CMakeScratch/TryCompile-6sgajp/Debug/cmTC_302b1.lib" /MACHINE:X64  /machine:x64 cmTC_302b1.dir\\Debug\\CMakeCCompilerABI.obj
-          cmTC_302b1.vcxproj -> D:\\Git_Project\\github\\WheelBipe_Simulate\\libs\\controller_module\\buildw\\CMakeFiles\\CMakeScratch\\TryCompile-6sgajp\\Debug\\cmTC_302b1.exe
+          D:\\VS\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\Git_Project\\github\\WheelBipe_Simulate\\libs\\controller_module\\buildw\\CMakeFiles\\CMakeScratch\\TryCompile-shi4mo\\Debug\\cmTC_141ff.exe" /INCREMENTAL /ILK:"cmTC_141ff.dir\\Debug\\cmTC_141ff.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/Git_Project/github/WheelBipe_Simulate/libs/controller_module/buildw/CMakeFiles/CMakeScratch/TryCompile-shi4mo/Debug/cmTC_141ff.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/Git_Project/github/WheelBipe_Simulate/libs/controller_module/buildw/CMakeFiles/CMakeScratch/TryCompile-shi4mo/Debug/cmTC_141ff.lib" /MACHINE:X64  /machine:x64 cmTC_141ff.dir\\Debug\\CMakeCCompilerABI.obj
+          cmTC_141ff.vcxproj -> D:\\Git_Project\\github\\WheelBipe_Simulate\\libs\\controller_module\\buildw\\CMakeFiles\\CMakeScratch\\TryCompile-shi4mo\\Debug\\cmTC_141ff.exe
         FinalizeBuildStatus:
-          正在删除文件“cmTC_302b1.dir\\Debug\\cmTC_302b1.tlog\\unsuccessfulbuild”。
-          正在对“cmTC_302b1.dir\\Debug\\cmTC_302b1.tlog\\cmTC_302b1.lastbuildstate”执行 Touch 任务。
-        已完成生成项目“D:\\Git_Project\\github\\WheelBipe_Simulate\\libs\\controller_module\\buildw\\CMakeFiles\\CMakeScratch\\TryCompile-6sgajp\\cmTC_302b1.vcxproj”(默认目标)的操作。
+          正在删除文件“cmTC_141ff.dir\\Debug\\cmTC_141ff.tlog\\unsuccessfulbuild”。
+          正在对“cmTC_141ff.dir\\Debug\\cmTC_141ff.tlog\\cmTC_141ff.lastbuildstate”执行 Touch 任务。
+        已完成生成项目“D:\\Git_Project\\github\\WheelBipe_Simulate\\libs\\controller_module\\buildw\\CMakeFiles\\CMakeScratch\\TryCompile-shi4mo\\cmTC_141ff.vcxproj”(默认目标)的操作。
         
         已成功生成。
             0 个警告
             0 个错误
         
-        已用时间 00:00:00.72
+        已用时间 00:00:00.71
         
       exitCode: 0
   -
@@ -209,8 +209,8 @@ events:
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "D:/Git_Project/github/WheelBipe_Simulate/libs/controller_module/buildw/CMakeFiles/CMakeScratch/TryCompile-hdq506"
-      binary: "D:/Git_Project/github/WheelBipe_Simulate/libs/controller_module/buildw/CMakeFiles/CMakeScratch/TryCompile-hdq506"
+      source: "D:/Git_Project/github/WheelBipe_Simulate/libs/controller_module/buildw/CMakeFiles/CMakeScratch/TryCompile-ijjyna"
+      binary: "D:/Git_Project/github/WheelBipe_Simulate/libs/controller_module/buildw/CMakeFiles/CMakeScratch/TryCompile-ijjyna"
     cmakeVariables:
       CMAKE_CXX_FLAGS: "/DWIN32 /D_WINDOWS /W3 /GR /EHsc"
       CMAKE_CXX_SCAN_FOR_MODULES: "OFF"
@@ -219,40 +219,40 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: 'D:/Git_Project/github/WheelBipe_Simulate/libs/controller_module/buildw/CMakeFiles/CMakeScratch/TryCompile-hdq506'
+        Change Dir: 'D:/Git_Project/github/WheelBipe_Simulate/libs/controller_module/buildw/CMakeFiles/CMakeScratch/TryCompile-ijjyna'
         
-        Run Build Command(s): D:/VS/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_56c65.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
+        Run Build Command(s): D:/VS/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe cmTC_e423c.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=17.0 /v:n
         适用于 .NET Framework MSBuild 版本 17.9.5+33de0b227
-        生成启动时间为 2025/5/28 17:26:23。
+        生成启动时间为 2025/5/28 20:12:18。
         
-        节点 1 上的项目“D:\\Git_Project\\github\\WheelBipe_Simulate\\libs\\controller_module\\buildw\\CMakeFiles\\CMakeScratch\\TryCompile-hdq506\\cmTC_56c65.vcxproj”(默认目标)。
+        节点 1 上的项目“D:\\Git_Project\\github\\WheelBipe_Simulate\\libs\\controller_module\\buildw\\CMakeFiles\\CMakeScratch\\TryCompile-ijjyna\\cmTC_e423c.vcxproj”(默认目标)。
         PrepareForBuild:
-          正在创建目录“cmTC_56c65.dir\\Debug\\”。
+          正在创建目录“cmTC_e423c.dir\\Debug\\”。
           已启用结构化输出。编译器诊断的格式设置将反映错误层次结构。有关详细信息，请参阅 https://aka.ms/cpp/structured-output。
-          正在创建目录“D:\\Git_Project\\github\\WheelBipe_Simulate\\libs\\controller_module\\buildw\\CMakeFiles\\CMakeScratch\\TryCompile-hdq506\\Debug\\”。
-          正在创建目录“cmTC_56c65.dir\\Debug\\cmTC_56c65.tlog\\”。
+          正在创建目录“D:\\Git_Project\\github\\WheelBipe_Simulate\\libs\\controller_module\\buildw\\CMakeFiles\\CMakeScratch\\TryCompile-ijjyna\\Debug\\”。
+          正在创建目录“cmTC_e423c.dir\\Debug\\cmTC_e423c.tlog\\”。
         InitializeBuildStatus:
-          正在创建“cmTC_56c65.dir\\Debug\\cmTC_56c65.tlog\\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
-          正在对“cmTC_56c65.dir\\Debug\\cmTC_56c65.tlog\\unsuccessfulbuild”执行 Touch 任务。
+          正在创建“cmTC_e423c.dir\\Debug\\cmTC_e423c.tlog\\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+          正在对“cmTC_e423c.dir\\Debug\\cmTC_e423c.tlog\\unsuccessfulbuild”执行 Touch 任务。
         ClCompile:
-          D:\\VS\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_56c65.dir\\Debug\\\\" /Fd"cmTC_56c65.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "D:\\usefulTools\\Cmake\\share\\cmake-3.30\\Modules\\CMakeCXXCompilerABI.cpp"
+          D:\\VS\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\HostX64\\x64\\CL.exe /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_e423c.dir\\Debug\\\\" /Fd"cmTC_e423c.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "D:\\usefulTools\\Cmake\\share\\cmake-3.30\\Modules\\CMakeCXXCompilerABI.cpp"
           用于 x64 的 Microsoft (R) C/C++ 优化编译器 19.39.33521 版
           版权所有(C) Microsoft Corporation。保留所有权利。
-          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_56c65.dir\\Debug\\\\" /Fd"cmTC_56c65.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "D:\\usefulTools\\Cmake\\share\\cmake-3.30\\Modules\\CMakeCXXCompilerABI.cpp"
+          cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\\"Debug\\"" /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_e423c.dir\\Debug\\\\" /Fd"cmTC_e423c.dir\\Debug\\vc143.pdb" /external:W3 /Gd /TP /errorReport:queue "D:\\usefulTools\\Cmake\\share\\cmake-3.30\\Modules\\CMakeCXXCompilerABI.cpp"
           CMakeCXXCompilerABI.cpp
         Link:
-          D:\\VS\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\Git_Project\\github\\WheelBipe_Simulate\\libs\\controller_module\\buildw\\CMakeFiles\\CMakeScratch\\TryCompile-hdq506\\Debug\\cmTC_56c65.exe" /INCREMENTAL /ILK:"cmTC_56c65.dir\\Debug\\cmTC_56c65.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/Git_Project/github/WheelBipe_Simulate/libs/controller_module/buildw/CMakeFiles/CMakeScratch/TryCompile-hdq506/Debug/cmTC_56c65.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/Git_Project/github/WheelBipe_Simulate/libs/controller_module/buildw/CMakeFiles/CMakeScratch/TryCompile-hdq506/Debug/cmTC_56c65.lib" /MACHINE:X64  /machine:x64 cmTC_56c65.dir\\Debug\\CMakeCXXCompilerABI.obj
-          cmTC_56c65.vcxproj -> D:\\Git_Project\\github\\WheelBipe_Simulate\\libs\\controller_module\\buildw\\CMakeFiles\\CMakeScratch\\TryCompile-hdq506\\Debug\\cmTC_56c65.exe
+          D:\\VS\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\HostX64\\x64\\link.exe /ERRORREPORT:QUEUE /OUT:"D:\\Git_Project\\github\\WheelBipe_Simulate\\libs\\controller_module\\buildw\\CMakeFiles\\CMakeScratch\\TryCompile-ijjyna\\Debug\\cmTC_e423c.exe" /INCREMENTAL /ILK:"cmTC_e423c.dir\\Debug\\cmTC_e423c.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:/Git_Project/github/WheelBipe_Simulate/libs/controller_module/buildw/CMakeFiles/CMakeScratch/TryCompile-ijjyna/Debug/cmTC_e423c.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:/Git_Project/github/WheelBipe_Simulate/libs/controller_module/buildw/CMakeFiles/CMakeScratch/TryCompile-ijjyna/Debug/cmTC_e423c.lib" /MACHINE:X64  /machine:x64 cmTC_e423c.dir\\Debug\\CMakeCXXCompilerABI.obj
+          cmTC_e423c.vcxproj -> D:\\Git_Project\\github\\WheelBipe_Simulate\\libs\\controller_module\\buildw\\CMakeFiles\\CMakeScratch\\TryCompile-ijjyna\\Debug\\cmTC_e423c.exe
         FinalizeBuildStatus:
-          正在删除文件“cmTC_56c65.dir\\Debug\\cmTC_56c65.tlog\\unsuccessfulbuild”。
-          正在对“cmTC_56c65.dir\\Debug\\cmTC_56c65.tlog\\cmTC_56c65.lastbuildstate”执行 Touch 任务。
-        已完成生成项目“D:\\Git_Project\\github\\WheelBipe_Simulate\\libs\\controller_module\\buildw\\CMakeFiles\\CMakeScratch\\TryCompile-hdq506\\cmTC_56c65.vcxproj”(默认目标)的操作。
+          正在删除文件“cmTC_e423c.dir\\Debug\\cmTC_e423c.tlog\\unsuccessfulbuild”。
+          正在对“cmTC_e423c.dir\\Debug\\cmTC_e423c.tlog\\cmTC_e423c.lastbuildstate”执行 Touch 任务。
+        已完成生成项目“D:\\Git_Project\\github\\WheelBipe_Simulate\\libs\\controller_module\\buildw\\CMakeFiles\\CMakeScratch\\TryCompile-ijjyna\\cmTC_e423c.vcxproj”(默认目标)的操作。
         
         已成功生成。
             0 个警告
             0 个错误
         
-        已用时间 00:00:00.72
+        已用时间 00:00:00.74
         
       exitCode: 0
   -

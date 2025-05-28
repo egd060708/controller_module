@@ -28,4 +28,8 @@ target_include_directories(MpcCpp PUBLIC include ${INCLUDE_DIR})
 # find_library(QPOASES_LIB qpOASES PATHS "${CMAKE_CURRENT_SOURCE_DIR}/libs")
 
 # 指定在链接该库时需要使用的库
-target_link_libraries(MpcCpp "${CMAKE_CURRENT_SOURCE_DIR}/libs/osqp100/osqpstatic.lib")
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    target_link_libraries(MpcCpp "${CMAKE_CURRENT_SOURCE_DIR}/libs/osqp100/osqpstatic.lib")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    target_link_libraries(MpcCpp "${CMAKE_CURRENT_SOURCE_DIR}/bin/osqp100/libosqp.so")
+endif()

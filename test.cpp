@@ -324,9 +324,9 @@ double ub[4] = { 4.5, 4.5, 40, 40 };
 int main()
 {
     // qpoasesInterface mpcCal(10,4,4,0,2);// qpOASES
-    // tinympcInterface mpcCal(10, 4, 4, 0, 3, 1., 1);// tinyMPC
+    tinympcInterface mpcCal(10, 4, 4, 0, 3, 1., 1);// tinyMPC
     // quadprogInterface mpcCal(10, 4, 4, 0, 10);//qp++
-    osqpInterface mpcCal(10, 4, 4, 0, 2,0,0);//osqp
+    // osqpInterface mpcCal(10, 4, 4, 0, 2,0,0);//osqp
     Eigen::Vector<double,10> X = Eigen::Vector<double,10>::Constant(0);
     Eigen::Vector<double,10> Y = Eigen::Vector<double,10>::Constant(0);
     Y(1) = 2.;

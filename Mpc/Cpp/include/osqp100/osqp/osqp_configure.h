@@ -6,9 +6,9 @@
 /* #undef OSQP_ENABLE_DEBUG */
 
 /* Operating system */
-/* #undef IS_LINUX */
+#define IS_LINUX
 /* #undef IS_MAC */
-#define IS_WINDOWS
+/* #undef IS_WINDOWS */
 
 /* Algebra backend in use - Only one of the following is defined at compilation time */
 #define OSQP_ALGEBRA_BUILTIN
@@ -46,7 +46,7 @@
 /* #undef OSQP_USE_FLOAT */
 
 /* OSQP_USE_LONG */
-#define OSQP_USE_LONG
+/* #undef OSQP_USE_LONG */
 
 /* OSQP_PACK_SETTINGS (advanced usage) */
 /* #undef OSQP_PACK_SETTINGS */

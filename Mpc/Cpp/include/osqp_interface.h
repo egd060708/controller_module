@@ -22,9 +22,9 @@ private:
     //double* asv = NULL;
     int n,m,q,p;
     Matrixr As;
-    std::vector<double> Hvalues;
+    std::vector<OSQPFloat> Hvalues;
     std::vector<OSQPInt> Hrow_indices, Hcol_ptr;
-    std::vector<double> Avalues;
+    std::vector<OSQPFloat> Avalues;
     std::vector<OSQPInt> Arow_indices, Acol_ptr;
 
     /* Exitflag */
@@ -54,7 +54,7 @@ private:
     // 稠密矩阵转csc稀疏矩阵
     void denseToCSC(
         const Matrixr& dense,
-        std::vector<double>& values,
+        std::vector<OSQPFloat>& values,
         std::vector<OSQPInt>& row_indices,
         std::vector<OSQPInt>& col_ptr,
         bool is_up_traingle
@@ -63,7 +63,7 @@ private:
     // 稠密矩阵值转稀疏矩阵向量
     void denseToCSCvel(
         const Matrixr& dense,
-        std::vector<double>& values,
+        std::vector<OSQPFloat>& values,
         bool is_up_traingle
     );
 };

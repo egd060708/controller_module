@@ -169,7 +169,7 @@ void osqpInterface::_matrix_transfer()
  */
 void osqpInterface::denseToCSC(
     const Matrixr& dense,
-    std::vector<double>& values,
+    std::vector<OSQPFloat>& values,
     std::vector<OSQPInt>& row_indices,
     std::vector<OSQPInt>& col_ptr,
     bool is_up_traingle
@@ -227,7 +227,7 @@ void osqpInterface::denseToCSC(
     // }
 }
 
-void osqpInterface::denseToCSCvel(const Matrixr& dense, std::vector<double>& values, bool is_up_traingle)
+void osqpInterface::denseToCSCvel(const Matrixr& dense, std::vector<OSQPFloat>& values, bool is_up_traingle)
 {
     int rows = dense.rows();
     if (rows == 0) return;

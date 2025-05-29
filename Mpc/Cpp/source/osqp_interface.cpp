@@ -44,6 +44,8 @@ osqpInterface::osqpInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ct
     settings = OSQPSettings_new();
     settings->verbose = _verbose;
 //	solver = &mpc_mat_solver;
+
+    this->osqpInit();
 }
 
 /**
@@ -81,7 +83,7 @@ void osqpInterface::osqpInit()
     if (!exitflag)
         isSetUp = true;
     /* Get the default codegen options */
-    OSQPCodegenDefines* defs = OSQPCodegenDefines_new();
+    // OSQPCodegenDefines* defs = OSQPCodegenDefines_new();
     /* Sample with both vector and matrix updates */
 //    defs->embedded_mode = 2;
 //    exitflag = osqp_codegen(solver, "./osqp_generate/", "mpc_mat_", defs);

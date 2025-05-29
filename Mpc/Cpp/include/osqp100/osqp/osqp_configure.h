@@ -43,7 +43,7 @@
 #define OSQP_ENABLE_INTERRUPT
 
 /* OSQP_USE_FLOAT */
-/* #undef OSQP_USE_FLOAT */
+#define OSQP_USE_FLOAT
 
 /* OSQP_USE_LONG */
 /* #undef OSQP_USE_LONG */
@@ -51,7 +51,6 @@
 /* OSQP_PACK_SETTINGS (advanced usage) */
 /* #undef OSQP_PACK_SETTINGS */
 
-#define OSQP_EIGEN_OSQP_IS_V1
-#define OSQP_EIGEN_OSQP_IS_V1_FINAL
+
 
 #endif /* ifndef OSQP_CONFIGURE_H */

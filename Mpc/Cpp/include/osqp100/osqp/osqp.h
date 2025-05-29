@@ -8,4 +8,7 @@
 # include "osqp_api_types.h"
 # include "osqp_api_functions.h"
 
+#define OSQP_EIGEN_OSQP_IS_V1
+#define OSQP_EIGEN_OSQP_IS_V1_FINAL
+
 #endif /* ifndef OSQP_H */

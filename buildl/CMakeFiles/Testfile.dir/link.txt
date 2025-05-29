@@ -1,1 +1,0 @@
-/usr/bin/c++  -O2 -O3 -DNDEBUG CMakeFiles/Testfile.dir/test.cpp.o -o Testfile  -Wl,-rpath,/home/lu/Git_Project/github/WheelBipe_Simulate/libs/controller_module/Mpc/Cpp/bin/osqp100 Mpc/Cpp/libMpcCpp.a /home/lu/Git_Project/github/WheelBipe_Simulate/libs/controller_module/Mpc/Cpp/bin/osqp100/libosqp.so

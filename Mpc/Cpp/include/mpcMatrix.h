@@ -19,13 +19,14 @@
 #pragma once
 
 #include <Eigen/Dense>
+#include "../config/mpcInterfaceCfg.h"
 
 // 定义常规矩阵类型(静态)
-#define MatrixSr(r, c) Eigen::Matrix<double, r, c, Eigen::ColMajor>
+#define MatrixSr(r, c) Eigen::Matrix<MPCFloat, r, c, Eigen::ColMajor>
 // 定义方阵类型（Square）
-#define MatrixSsr(d) Eigen::Matrix<double, d, d, Eigen::ColMajor>
+#define MatrixSsr(d) Eigen::Matrix<MPCFloat, d, d, Eigen::ColMajor>
 // 定义常规矩阵类型(动态)
-#define Matrixr Eigen::Matrix<double, -1, -1, Eigen::ColMajor>
+#define Matrixr Eigen::Matrix<MPCFloat, -1, -1, Eigen::ColMajor>
 
 class mpcBase
 {
@@ -59,18 +60,18 @@ class mpcBase
         // qp求解执行参数
         int nWSR_static = 1000; // 最大单轮qp迭代次数
         int nWSR = 1000;
-        double CPU_t_static = 1.; // 最长CPU使用时间
-        double CPU_t = 1.;
+        MPCFloat CPU_t_static = 1.; // 最长CPU使用时间
+        MPCFloat CPU_t = 1.;
         uint8_t isModelUpdate = 1; // 系统模型是否更新
 
         // 初始化
-        virtual void mpcInit(const Matrixr& _A,const Matrixr& _B,const Matrixr& _Q,const Matrixr& _F,const Matrixr& _R,const Matrixr& _W, double _Ts = 0);
+        virtual void mpcInit(const Matrixr& _A,const Matrixr& _B,const Matrixr& _Q,const Matrixr& _F,const Matrixr& _R,const Matrixr& _W, MPCFloat _Ts = 0);
         // 独立更新状态空间
-        virtual void setStateSpace(const Matrixr& _A,const Matrixr& _B, double _Ts = 0);
+        virtual void setStateSpace(const Matrixr& _A,const Matrixr& _B, MPCFloat _Ts = 0);
         // 独立更新权重参数
         virtual void setWeightParams(const Matrixr& _Q,const Matrixr& _F,const Matrixr& _R,const Matrixr& _W);
         // 状态更新
-        void mpcUpdate(const Matrixr& _Y,const Matrixr& _X, int _nWSR, double _cpu_t);
+        void mpcUpdate(const Matrixr& _Y,const Matrixr& _X, int _nWSR, MPCFloat _cpu_t);
         // mpc问题求解
         void mpcSolve();
         // 设置输入约束
@@ -118,7 +119,7 @@ class mpcMatrix : public mpcBase
         Matrixr Iup, Idown, Wup, Wn;
 
         // 重写权重更新
-        // void mpcInit(const Matrixr& _A, const Matrixr& _B, const Matrixr& _Q, const Matrixr& _F, const Matrixr& _R, const Matrixr& _W, double _Ts = 0) override;
+        // void mpcInit(const Matrixr& _A, const Matrixr& _B, const Matrixr& _Q, const Matrixr& _F, const Matrixr& _R, const Matrixr& _W, MPCFloat _Ts = 0) override;
         void setWeightParams(const Matrixr& _Q,const Matrixr& _F,const Matrixr& _R,const Matrixr& _W) override;
         // 设置额外代价
         void setExtraCost(const Matrixr& _extraH,const Matrixr& _extra_g);

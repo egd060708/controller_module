@@ -3,12 +3,13 @@
 #include <thread>
 #include "qpOASES_interface.h"
 #include "tinyMpc_interface.h"
-#include "quadprog_interface.h"
+// #include "quadprog_interface.h"
 #include "osqp_interface.h"
+#include "osqpE_interface.h"
 #include "model_fit.h"
 
 /*MPC模型参数*/
-double model_A[4 * 10 * 10] = {
+MPCFloat model_A[4 * 10 * 10] = {
 1.000000e+00,-1.394936e-14,5.045869e-14,-5.857560e-14,
 5.000000e-03,-1.519882e-16,5.497832e-16,-6.382226e-16,
 0,0,0,0,
@@ -110,7 +111,7 @@ double model_A[4 * 10 * 10] = {
 1.083541e-01,5.270732e-03,-1.495823e-02,1.470508e-02,
 1.000271e+00,1.314246e-05,-3.726309e-05,3.661317e-05,
 };
-double model_B[4 * 10 * 4] = {
+MPCFloat model_B[4 * 10 * 4] = {
 2.415160e-04,9.055450e-04,-3.285390e-03,3.640436e-03,
 2.415160e-04,9.055450e-04,-3.285390e-03,3.640436e-03,
 -1.495879e-04,6.418049e-04,-1.270011e-03,9.539925e-04,
@@ -152,7 +153,7 @@ double model_B[4 * 10 * 4] = {
 -1.852759e-02,2.331256e-04,2.994202e-02,-4.675787e-02,
 -1.852759e-02,2.331256e-04,2.994202e-02,-4.675787e-02,
 };
-double model_K[4 * 4 * 10] = {
+MPCFloat model_K[4 * 4 * 10] = {
 -1.065673e-04,-2.272152e-03,5.311686e-03,-4.550664e-03,
 -3.371490e-01,-7.185938e+00,1.679833e+01,-1.439147e+01,
 -5.791408e-04,-6.764809e-04,3.566668e-03,-3.500909e-03,
@@ -194,7 +195,7 @@ double model_K[4 * 4 * 10] = {
 -1.782634e+01,-1.241320e+02,3.124392e+02,-2.830730e+02,
 -1.593020e+00,-1.072736e+01,2.519544e+01,-2.181701e+01,
 };
-double model_P[4 * 10 * 10] = {
+MPCFloat model_P[4 * 10 * 10] = {
 6.326311e+00,-4.220728e-03,1.339189e-02,-1.311968e-02,
 5.537012e+00,-1.335000e+01,4.235810e+01,-4.149725e+01,
 1.566576e-09,-1.630369e-08,5.476932e-08,-5.910488e-08,
@@ -297,7 +298,7 @@ double model_P[4 * 10 * 10] = {
 9.430366e+02,-3.411732e+03,9.580426e+03,-9.377007e+03,
 };
 
-double Q[10] = {
+MPCFloat Q[10] = {
     0.00001,
     100,
     0.00001,
@@ -309,17 +310,17 @@ double Q[10] = {
     5000,
     0.5
 };
-double R[4] = {
+MPCFloat R[4] = {
     12,
     12,
     2,
     2
 };
 
-double F[10];
-double W[4] = {1e-6,1e-6,1e-6,1e-6};
-double lb[4] = { -4.5,-4.5,-40,-40 };
-double ub[4] = { 4.5, 4.5, 40, 40 };
+MPCFloat F[10];
+MPCFloat W[4] = {1e-6,1e-6,1e-6,1e-6};
+MPCFloat lb[4] = { -4.5,-4.5,-40,-40 };
+MPCFloat ub[4] = { 4.5, 4.5, 40, 40 };
 
 int main()
 {
@@ -327,11 +328,12 @@ int main()
     // tinympcInterface mpcCal(10, 4, 4, 0, 3, 1., 1);// tinyMPC
     // quadprogInterface mpcCal(10, 4, 4, 0, 10);//qp++
     osqpInterface mpcCal(10, 4, 4, 0, 2,0,0);//osqp
-    Eigen::Vector<double,10> X = Eigen::Vector<double,10>::Constant(0);
-    Eigen::Vector<double,10> Y = Eigen::Vector<double,10>::Constant(0);
+    // osqpeInterface mpcCal(10, 4, 4, 0, 2);//osqp-eigen
+    Eigen::Vector<MPCFloat,10> X = Eigen::Vector<MPCFloat,10>::Constant(0);
+    Eigen::Vector<MPCFloat,10> Y = Eigen::Vector<MPCFloat,10>::Constant(0);
     Y(1) = 2.;
     X(8) = -0.1;
-    double avc_length = 0.2;
+    MPCFloat avc_length = 0.2;
     modelFit<10, 10, 3> fitA;
     modelFit<10, 4, 3> fitB;
     modelFit<4, 10, 3> fitK;
@@ -340,19 +342,19 @@ int main()
     fitB.setFunctions(model_B);
     fitK.setFunctions(model_K);
     fitP.setFunctions(model_P);
-    Eigen::MatrixXd A = fitA.modelGenerateMat(avc_length);
-    Eigen::MatrixXd B = fitB.modelGenerateMat(avc_length);
-    Eigen::MatrixXd K = fitK.modelGenerateMat(avc_length);
-    Eigen::MatrixXd P = fitP.modelGenerateMat(avc_length);
-    Eigen::VectorXd Qv = Eigen::Map<Eigen::Vector<double, 10>>(Q);
-    Eigen::VectorXd Rv = Eigen::Map<Eigen::Vector<double, 4>>(R);
-    Eigen::VectorXd Fv = Qv;
-    Eigen::VectorXd Wv = Eigen::Map<Eigen::Vector<double, 4>>(W);
-    Eigen::VectorXd lbv = Eigen::Map<Eigen::Vector<double, 4>>(lb);
-    Eigen::VectorXd ubv = Eigen::Map<Eigen::Vector<double, 4>>(ub);
-    Eigen::VectorXd Albv = lbv;
-    Eigen::VectorXd Aubv = ubv;
-    Eigen::MatrixXd cA;
+    Eigen::Matrix<MPCFloat,-1,-1> A = fitA.modelGenerateMat(avc_length);
+    Eigen::Matrix<MPCFloat,-1,-1> B = fitB.modelGenerateMat(avc_length);
+    Eigen::Matrix<MPCFloat,-1,-1> K = fitK.modelGenerateMat(avc_length);
+    Eigen::Matrix<MPCFloat,-1,-1> P = fitP.modelGenerateMat(avc_length);
+    Eigen::Vector<MPCFloat,-1> Qv = Eigen::Map<Eigen::Vector<MPCFloat, 10>>(Q);
+    Eigen::Vector<MPCFloat,-1> Rv = Eigen::Map<Eigen::Vector<MPCFloat, 4>>(R);
+    Eigen::Vector<MPCFloat,-1> Fv = Qv;
+    Eigen::Vector<MPCFloat,-1> Wv = Eigen::Map<Eigen::Vector<MPCFloat, 4>>(W);
+    Eigen::Vector<MPCFloat,-1> lbv = Eigen::Map<Eigen::Vector<MPCFloat, 4>>(lb);
+    Eigen::Vector<MPCFloat,-1> ubv = Eigen::Map<Eigen::Vector<MPCFloat, 4>>(ub);
+    Eigen::Vector<MPCFloat,-1> Albv = lbv;
+    Eigen::Vector<MPCFloat,-1> Aubv = ubv;
+    Eigen::Matrix<MPCFloat,-1,-1> cA;
     mpcCal.mpcInit(A,B,Qv.asDiagonal(),P,Rv.asDiagonal(),Wv.asDiagonal(),0);
     while(1)
     {
@@ -377,7 +379,7 @@ int main()
         // // 记录开始时间
         // auto start = std::chrono::high_resolution_clock::now();
         mpcCal.mpcSolve();
-        Eigen::VectorXd output = mpcCal.getOutput();
+        Eigen::Vector<MPCFloat,-1> output = mpcCal.getOutput();
         // 记录结束时间
         auto end = std::chrono::high_resolution_clock::now();
         // 计算时间差（单位：毫秒）

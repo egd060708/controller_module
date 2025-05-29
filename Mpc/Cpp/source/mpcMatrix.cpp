@@ -98,7 +98,7 @@ mpcBase::mpcBase(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep)
  * @param _W 输入平滑权重矩阵
  * @param _Ts 离散周期，若为0，则默认输入的_A,_B已经为离散状态空间方程，否则，做一阶线性化处理
  */
-void mpcBase::mpcInit(const Matrixr& _A,const Matrixr& _B,const Matrixr& _Q,const Matrixr& _F,const Matrixr& _R,const Matrixr& _W, double _Ts)
+void mpcBase::mpcInit(const Matrixr& _A,const Matrixr& _B,const Matrixr& _Q,const Matrixr& _F,const Matrixr& _R,const Matrixr& _W, MPCFloat _Ts)
 {
     
     this->setStateSpace(_A,_B,_Ts);
@@ -111,7 +111,7 @@ void mpcBase::mpcInit(const Matrixr& _A,const Matrixr& _B,const Matrixr& _Q,cons
  * @param _B 设置状态空间方程B矩阵
  * @param _Ts 离散周期，若为0，则默认输入的_A,_B已经为离散状态空间方程，否则，做一阶线性化处理
  */
-void mpcBase::setStateSpace(const Matrixr& _A,const Matrixr& _B, double _Ts)
+void mpcBase::setStateSpace(const Matrixr& _A,const Matrixr& _B, MPCFloat _Ts)
 {
     if (_Ts <= 0)
     {
@@ -153,7 +153,7 @@ void mpcBase::setWeightParams(const Matrixr& _Q,const Matrixr& _F,const Matrixr&
  * @param _nWSR 最大迭代次数
  * @param _cpu_t 最大迭代时间
  */
-void mpcBase::mpcUpdate(const Matrixr& _Y,const Matrixr& _X, int _nWSR, double _cpu_t)
+void mpcBase::mpcUpdate(const Matrixr& _Y,const Matrixr& _X, int _nWSR, MPCFloat _cpu_t)
 {
     this->Y = _Y;
     this->X = _X;
@@ -340,7 +340,7 @@ void mpcMatrix::setExtraCost(const Matrixr& _extraH,const Matrixr& _extra_g)
 //  * @param _W 输入平滑权重矩阵
 //  * @param _Ts 离散周期，若为0，则默认输入的_A,_B已经为离散状态空间方程，否则，做一阶线性化处理
 //  */
-// void mpcMatrix::mpcInit(const Matrixr& _A, const Matrixr& _B, const Matrixr& _Q, const Matrixr& _F, const Matrixr& _R, const Matrixr& _W, double _Ts)
+// void mpcMatrix::mpcInit(const Matrixr& _A, const Matrixr& _B, const Matrixr& _Q, const Matrixr& _F, const Matrixr& _R, const Matrixr& _W, MPCFloat _Ts)
 // {
 //     if (_Ts <= 0)
 //     {

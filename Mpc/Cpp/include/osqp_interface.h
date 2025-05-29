@@ -12,14 +12,14 @@ public:
     void osqpInit();
 private:
     // 转换矩阵，用于从eigen稠密阵转换成稀疏矩阵
-    //Eigen::SparseMatrix<double> Hs;
+    //Eigen::SparseMatrix<MPCFloat> Hs;
     //int* hsp = NULL;
     //int* hsi = NULL;
-    //double* hsv = NULL;
-    //Eigen::SparseMatrix<double> As;
+    //MPCFloat* hsv = NULL;
+    //Eigen::SparseMatrix<MPCFloat> As;
     //int* asp = NULL;
     //int* asi = NULL;
-    //double* asv = NULL;
+    //MPCFloat* asv = NULL;
     int n,m,q,p;
     Matrixr As;
     std::vector<OSQPFloat> Hvalues;

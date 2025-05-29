@@ -14,11 +14,11 @@
 class tinympcInterface : public mpcBase
 {
 public:
-    tinympcInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, double _rho = 1., int _speed_up = 1, int _verbose = 0);
+    tinympcInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, MPCFloat _rho = 1., int _speed_up = 1, int _verbose = 0);
     ~tinympcInterface() {}
 
     // 设置学习率
-    void setRegularisation(double _rho) { rho_value = _rho; }
+    void setRegularisation(MPCFloat _rho) { rho_value = _rho; }
 
 private:
     // 求解器
@@ -27,7 +27,7 @@ private:
     // 打印使能
     int verbose = 0;
     // QR矩阵正则化参数
-    double rho_value = 0.;
+    MPCFloat rho_value = 0.;
     // 是否使用离线拟合LQR矩阵进行加速
     int speed_up = 0.;
     // 输入矩阵

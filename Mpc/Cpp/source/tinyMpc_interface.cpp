@@ -20,7 +20,7 @@
  * @param _speed_up 使用离线lqr加速模式
  * @param _verbose 是否使能打印
  */
-tinympcInterface::tinympcInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, double _rho, int _speed_up, int _verbose)
+tinympcInterface::tinympcInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, MPCFloat _rho, int _speed_up, int _verbose)
     : mpcBase(_xNum, _uNum, _cNum, _eNum, _ctrlStep)
 {
     this->_Adyn.resize(xNum, xNum);

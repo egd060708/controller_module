@@ -88,7 +88,7 @@ Matrixr quadprogInterface::_prediction(const Matrixr &y_k, const Matrixr &x_k)
         _ci0[2 * q + i] = lb(i, 0);
         _ci0[2 * q + n + i] = -ub(i, 0);
     }
-    double value = solve_quadprog(_G, _g0, _CE, _ce0, _CI, _ci0, _x);
+    MPCFloat value = solve_quadprog(_G, _g0, _CE, _ce0, _CI, _ci0, _x);
     Matrixr result;
     result.resize(n, 1);
     result.setZero();

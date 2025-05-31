@@ -378,6 +378,9 @@ int main()
         mpcCal.mpcUpdate(Y,X,50,2e-3);
         // // 记录开始时间
         // auto start = std::chrono::high_resolution_clock::now();
+        // mpcCal.mpcPredictionSolve();
+        mpcCal.mpcPrediction();
+        mpcCal.matrixCopy();
         mpcCal.mpcSolve();
         Eigen::Vector<MPCFloat,-1> output = mpcCal.getOutput();
         // 记录结束时间

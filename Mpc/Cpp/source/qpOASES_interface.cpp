@@ -142,14 +142,21 @@ Matrixr qpoasesInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x_
     return result;
 }
 
-// 重写预测函数
+/**
+ * @brief mpc问题预测
+ * @param None
+ */
 void qpoasesInterface::_prediction(const Matrixr& y_k, const Matrixr& x_k)
 {
     // 生成预测矩阵
     this->_mpc_matrices();
     this->_update_qp(y_k, x_k);
 }
-// 重写矩阵拷贝
+
+/**
+ * @brief 矩阵拷贝，方便加锁
+ * @param None
+ */
 void qpoasesInterface::matrixCopy()
 {
     Eigen::Map<Matrixr>(H_qpOASES, H_new.rows(), H_new.cols()) = H_new;  // 直接映射，无拷贝
@@ -160,7 +167,11 @@ void qpoasesInterface::matrixCopy()
     Eigen::Map<Matrixr>(Alb_qpOASES, Alb.rows(), Alb.cols()) = Alb;
     Eigen::Map<Matrixr>(Aub_qpOASES, Aub.rows(), Aub.cols()) = Aub;
 }
-// 重写求解函数
+
+/**
+ * @brief mpc问题求解
+ * @param None
+ */
 Matrixr qpoasesInterface::_solve()
 {
     qpOASES::returnValue ret = qpOASES::SUCCESSFUL_RETURN;
@@ -198,7 +209,16 @@ Matrixr qpoasesInterface::_solve()
 
 
 
-
+/**
+ * @brief qpoasesSimple接口构造
+ * @param _xNum 状态维度
+ * @param _uNum 输入维度
+ * @param _cNum 不等式约束维度
+ * @param _eNum 等式约束维度
+ * @param _ctrlStep 控制周期=预测周期
+ * @param _flat_mode 0为不设平滑，1为预测整体与上一次平滑，2为每一步预测平滑
+ * @param _pl 打印等级
+ */
 qpoasesInterfaceSimple::qpoasesInterfaceSimple(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, uint8_t _flat_mode, PrintLevel _pl)
     : mpcMatrix(_xNum, _uNum, _cNum, _eNum, _ctrlStep, _flat_mode),
     qp_solver(_ctrlStep* _uNum, HST_UNKNOWN)
@@ -219,6 +239,10 @@ qpoasesInterfaceSimple::qpoasesInterfaceSimple(int _xNum, int _uNum, int _cNum, 
     qp_out = new real_t[ctrlStep * uNum];
 }
 
+/**
+ * @brief 析构函数
+ * @param None
+ */
 qpoasesInterfaceSimple::~qpoasesInterfaceSimple()
 {
     delete H_qpOASES;
@@ -231,6 +255,11 @@ qpoasesInterfaceSimple::~qpoasesInterfaceSimple()
     delete qp_out;
 }
 
+/**
+ * @brief mpc预测求解
+ * @param y_k 期望状态
+ * @param x_k 当前轨迹
+ */
 Matrixr qpoasesInterfaceSimple::_predictionSolve(const Matrixr& y_k, const Matrixr& x_k)
 {
     // 生成预测矩阵
@@ -279,14 +308,21 @@ Matrixr qpoasesInterfaceSimple::_predictionSolve(const Matrixr& y_k, const Matri
     return result;
 }
 
-// 重写预测函数
+/**
+ * @brief mpc问题预测
+ * @param None
+ */
 void qpoasesInterfaceSimple::_prediction(const Matrixr& y_k, const Matrixr& x_k)
 {
     // 生成预测矩阵
     this->_mpc_matrices();
     this->_update_qp(y_k, x_k);
 }
-// 重写矩阵拷贝
+
+/**
+ * @brief 矩阵拷贝，方便求解
+ * @param None
+ */
 void qpoasesInterfaceSimple::matrixCopy()
 {
     Eigen::Map<Matrixr>(H_qpOASES, H_new.rows(), H_new.cols()) = H_new;  // 直接映射，无拷贝
@@ -294,7 +330,11 @@ void qpoasesInterfaceSimple::matrixCopy()
     Eigen::Map<Matrixr>(lb_qpOASES, lb.rows(), lb.cols()) = lb;
     Eigen::Map<Matrixr>(ub_qpOASES, ub.rows(), ub.cols()) = ub;
 }
-// 重写求解函数
+
+/**
+ * @brief mpc问题求解
+ * @param None
+ */
 Matrixr qpoasesInterfaceSimple::_solve()
 {
     qpOASES::returnValue ret = qpOASES::SUCCESSFUL_RETURN;

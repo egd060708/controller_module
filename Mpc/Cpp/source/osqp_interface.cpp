@@ -150,6 +150,10 @@ Matrixr osqpInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x_k)
     return result;
 }
 
+/**
+ * @brief mpc问题预测
+ * @param None
+ */
 void osqpInterface::_prediction(const Matrixr& y_k, const Matrixr& x_k)
 {
     if (isSetUp == false)
@@ -164,6 +168,10 @@ void osqpInterface::_prediction(const Matrixr& y_k, const Matrixr& x_k)
     this->_update_qp(y_k, x_k);
 }
 
+/**
+ * @brief 矩阵拷贝，方便加锁
+ * @param None
+ */
 void osqpInterface::matrixCopy()
 {
     denseToCSCvel(H_new, Hvalues, true);
@@ -185,6 +193,10 @@ void osqpInterface::matrixCopy()
     }
 }
 
+/**
+ * @brief mpc问题求解
+ * @param None
+ */
 Matrixr osqpInterface::_solve()
 {
     // 更新向量

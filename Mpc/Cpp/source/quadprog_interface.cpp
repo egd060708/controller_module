@@ -99,7 +99,10 @@ Matrixr quadprogInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x
     return result;
 }
 
-// 重写预测函数
+/**
+ * @brief mpc问题预测
+ * @param None
+ */
 void quadprogInterface::_prediction(const Matrixr& y_k, const Matrixr& x_k)
 {
     // 生成预测矩阵
@@ -107,7 +110,10 @@ void quadprogInterface::_prediction(const Matrixr& y_k, const Matrixr& x_k)
     this->_update_qp(y_k, x_k);
 }
 
-// 重写矩阵拷贝
+/**
+ * @brief 矩阵拷贝，方便加锁
+ * @param None
+ */
 void quadprogInterface::matrixCopy()
 {
     // 由于eigen库的矩阵是按列存储，因此需要手动转换为数组
@@ -155,7 +161,10 @@ void quadprogInterface::matrixCopy()
     }
 }
 
-// 重写求解函数
+/**
+ * @brief mpc问题求解
+ * @param None
+ */
 Matrixr quadprogInterface::_solve()
 {
     double value = solve_quadprog(_G, _g0, _CE, _ce0, _CI, _ci0, _x);

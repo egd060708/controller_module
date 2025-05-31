@@ -130,7 +130,10 @@ Matrixr tinympcInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x_
     return result;
 }
 
-// 重写预测函数
+/**
+ * @brief mpc问题预测
+ * @param None
+ */
 void tinympcInterface::_prediction(const Matrixr& y_k, const Matrixr& x_k)
 {
     _Adyn = A;
@@ -145,7 +148,10 @@ void tinympcInterface::_prediction(const Matrixr& y_k, const Matrixr& x_k)
     _x_max = xub.reshaped(xNum, ctrlStep);
 }
 
-// 重写矩阵拷贝
+/**
+ * @brief 矩阵拷贝，方便加锁
+ * @param None
+ */
 void tinympcInterface::matrixCopy()
 {
     work->Q = (_Q).diagonal();
@@ -178,7 +184,10 @@ void tinympcInterface::matrixCopy()
     work->Xref = Y_K.block(0, 0, xNum * ctrlStep, 1).reshaped(xNum, ctrlStep);
 }
 
-// 重写求解函数
+/**
+ * @brief mpc问题求解
+ * @param None
+ */
 Matrixr tinympcInterface::_solve()
 {
     // 1. Update measurement

@@ -139,7 +139,10 @@ Matrixr osqpeInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x_k)
 }
 
 
-// 重写预测函数
+/**
+ * @brief mpc问题预测
+ * @param None
+ */
 void osqpeInterface::_prediction(const Matrixr& y_k, const Matrixr& x_k)
 {
     // 生成预测矩阵
@@ -172,7 +175,10 @@ void osqpeInterface::_prediction(const Matrixr& y_k, const Matrixr& x_k)
     }
 }
 
-// 重写矩阵拷贝
+/**
+ * @brief 矩阵拷贝，方便加锁
+ * @param None
+ */
 void osqpeInterface::matrixCopy()
 {
     if (!solver.isInitialized()) {
@@ -198,7 +204,10 @@ void osqpeInterface::matrixCopy()
     }
 }
 
-// 重写求解函数
+/**
+ * @brief mpc问题求解
+ * @param None
+ */
 Matrixr osqpeInterface::_solve()
 {
     Matrixr result;

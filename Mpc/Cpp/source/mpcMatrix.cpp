@@ -167,13 +167,33 @@ void mpcBase::mpcUpdate(const Matrixr& _Y,const Matrixr& _X, int _nWSR, double _
 }
 
 /**
+ * @brief mpc问题预测求解
+ * @param None
+ */
+void mpcBase::mpcPredictionSolve()
+{
+    // 执行预测
+    this->U_K.block(0, 0, uNum * ctrlStep, 1) = _predictionSolve(this->Y_K, this->X);     // 把预测输出记录下来
+    this->U = this->U_K.block(0, 0, uNum, 1); // 选择第一个周期的输出作为最后输出
+    this->U_pre = this->U_K; // 更新上一次求解的输出
+}
+
+/**
+ * @brief mpc问题预测
+ * @param None
+ */
+void mpcBase::mpcPrediction()
+{
+    this->_prediction(this->Y_K, this->X);
+}
+
+/**
  * @brief mpc问题求解
  * @param None
  */
 void mpcBase::mpcSolve()
 {
-    // 执行预测
-    this->U_K.block(0, 0, uNum * ctrlStep, 1) = _prediction(this->Y_K, this->X);     // 把预测输出记录下来
+    this->U_K.block(0, 0, uNum * ctrlStep, 1) = this->_solve();
     this->U = this->U_K.block(0, 0, uNum, 1); // 选择第一个周期的输出作为最后输出
     this->U_pre = this->U_K; // 更新上一次求解的输出
 }

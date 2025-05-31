@@ -45,8 +45,14 @@ private:
     // is problem setup
     bool isSetUp = false;
 
+    // 重写预测求解函数
+    Matrixr _predictionSolve(const Matrixr &y_k, const Matrixr &x_k) override;
     // 重写预测函数
-    Matrixr _prediction(const Matrixr &y_k, const Matrixr &x_k) override;
+    void _prediction(const Matrixr& y_k, const Matrixr& x_k) override;
+    // 重写矩阵拷贝
+    void matrixCopy() override;
+    // 重写求解函数
+    Matrixr _solve() override;
 
     // 独立矩阵处理函数
     void _matrix_transfer();

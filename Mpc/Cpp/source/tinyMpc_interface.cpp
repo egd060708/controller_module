@@ -61,9 +61,8 @@ tinympcInterface::tinympcInterface(int _xNum, int _uNum, int _cNum, int _eNum, i
  * @param y_k 期望状态
  * @param x_k 当前轨迹
  */
-Matrixr tinympcInterface::_prediction(const Matrixr &y_k, const Matrixr &x_k)
+Matrixr tinympcInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x_k)
 {
-    
     _Adyn = A;
     _Bdyn = B;
     _Q = Q;
@@ -103,10 +102,10 @@ Matrixr tinympcInterface::_prediction(const Matrixr &y_k, const Matrixr &x_k)
     }
 
     // Initial state
-    _x0 = X;
+    _x0 = x_k;
 
     // Reference trajectory
-    work->Xref = Y_K.block(0,0,xNum * ctrlStep,1).reshaped(xNum, ctrlStep);
+    work->Xref = y_k.block(0,0,xNum * ctrlStep,1).reshaped(xNum, ctrlStep);
 
     // 1. Update measurement
     tiny_set_x0(solver, _x0);
@@ -128,5 +127,71 @@ Matrixr tinympcInterface::_prediction(const Matrixr &y_k, const Matrixr &x_k)
     }*/
     result.block(0, 0, uNum, 1) = work->u.col(0);
     //std::cout << result.block(0, 0, uNum, 1) << std::endl;
+    return result;
+}
+
+// 重写预测函数
+void tinympcInterface::_prediction(const Matrixr& y_k, const Matrixr& x_k)
+{
+    _Adyn = A;
+    _Bdyn = B;
+    _Q = Q;
+    _R = R;
+    _K = K;
+    _P = P;
+    _u_min = lb.block(0, 0, uNum * (ctrlStep - 1), 1).reshaped(uNum, ctrlStep - 1);
+    _u_max = ub.block(0, 0, uNum * (ctrlStep - 1), 1).reshaped(uNum, ctrlStep - 1);
+    _x_min = xlb.reshaped(xNum, ctrlStep);
+    _x_max = xub.reshaped(xNum, ctrlStep);
+}
+
+// 重写矩阵拷贝
+void tinympcInterface::matrixCopy()
+{
+    work->Q = (_Q).diagonal();
+    work->R = (_R).diagonal();
+    work->Adyn = _Adyn;
+    work->Bdyn = _Bdyn;
+
+    work->x_min = _x_min;
+    work->x_max = _x_max;
+    work->u_min = _u_min;
+    work->u_max = _u_max;
+    if (speed_up)
+    {
+        solver->cache->rho = rho_value;
+        solver->cache->Kinf = _K;
+        solver->cache->Pinf = _P;
+        tinyMatrix R1 = work->R.asDiagonal();
+        solver->cache->Quu_inv = (R1 + _Bdyn.transpose() * _P * _Bdyn).inverse();
+        solver->cache->AmBKt = (_Adyn - _Bdyn * _K).transpose();
+    }
+    else
+    {
+        int status = tiny_precompute_and_set_cache(solver->cache, _Adyn, _Bdyn, _Q, _R, xNum, uNum, rho_value, verbose);
+
+    }
+    // Initial state
+    _x0 = X;
+
+    // Reference trajectory
+    work->Xref = Y_K.block(0, 0, xNum * ctrlStep, 1).reshaped(xNum, ctrlStep);
+}
+
+// 重写求解函数
+Matrixr tinympcInterface::_solve()
+{
+    // 1. Update measurement
+    tiny_set_x0(solver, _x0);
+
+    // 2. Solve MPC problem
+    tiny_solve(solver);
+
+    Matrixr result;
+    result.resize(uNum * ctrlStep, 1);
+    result.setZero();
+
+    result.block(0, 0, uNum, 1) = work->u.col(0);
+
     return result;
 }

@@ -1,3 +1,3 @@
 #pragma once
 
-typedef float MPCFloat;
+typedef double MPCFloat;

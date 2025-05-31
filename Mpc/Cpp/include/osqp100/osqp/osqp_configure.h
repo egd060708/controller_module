@@ -43,7 +43,7 @@
 #define OSQP_ENABLE_INTERRUPT
 
 /* OSQP_USE_FLOAT */
-#define OSQP_USE_FLOAT
+// #define OSQP_USE_FLOAT
 
 /* OSQP_USE_LONG */
 /* #undef OSQP_USE_LONG */

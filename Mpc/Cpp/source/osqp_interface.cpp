@@ -94,7 +94,7 @@ void osqpInterface::osqpInit()
  * @param y_k 期望状态
  * @param x_k 当前轨迹
  */
-Matrixr osqpInterface::_prediction(const Matrixr &y_k, const Matrixr &x_k)
+Matrixr osqpInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x_k)
 {
     if (isSetUp == false)
     {
@@ -149,6 +149,71 @@ Matrixr osqpInterface::_prediction(const Matrixr &y_k, const Matrixr &x_k)
     }
     return result;
 }
+
+void osqpInterface::_prediction(const Matrixr& y_k, const Matrixr& x_k)
+{
+    if (isSetUp == false)
+    {
+        this->osqpInit();
+    }
+    else
+    {
+        this->_matrix_transfer();
+        
+    }
+    this->_update_qp(y_k, x_k);
+}
+
+void osqpInterface::matrixCopy()
+{
+    denseToCSCvel(H_new, Hvalues, true);
+    denseToCSCvel(As, Avalues, false);
+    // 转换为osqp适用的向量
+    for (int i = 0; i < g_new.rows(); i++)
+        for (int j = 0; j < g_new.cols(); j++)
+            qp_q[i * g_new.cols() + j] = g_new(i, j);
+
+    for (int i = 0; i < q; i++)
+    {
+        qp_l[i] = Alb(i, 0);
+        qp_u[i] = Aub(i, 0);
+    }
+    for (int i = 0; i < n; i++)
+    {
+        qp_l[q + i] = lb(i, 0);
+        qp_u[q + i] = ub(i, 0);
+    }
+}
+
+Matrixr osqpInterface::_solve()
+{
+    // 更新向量
+    if (!exitflag)
+        exitflag = osqp_update_data_vec(solver, qp_q, qp_l, qp_u);
+    // 更新矩阵
+    if (!exitflag)
+        exitflag = osqp_update_data_mat(solver,
+            Hvalues.data(), OSQP_NULL, Hvalues.size(),
+            Avalues.data(), OSQP_NULL, Avalues.size());
+
+    // 求解
+    if (!exitflag)
+        exitflag = osqp_solve(solver);
+
+    //std::cout << solver->info->run_time << std::endl;
+    //std::cout << solver->info->iter << std::endl;
+    // 导出结果
+    Matrixr result;
+    result.resize(uNum * ctrlStep, 1);
+    result.setZero();
+    for (int i = 0; i < n; i++)
+    {
+        result(i, 0) = solver->solution->x[i];
+    }
+    return result;
+}
+
+
 
 /**
  * @brief mpc矩阵转换成稀疏矩阵

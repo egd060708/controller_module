@@ -68,7 +68,7 @@ qpoasesInterface::~qpoasesInterface()
  * @param y_k 期望状态
  * @param x_k 当前轨迹
  */
-Matrixr qpoasesInterface::_prediction(const Matrixr &y_k, const Matrixr &x_k)
+Matrixr qpoasesInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x_k)
 {
     // 生成预测矩阵
     this->_mpc_matrices();
@@ -142,6 +142,59 @@ Matrixr qpoasesInterface::_prediction(const Matrixr &y_k, const Matrixr &x_k)
     return result;
 }
 
+// 重写预测函数
+void qpoasesInterface::_prediction(const Matrixr& y_k, const Matrixr& x_k)
+{
+    // 生成预测矩阵
+    this->_mpc_matrices();
+    this->_update_qp(y_k, x_k);
+}
+// 重写矩阵拷贝
+void qpoasesInterface::matrixCopy()
+{
+    Eigen::Map<Matrixr>(H_qpOASES, H_new.rows(), H_new.cols()) = H_new;  // 直接映射，无拷贝
+    Eigen::Map<Matrixr>(g_qpOASES, g_new.rows(), g_new.cols()) = g_new;
+    Eigen::Map<Matrixr>(cA_qpOASES, cA.rows(), cA.cols()) = cA;
+    Eigen::Map<Matrixr>(lb_qpOASES, lb.rows(), lb.cols()) = lb;
+    Eigen::Map<Matrixr>(ub_qpOASES, ub.rows(), ub.cols()) = ub;
+    Eigen::Map<Matrixr>(Alb_qpOASES, Alb.rows(), Alb.cols()) = Alb;
+    Eigen::Map<Matrixr>(Aub_qpOASES, Aub.rows(), Aub.cols()) = Aub;
+}
+// 重写求解函数
+Matrixr qpoasesInterface::_solve()
+{
+    qpOASES::returnValue ret = qpOASES::SUCCESSFUL_RETURN;
+    if (isModelUpdate == 1)
+    {
+        // qp_solver.init(H_qpOASES, g_qpOASES, cA_qpOASES, lb_qpOASES, ub_qpOASES, Alb_qpOASES, Aub_qpOASES, nWSR, &CPU_t, xOpt_initialGuess);
+        ret = qp_solver.init(H_qpOASES, g_qpOASES, cA_qpOASES, lb_qpOASES, ub_qpOASES, Alb_qpOASES, Aub_qpOASES, nWSR, &CPU_t);
+        isModelUpdate = 0;
+    }
+    else
+    {
+        //ret = qp_solver.hotstart(H_qpOASES, g_qpOASES, cA_qpOASES, lb_qpOASES, ub_qpOASES, Alb_qpOASES, Aub_qpOASES, nWSR, &CPU_t, &guessedBounds, &guessedConstraints);
+        ret = qp_solver.init(H_qpOASES, g_qpOASES, cA_qpOASES, lb_qpOASES, ub_qpOASES, Alb_qpOASES, Aub_qpOASES, nWSR, &CPU_t);
+    }
+    nWSR = nWSR_static;
+    CPU_t = CPU_t_static;
+    qp_solver.getPrimalSolution(xOpt_qpOASES);
+    qp_solver.getDualSolution(yOpt_qpOASES);
+    //qp_solver.getBounds(guessedBounds);
+    //qp_solver.getConstraints(guessedConstraints);
+
+    Matrixr result;
+    result.resize(uNum * ctrlStep, 1);
+    result.setZero();
+    if (ret == qpOASES::SUCCESSFUL_RETURN)
+    {
+        for (int i = 0; i < uNum * ctrlStep; i++)
+        {
+            result(i, 0) = xOpt_qpOASES[i];
+        }
+    }
+    return result;
+}
+
 
 
 
@@ -151,7 +204,7 @@ qpoasesInterfaceSimple::qpoasesInterfaceSimple(int _xNum, int _uNum, int _cNum, 
     qp_solver(_ctrlStep* _uNum, HST_UNKNOWN)
 {
     Options option;
-    option.setToDefault();
+    option.setToMPC();
     option.printLevel = _pl; // 禁用qpOASES库的打印输出
     qp_solver.setOptions(option);
 
@@ -178,26 +231,30 @@ qpoasesInterfaceSimple::~qpoasesInterfaceSimple()
     delete qp_out;
 }
 
-Matrixr qpoasesInterfaceSimple::_prediction(const Matrixr& y_k, const Matrixr& x_k)
+Matrixr qpoasesInterfaceSimple::_predictionSolve(const Matrixr& y_k, const Matrixr& x_k)
 {
     // 生成预测矩阵
     this->_mpc_matrices();
-    g_new = E * x_k - L * y_k - W_bar * U_pre.block(0, 0, uNum * ctrlStep, 1) + extra_g;
-    H_new = H + extraH;
+    this->_update_qp(y_k, x_k);
 
-    // 由于eigen库的矩阵是按列存储，因此需要手动转换为数组
-    for (int i = 0; i < H_new.rows(); i++)
-        for (int j = 0; j < H_new.cols(); j++)
-            H_qpOASES[i * H_new.cols() + j] = H_new(i, j);
-    for (int i = 0; i < g_new.rows(); i++)
-        for (int j = 0; j < g_new.cols(); j++)
-            g_qpOASES[i * g_new.cols() + j] = g_new(i, j);
-    for (int i = 0; i < lb.rows(); i++)
-        for (int j = 0; j < lb.cols(); j++)
-            lb_qpOASES[i * lb.cols() + j] = lb(i, j);
-    for (int i = 0; i < ub.rows(); i++)
-        for (int j = 0; j < ub.cols(); j++)
-            ub_qpOASES[i * ub.cols() + j] = ub(i, j);
+    //// 由于eigen库的矩阵是按列存储，因此需要手动转换为数组
+    //for (int i = 0; i < H_new.rows(); i++)
+    //    for (int j = 0; j < H_new.cols(); j++)
+    //        H_qpOASES[i * H_new.cols() + j] = H_new(i, j);
+    //for (int i = 0; i < g_new.rows(); i++)
+    //    for (int j = 0; j < g_new.cols(); j++)
+    //        g_qpOASES[i * g_new.cols() + j] = g_new(i, j);
+    //for (int i = 0; i < lb.rows(); i++)
+    //    for (int j = 0; j < lb.cols(); j++)
+    //        lb_qpOASES[i * lb.cols() + j] = lb(i, j);
+    //for (int i = 0; i < ub.rows(); i++)
+    //    for (int j = 0; j < ub.cols(); j++)
+    //        ub_qpOASES[i * ub.cols() + j] = ub(i, j);
+
+    Eigen::Map<Matrixr>(H_qpOASES, H_new.rows(), H_new.cols()) = H_new;  // 直接映射，无拷贝
+    Eigen::Map<Matrixr>(g_qpOASES, g_new.rows(), g_new.cols()) = g_new;
+    Eigen::Map<Matrixr>(lb_qpOASES, lb.rows(), lb.cols()) = lb;
+    Eigen::Map<Matrixr>(ub_qpOASES, ub.rows(), ub.cols()) = ub;
 
     qpOASES::returnValue ret = qpOASES::SUCCESSFUL_RETURN;
     
@@ -207,7 +264,48 @@ Matrixr qpoasesInterfaceSimple::_prediction(const Matrixr& y_k, const Matrixr& x
     CPU_t = CPU_t_static;
     qp_solver.getPrimalSolution(xOpt_qpOASES);
     qp_solver.getDualSolution(yOpt_qpOASES);
-    qp_solver.getBounds(guessedBounds);
+    //qp_solver.getBounds(guessedBounds);
+
+    Matrixr result;
+    result.resize(uNum * ctrlStep, 1);
+    result.setZero();
+    if (ret == qpOASES::SUCCESSFUL_RETURN)
+    {
+        for (int i = 0; i < uNum * ctrlStep; i++)
+        {
+            result(i, 0) = xOpt_qpOASES[i];
+        }
+    }
+    return result;
+}
+
+// 重写预测函数
+void qpoasesInterfaceSimple::_prediction(const Matrixr& y_k, const Matrixr& x_k)
+{
+    // 生成预测矩阵
+    this->_mpc_matrices();
+    this->_update_qp(y_k, x_k);
+}
+// 重写矩阵拷贝
+void qpoasesInterfaceSimple::matrixCopy()
+{
+    Eigen::Map<Matrixr>(H_qpOASES, H_new.rows(), H_new.cols()) = H_new;  // 直接映射，无拷贝
+    Eigen::Map<Matrixr>(g_qpOASES, g_new.rows(), g_new.cols()) = g_new;
+    Eigen::Map<Matrixr>(lb_qpOASES, lb.rows(), lb.cols()) = lb;
+    Eigen::Map<Matrixr>(ub_qpOASES, ub.rows(), ub.cols()) = ub;
+}
+// 重写求解函数
+Matrixr qpoasesInterfaceSimple::_solve()
+{
+    qpOASES::returnValue ret = qpOASES::SUCCESSFUL_RETURN;
+
+    ret = qp_solver.init(H_qpOASES, g_qpOASES, lb_qpOASES, ub_qpOASES, nWSR, &CPU_t);
+
+    nWSR = nWSR_static;
+    CPU_t = CPU_t_static;
+    qp_solver.getPrimalSolution(xOpt_qpOASES);
+    qp_solver.getDualSolution(yOpt_qpOASES);
+    //qp_solver.getBounds(guessedBounds);
 
     Matrixr result;
     result.resize(uNum * ctrlStep, 1);

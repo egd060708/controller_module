@@ -72,6 +72,12 @@ class mpcBase
         virtual void setWeightParams(const Matrixr& _Q,const Matrixr& _F,const Matrixr& _R,const Matrixr& _W);
         // 状态更新
         void mpcUpdate(const Matrixr& _Y,const Matrixr& _X, int _nWSR, MPCFloat _cpu_t);
+        // mpc问题预测+求解
+        void mpcPredictionSolve();
+        // mpc问题预测
+        void mpcPrediction();
+        // 矩阵拷贝(prediction->solve)，用于多线程/进程
+        virtual void matrixCopy() = 0;
         // mpc问题求解
         void mpcSolve();
         // 设置输入约束
@@ -100,7 +106,11 @@ class mpcBase
         }
     protected:
         // 执行预测并求解qp问题
-        virtual Matrixr _prediction(const Matrixr& y_k, const Matrixr& x_k) = 0;
+        virtual Matrixr _predictionSolve(const Matrixr& y_k, const Matrixr& x_k) = 0;
+        // 执行预测
+        virtual void _prediction(const Matrixr& y_k, const Matrixr& x_k) = 0;
+        // 执行求解
+        virtual Matrixr _solve() = 0;
 };
 
 class mpcMatrix : public mpcBase

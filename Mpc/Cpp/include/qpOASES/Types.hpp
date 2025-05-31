@@ -68,7 +68,7 @@
 /* #define __USE_THREE_MULTS_GIVENS__ */
 
 /* Uncomment the following line to activate the use of single precision arithmetic. */
-#define __USE_SINGLE_PRECISION__
+// #define __USE_SINGLE_PRECISION__
 
 
 

@@ -74,7 +74,7 @@ osqpeInterface::osqpeInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _
  * @param y_k 期望状态
  * @param x_k 当前轨迹
  */
-Matrixr osqpeInterface::_prediction(const Matrixr &y_k, const Matrixr &x_k)
+Matrixr osqpeInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x_k)
 {
     Matrixr result;
     result.resize(n, 1);
@@ -137,3 +137,78 @@ Matrixr osqpeInterface::_prediction(const Matrixr &y_k, const Matrixr &x_k)
 
     return result;
 }
+
+
+// 重写预测函数
+void osqpeInterface::_prediction(const Matrixr& y_k, const Matrixr& x_k)
+{
+    // 生成预测矩阵
+    this->_mpc_matrices();
+    this->_update_qp(y_k, x_k);
+
+    gradient = g_new;
+    lowerBound.block(0, 0, q, 1) = Alb;
+    lowerBound.block(q, 0, n, 1) = lb;
+    upperBound.block(0, 0, q, 1) = Aub;
+    upperBound.block(q, 0, n, 1) = ub;
+
+    for (int k = 0; k < hessian.outerSize(); ++k)
+    {
+        for (Eigen::SparseMatrix<MPCFloat>::InnerIterator it(hessian, k); it; ++it)
+        {
+            it.valueRef() = H_new(it.row(), it.col()) + 1e-30;
+        }
+    }
+
+    for (int l = 0; l < linearMatrix.outerSize(); ++l)
+    {
+        for (Eigen::SparseMatrix<MPCFloat>::InnerIterator it(linearMatrix, l); it; ++it)
+        {
+            if (it.row() < q)
+            {
+                it.valueRef() = cA(it.row(), it.col()) + 1e-30;
+            }
+        }
+    }
+}
+
+// 重写矩阵拷贝
+void osqpeInterface::matrixCopy()
+{
+    if (!solver.isInitialized()) {
+
+        solver.data()->setHessianMatrix(hessian);
+        solver.data()->setGradient(gradient);
+        solver.data()->setLinearConstraintsMatrix(linearMatrix);
+        solver.data()->setLowerBound(lowerBound);
+        solver.data()->setUpperBound(upperBound);
+
+        if (!solver.initSolver()) {
+            std::cerr << "Failed to initialize solver!" << std::endl;
+            return;
+        }
+    }
+    else {
+        solver.updateHessianMatrix(hessian);
+        solver.updateGradient(gradient);
+        solver.updateLinearConstraintsMatrix(linearMatrix);
+        solver.updateLowerBound(lowerBound);
+        solver.updateUpperBound(upperBound);
+
+    }
+}
+
+// 重写求解函数
+Matrixr osqpeInterface::_solve()
+{
+    Matrixr result;
+    result.resize(n, 1);
+    result.setZero();
+    if (solver.solveProblem() == OsqpEigen::ErrorExitFlag::NoError)
+    {
+        result = solver.getSolution();
+    }
+
+    return result;
+}
+

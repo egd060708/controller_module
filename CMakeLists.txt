@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # 设置默认优化标志（影响所有编译器）
 set(CMAKE_BUILD_TYPE "Release")  # 强制Release，会覆盖vscode的配置
 
-add_compile_options(-Wno-psabi)
+# add_compile_options(-Wno-psabi)
 
 add_subdirectory(Mpc/Cpp)
 # add_subdirectory(Pid/Cpp)

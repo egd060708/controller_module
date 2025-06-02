@@ -14,12 +14,14 @@
 class tinympcInterface : public mpcBase
 {
 public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     tinympcInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, MPCFloat _rho = 1., int _speed_up = 1, int _verbose = 0);
     ~tinympcInterface() {}
 
     // 设置学习率
     void setRegularisation(MPCFloat _rho) { rho_value = _rho; }
-
+    // 重写矩阵拷贝
+    void matrixCopy() override;
 private:
     // 求解器
     TinySolver *solver;
@@ -38,8 +40,6 @@ private:
     Matrixr _predictionSolve(const Matrixr &y_k, const Matrixr &x_k) override;
     // 重写预测函数
     void _prediction(const Matrixr& y_k, const Matrixr& x_k) override;
-    // 重写矩阵拷贝
-    void matrixCopy() override;
     // 重写求解函数
     Matrixr _solve() override;
 };

@@ -31,6 +31,7 @@
 class mpcBase
 {
     public:
+        EIGEN_MAKE_ALIGNED_OPERATOR_NEW
         // 基类构造
         mpcBase(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep);
         // 矩阵维度

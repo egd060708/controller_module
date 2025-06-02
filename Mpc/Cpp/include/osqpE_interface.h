@@ -14,8 +14,11 @@
 class osqpeInterface : public mpcMatrix
 {
 public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     osqpeInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, uint8_t _flat_mode=0, bool _verbose=false);
     ~osqpeInterface(){}
+    // 重写矩阵拷贝
+    void matrixCopy() override;
 private:
     // 求解器
     OsqpEigen::Solver solver;
@@ -32,8 +35,6 @@ private:
     Matrixr _predictionSolve(const Matrixr &y_k, const Matrixr &x_k) override;
     // 重写预测函数
     void _prediction(const Matrixr& y_k, const Matrixr& x_k) override;
-    // 重写矩阵拷贝
-    void matrixCopy() override;
     // 重写求解函数
     Matrixr _solve() override;
 

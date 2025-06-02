@@ -25,6 +25,7 @@ template <int_t xNum, int_t uNum, int_t cNum, int_t preStep = 10, int_t ctrlStep
 class mpcCal
 {
 public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     // 输入qpOASES的数组
     real_t H_qpOASES[ctrlStep * uNum * ctrlStep * uNum];
     real_t g_qpOASES[ctrlStep * uNum];

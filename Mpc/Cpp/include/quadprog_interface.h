@@ -13,9 +13,11 @@
 class quadprogInterface : public mpcMatrix
 {
 public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     quadprogInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, uint8_t _flat_mode=0);
     ~quadprogInterface() {}
-
+    // 重写矩阵拷贝
+    void matrixCopy() override;
 private:
     // 接口输入矩阵
     quadprogpp::qpMatrix<double> _G, _CE, _CI;
@@ -26,8 +28,6 @@ private:
     Matrixr _predictionSolve(const Matrixr &y_k, const Matrixr &x_k) override;
     // 重写预测函数
     void _prediction(const Matrixr& y_k, const Matrixr& x_k) override;
-    // 重写矩阵拷贝
-    void matrixCopy() override;
     // 重写求解函数
     Matrixr _solve() override;
 };

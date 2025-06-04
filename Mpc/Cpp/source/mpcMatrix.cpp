@@ -47,9 +47,9 @@ mpcBase::mpcBase(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep)
     X.resize(_xNum, 1); // 当前状态
     U.resize(_uNum, 1); // 输出向量
     // 预测结果
-    Y_K.resize(_xNum * _ctrlStep, 1); // qp求解给定
-    X_K.resize(_xNum, 1);        // qp求解状态
-    U_K.resize(_uNum * _ctrlStep, 1); // qp求解输出
+    Y_K.resize(_xNum * _ctrlStep, 1);   // qp求解给定
+    X_K.resize(_xNum, 1);               // qp求解状态
+    U_K.resize(_uNum * _ctrlStep, 1);   // qp求解输出
     U_pre.resize(_uNum * _ctrlStep, 1); // 上一次qp求解的输出
     // 约束矩阵
     // 输入约束
@@ -98,11 +98,11 @@ mpcBase::mpcBase(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep)
  * @param _W 输入平滑权重矩阵
  * @param _Ts 离散周期，若为0，则默认输入的_A,_B已经为离散状态空间方程，否则，做一阶线性化处理
  */
-void mpcBase::mpcInit(const Matrixr& _A,const Matrixr& _B,const Matrixr& _Q,const Matrixr& _F,const Matrixr& _R,const Matrixr& _W, MPCFloat _Ts)
+void mpcBase::mpcInit(const Matrixr &_A, const Matrixr &_B, const Vectorr &_Q, const Matrixr &_F, const Vectorr &_R, const Vectorr &_W, MPCFloat _Ts)
 {
-    
-    this->setStateSpace(_A,_B,_Ts);
-    this->setWeightParams(_Q,_F,_R,_W);
+
+    this->setStateSpace(_A, _B, _Ts);
+    this->setWeightParams(_Q, _F, _R, _W);
 }
 
 /**
@@ -111,7 +111,7 @@ void mpcBase::mpcInit(const Matrixr& _A,const Matrixr& _B,const Matrixr& _Q,cons
  * @param _B 设置状态空间方程B矩阵
  * @param _Ts 离散周期，若为0，则默认输入的_A,_B已经为离散状态空间方程，否则，做一阶线性化处理
  */
-void mpcBase::setStateSpace(const Matrixr& _A,const Matrixr& _B, MPCFloat _Ts)
+void mpcBase::setStateSpace(const Matrixr &_A, const Matrixr &_B, MPCFloat _Ts)
 {
     if (_Ts <= 0)
     {
@@ -138,12 +138,12 @@ void mpcBase::setStateSpace(const Matrixr& _A,const Matrixr& _B, MPCFloat _Ts)
  * @param _R 输入权重矩阵
  * @param _W 输入平滑权重矩阵
  */
-void mpcBase::setWeightParams(const Matrixr& _Q,const Matrixr& _F,const Matrixr& _R,const Matrixr& _W)
+void mpcBase::setWeightParams(const Vectorr &_Q, const Matrixr &_F, const Vectorr &_R, const Vectorr &_W)
 {
-    this->Q = _Q;
+    this->Q = _Q.asDiagonal();
     this->F = _F;
-    this->R = _R;
-    this->W = _W;
+    this->R = _R.asDiagonal();
+    this->W = _W.asDiagonal();
 }
 
 /**
@@ -153,7 +153,7 @@ void mpcBase::setWeightParams(const Matrixr& _Q,const Matrixr& _F,const Matrixr&
  * @param _nWSR 最大迭代次数
  * @param _cpu_t 最大迭代时间
  */
-void mpcBase::mpcUpdate(const Matrixr& _Y,const Matrixr& _X, int _nWSR, MPCFloat _cpu_t)
+void mpcBase::mpcUpdate(const Vectorr &_Y, const Vectorr &_X, int _nWSR, MPCFloat _cpu_t)
 {
     this->Y = _Y;
     this->X = _X;
@@ -173,9 +173,9 @@ void mpcBase::mpcUpdate(const Matrixr& _Y,const Matrixr& _X, int _nWSR, MPCFloat
 void mpcBase::mpcPredictionSolve()
 {
     // 执行预测
-    this->U_K.block(0, 0, uNum * ctrlStep, 1) = _predictionSolve(this->Y_K, this->X);     // 把预测输出记录下来
-    this->U = this->U_K.block(0, 0, uNum, 1); // 选择第一个周期的输出作为最后输出
-    this->U_pre = this->U_K; // 更新上一次求解的输出
+    this->U_K.block(0, 0, uNum * ctrlStep, 1) = _predictionSolve(this->Y_K, this->X); // 把预测输出记录下来
+    this->U = this->U_K.block(0, 0, uNum, 1);                                         // 选择第一个周期的输出作为最后输出
+    this->U_pre = this->U_K;                                                          // 更新上一次求解的输出
 }
 
 /**
@@ -195,7 +195,7 @@ void mpcBase::mpcSolve()
 {
     this->U_K.block(0, 0, uNum * ctrlStep, 1) = this->_solve();
     this->U = this->U_K.block(0, 0, uNum, 1); // 选择第一个周期的输出作为最后输出
-    this->U_pre = this->U_K; // 更新上一次求解的输出
+    this->U_pre = this->U_K;                  // 更新上一次求解的输出
 }
 
 /**
@@ -203,7 +203,7 @@ void mpcBase::mpcSolve()
  * @param _lb 输入约束下界
  * @param _ub 输入约束上界
  */
-void mpcBase::setInputConstrain(const Matrixr& _lb,const Matrixr& _ub)
+void mpcBase::setInputConstrain(const Vectorr &_lb, const Vectorr &_ub)
 {
     for (int i = 0; i < ctrlStep; i++)
     {
@@ -217,7 +217,7 @@ void mpcBase::setInputConstrain(const Matrixr& _lb,const Matrixr& _ub)
  * @param _lb 状态约束下界
  * @param _ub 状态约束上界
  */
-void mpcBase::setStateConstrain(const Matrixr& _xlb, const Matrixr& _xub)
+void mpcBase::setStateConstrain(const Vectorr &_xlb, const Vectorr &_xub)
 {
     for (int i = 0; i < ctrlStep; i++)
     {
@@ -232,7 +232,7 @@ void mpcBase::setStateConstrain(const Matrixr& _xlb, const Matrixr& _xub)
  * @param _Alb 不等式约束下界
  * @param _Aub 不等式约束上界
  */
-void mpcBase::setIeqConstrain(const Matrixr& _cA,const Matrixr& _Alb,const Matrixr& _Aub)
+void mpcBase::setIeqConstrain(const Matrixr &_cA, const Vectorr &_Alb, const Vectorr &_Aub)
 {
     this->cA.setZero();
     for (int i = 0; i < ctrlStep; i++)
@@ -248,10 +248,10 @@ void mpcBase::setIeqConstrain(const Matrixr& _cA,const Matrixr& _Alb,const Matri
  * @param _cE 等式约束左乘矩阵
  * @param _Eb 等式约束边界
  */
-void mpcBase::setEqConstrain(const Matrixr& _cE,const Matrixr& _Eb)
+void mpcBase::setEqConstrain(const Matrixr &_cE, const Vectorr &_Eb)
 {
     this->cE.setZero();
-    for(int i = 0; i < ctrlStep; i++)
+    for (int i = 0; i < ctrlStep; i++)
     {
         this->cE.block(i * eNum, i * uNum, eNum, uNum) = _cE;
         this->Eb.block(i * eNum, 0, eNum, 1) = _Eb;
@@ -263,7 +263,7 @@ void mpcBase::setEqConstrain(const Matrixr& _cE,const Matrixr& _Eb)
  * @param _K 反馈增益矩阵
  * @param _P 代价矩阵
  */
-void mpcBase::setLqrFeedback(const Matrixr& _K, const Matrixr& _P)
+void mpcBase::setLqrFeedback(const Matrixr &_K, const Matrixr &_P)
 {
     this->K = _K;
     this->P = _P;
@@ -275,7 +275,7 @@ void mpcBase::setLqrFeedback(const Matrixr& _K, const Matrixr& _P)
  * @param _start 更新的位置
  * @param _length 更新向量的长度
  */
-void mpcBase::updateLastU(const Matrixr& _U_pre, const int& _start, const int& _length)
+void mpcBase::updateLastU(const Matrixr &_U_pre, const int &_start, const int &_length)
 {
     for (int i = 0; i < ctrlStep; i++)
     {
@@ -341,7 +341,7 @@ mpcMatrix::mpcMatrix(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, 
  * @param _extraH 额外代价H矩阵
  * @param _extra_g 额外代价g矩阵
  */
-void mpcMatrix::setExtraCost(const Matrixr& _extraH,const Matrixr& _extra_g)
+void mpcMatrix::setExtraCost(const Matrixr &_extraH, const Matrixr &_extra_g)
 {
     for (int i = 0; i < ctrlStep; i++)
     {
@@ -350,62 +350,6 @@ void mpcMatrix::setExtraCost(const Matrixr& _extraH,const Matrixr& _extra_g)
     }
 }
 
-// /**
-//  * @brief 初始化
-//  * @param _A 设置状态空间方程A矩阵
-//  * @param _B 设置状态空间方程B矩阵
-//  * @param _Q 状态权重矩阵
-//  * @param _F 终端补偿权重矩阵
-//  * @param _R 输入权重矩阵
-//  * @param _W 输入平滑权重矩阵
-//  * @param _Ts 离散周期，若为0，则默认输入的_A,_B已经为离散状态空间方程，否则，做一阶线性化处理
-//  */
-// void mpcMatrix::mpcInit(const Matrixr& _A, const Matrixr& _B, const Matrixr& _Q, const Matrixr& _F, const Matrixr& _R, const Matrixr& _W, MPCFloat _Ts)
-// {
-//     if (_Ts <= 0)
-//     {
-//         // 输入的是离散
-//         this->A = _A;
-//         this->B = _B;
-//     }
-//     else
-//     {
-//         // 输入的是连续，需要做离散化(使用简单的一阶离散)
-//         Matrixr AI;
-//         AI.resize(xNum, xNum);
-//         AI.setIdentity();
-//         this->A = AI + _Ts * _A;
-//         this->B = _Ts * _B;
-//         // TODO：做更精准的离散化
-//     }
-//     this->Q = _Q;
-//     this->F = _F;
-//     this->R = _R;
-//     this->W = _W;
-
-//     // 构建kron积
-//     for (int i = 0; i < ctrlStep; i++)
-//     {
-//         this->Q_bar.block(i * xNum, i * xNum, xNum, xNum) = this->Q;
-//         this->R_bar.block(i * uNum, i * uNum, uNum, uNum) = this->R;
-//         if (this->flat_mode != 0)
-//         {
-//             this->W_bar.block(i * uNum, i * uNum, uNum, uNum) = this->W;
-//         }
-//         if (this->flat_mode==2 && i < (ctrlStep - 1))
-//         {
-//             this->Iup.block(i * uNum, i * uNum + uNum, uNum, uNum).setIdentity();
-//             this->Idown.block(i * uNum + uNum, i * uNum, uNum, uNum).setIdentity();
-//             this->Wup.block(i * uNum, i * uNum + uNum, uNum, uNum) = this->W;
-//         }
-//     }
-//     this->Q_bar.block((ctrlStep-1) * xNum, (ctrlStep-1) * xNum, xNum, xNum) = this->F;
-//     if (this->flat_mode == 2)
-//     {
-//         this->Wn = this->W_bar + this->Iup * this->W_bar * this->Idown - 2 * this->Wup;
-//     }
-// }
-
 /**
  * @brief 独立更新权重参数
  * @param _Q 状态权重矩阵
@@ -413,12 +357,12 @@ void mpcMatrix::setExtraCost(const Matrixr& _extraH,const Matrixr& _extra_g)
  * @param _R 输入权重矩阵
  * @param _W 输入平滑权重矩阵
  */
-void mpcMatrix::setWeightParams(const Matrixr& _Q,const Matrixr& _F,const Matrixr& _R,const Matrixr& _W)
+void mpcMatrix::setWeightParams(const Vectorr &_Q, const Matrixr &_F, const Vectorr &_R, const Vectorr &_W)
 {
-    this->Q = _Q;
+    this->Q = _Q.asDiagonal();
     this->F = _F;
-    this->R = _R;
-    this->W = _W;
+    this->R = _R.asDiagonal();
+    this->W = _W.asDiagonal();
 
     // 构建kron积
     for (int i = 0; i < ctrlStep; i++)
@@ -429,14 +373,14 @@ void mpcMatrix::setWeightParams(const Matrixr& _Q,const Matrixr& _F,const Matrix
         {
             this->W_bar.block(i * uNum, i * uNum, uNum, uNum) = this->W;
         }
-        if (this->flat_mode==2 && i < (ctrlStep - 1))
+        if (this->flat_mode == 2 && i < (ctrlStep - 1))
         {
             this->Iup.block(i * uNum, i * uNum + uNum, uNum, uNum).setIdentity();
             this->Idown.block(i * uNum + uNum, i * uNum, uNum, uNum).setIdentity();
             this->Wup.block(i * uNum, i * uNum + uNum, uNum, uNum) = this->W;
         }
     }
-    this->Q_bar.block((ctrlStep-1) * xNum, (ctrlStep-1) * xNum, xNum, xNum) = this->F;
+    this->Q_bar.block((ctrlStep - 1) * xNum, (ctrlStep - 1) * xNum, xNum, xNum) = this->F;
     if (this->flat_mode == 2)
     {
         this->Wn = this->W_bar + this->Iup * this->W_bar * this->Idown - 2 * this->Wup;
@@ -452,7 +396,7 @@ void mpcMatrix::_mpc_matrices()
     this->M.block(0, 0, xNum, xNum).setIdentity();
 
     Matrixr tmp;
-    tmp.resize(xNum,xNum);
+    tmp.resize(xNum, xNum);
     tmp.setIdentity();
     // 填充C矩阵和M矩阵
     for (int i = 1; i < ctrlStep; i++)
@@ -467,9 +411,9 @@ void mpcMatrix::_mpc_matrices()
         this->M.block(rowStart, 0, xNum, xNum) = tmp;
     }
 
-    this->G = M.transpose() * Q_bar * M;         // G: n x n
-    this->L = C.transpose() * Q_bar;             // F: NP x n
-    this->E = L * M;                             // E: NP x n
+    this->G = M.transpose() * Q_bar * M; // G: n x n
+    this->L = C.transpose() * Q_bar;     // F: NP x n
+    this->E = L * M;                     // E: NP x n
     if (this->flat_mode == 0)
     {
         this->H = C.transpose() * Q_bar * C + R_bar;
@@ -489,20 +433,21 @@ void mpcMatrix::_mpc_matrices()
  * @param y_k 期望状态
  * @param x_k 当前轨迹
  */
-void mpcMatrix::_update_qp(const Matrixr& y_k, const Matrixr& x_k)
+void mpcMatrix::_update_qp(const Matrixr &y_k, const Matrixr &x)
 {
     H_new = H + extraH;
     if (this->flat_mode == 0)
     {
-        g_new = E * x_k - L * y_k + extra_g;
+        g_new = E * x - L * y_k + extra_g;
     }
     else if (this->flat_mode == 1)
     {
-        g_new = E * x_k - L * y_k - W_bar * U_pre.block(0, 0, uNum * ctrlStep, 1) + extra_g;
+        g_new = E * x - L * y_k - W_bar * U_pre.block(0, 0, uNum * ctrlStep, 1) + extra_g;
     }
     else if (this->flat_mode == 2)
     {
-        g_new = E * x_k - L * y_k + extra_g;
+        g_new = E * x - L * y_k + extra_g;
         g_new.block(0, 0, uNum, 1) -= this->W * U_pre.block(0, 0, uNum, 1);
     }
 }
+

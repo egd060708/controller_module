@@ -13,7 +13,7 @@
 class quadprogInterface : public mpcMatrix
 {
 public:
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    // EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     quadprogInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, uint8_t _flat_mode=0);
     ~quadprogInterface() {}
     // 重写矩阵拷贝

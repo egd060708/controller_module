@@ -7,7 +7,7 @@
 class osqpInterface : public mpcMatrix
 {
 public:
-    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    // EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     osqpInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, uint8_t _flat_mode=0, int _verbose=0);
     ~osqpInterface();
     void osqpInit();

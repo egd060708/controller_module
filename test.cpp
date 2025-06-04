@@ -330,9 +330,9 @@ int main()
     std::uniform_real_distribution<MPCFloat> dist(-0.5, 0.5);
 
     // qpoasesInterface mpcCal(10,4,4,0,2);// qpOASES
-    tinympcInterface mpcCal(10, 4, 4, 0, 3, 0.1, 1);// tinyMPC
+    // tinympcInterface mpcCal(10, 4, 4, 0, 3, 0.1, 1);// tinyMPC
     // quadprogInterface mpcCal(10, 4, 4, 0, 10);//qp++
-    // osqpInterface mpcCal(10, 4, 4, 0, 2,0,0);//osqp
+    osqpInterface mpcCal(10, 4, 4, 0, 2,0,0);//osqp
     // osqpeInterface mpcCal(10, 4, 4, 0, 2);//osqp-eigen
     Eigen::Vector<MPCFloat,10> X = Eigen::Vector<MPCFloat,10>::Constant(0);
     Eigen::Vector<MPCFloat,10> Y = Eigen::Vector<MPCFloat,10>::Constant(0);

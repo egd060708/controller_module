@@ -221,3 +221,143 @@ Matrixr osqpeInterface::_solve()
     return result;
 }
 
+/**
+ * @brief osqp-eigen接口构造
+ * @param _xNum 状态维度
+ * @param _uNum 输入维度
+ * @param _cNum 不等式约束维度
+ * @param _eNum 等式约束维度
+ * @param _ctrlStep 控制周期=预测周期
+ * @param _verbose 是否使能打印
+ */
+osqpeInterfaceSparse::osqpeInterfaceSparse(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep, bool _verbose)
+    : mpcMatrixSparse(_xNum, _uNum, _cNum, _eNum, _ctrlStep)
+{
+    n = uNum * ctrlStep;
+    this->hessian = this->Ps;
+    this->gradient = this->g;
+    this->linearMatrix = this->Acs;
+    this->lowerBound = this->l;
+    this->upperBound = this->u;
+
+    solver.settings()->setVerbosity(_verbose);
+    solver.settings()->setWarmStart(true);// 默认使能热启动
+    solver.data()->setNumberOfVariables(xNum* (ctrlStep + 1) + uNum * ctrlStep);
+    solver.data()->setNumberOfConstraints(2* xNum * (ctrlStep + 1) + uNum * ctrlStep);
+}
+
+/**
+ * @brief mpc预测求解
+ * @param y_k 期望状态
+ * @param x_k 当前轨迹
+ */
+Matrixr osqpeInterfaceSparse::_predictionSolve(const Matrixr &y_k, const Matrixr &x)
+{
+    Matrixr result;
+    result.resize(n, 1);
+    result.setZero();
+    // 生成预测矩阵
+    this->_update_qp(y_k.topRows(xNum), x);
+
+    // 直接拷贝非零值（最快）
+    std::copy(Ps.valuePtr(), Ps.valuePtr() + Ps.nonZeros(), this->hessian.valuePtr());
+    std::copy(Acs.valuePtr(), Acs.valuePtr() + Acs.nonZeros(), this->linearMatrix.valuePtr());
+    gradient = g;
+    lowerBound = l;
+    upperBound = u;
+
+    if (!solver.isInitialized()) {
+
+        solver.data()->setHessianMatrix(hessian);
+        solver.data()->setGradient(gradient);
+        solver.data()->setLinearConstraintsMatrix(linearMatrix);
+        solver.data()->setLowerBound(lowerBound);
+        solver.data()->setUpperBound(upperBound);
+
+        if (!solver.initSolver()) {
+            std::cerr << "Failed to initialize solver!" << std::endl;
+            return result;
+        }
+    }
+    else {
+        solver.updateHessianMatrix(hessian);
+        solver.updateGradient(gradient);
+        solver.updateLinearConstraintsMatrix(linearMatrix);
+        solver.updateLowerBound(lowerBound);
+        solver.updateUpperBound(upperBound);
+        
+    }
+
+    if (solver.solveProblem() == OsqpEigen::ErrorExitFlag::NoError)
+    {
+        result = solver.getSolution().topRows(n);
+    }
+
+    return result;
+}
+
+/**
+ * @brief mpc问题预测
+ * @param None
+ */
+void osqpeInterfaceSparse::_prediction(const Matrixr& y_k, const Matrixr& x)
+{
+    Matrixr result;
+    result.resize(n, 1);
+    result.setZero();
+    // 生成预测矩阵
+    this->_update_qp(y_k.topRows(xNum), x);
+
+    // 直接拷贝非零值（最快）
+    std::copy(Ps.valuePtr(), Ps.valuePtr() + Ps.nonZeros(), this->hessian.valuePtr());
+    std::copy(Acs.valuePtr(), Acs.valuePtr() + Acs.nonZeros(), this->linearMatrix.valuePtr());
+    gradient = g;
+    lowerBound = l;
+    upperBound = u;
+}
+
+/**
+ * @brief 矩阵拷贝，方便加锁
+ * @param None
+ */
+void osqpeInterfaceSparse::matrixCopy()
+{
+    if (!solver.isInitialized()) {
+
+        solver.data()->setHessianMatrix(hessian);
+        solver.data()->setGradient(gradient);
+        solver.data()->setLinearConstraintsMatrix(linearMatrix);
+        solver.data()->setLowerBound(lowerBound);
+        solver.data()->setUpperBound(upperBound);
+
+        if (!solver.initSolver()) {
+            std::cerr << "Failed to initialize solver!" << std::endl;
+            return;
+        }
+    }
+    else {
+        solver.updateHessianMatrix(hessian);
+        solver.updateGradient(gradient);
+        solver.updateLinearConstraintsMatrix(linearMatrix);
+        solver.updateLowerBound(lowerBound);
+        solver.updateUpperBound(upperBound);
+
+    }
+}
+
+/**
+ * @brief mpc问题求解
+ * @param None
+ */
+Matrixr osqpeInterfaceSparse::_solve()
+{
+    Matrixr result;
+    result.resize(n, 1);
+    result.setZero();
+    if (solver.solveProblem() == OsqpEigen::ErrorExitFlag::NoError)
+    {
+        result = solver.getSolution().topRows(n);
+    }
+
+    return result;
+}

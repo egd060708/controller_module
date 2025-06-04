@@ -47,6 +47,7 @@
 
 /* OSQP_USE_LONG */
 /* #undef OSQP_USE_LONG */
+#define OSQP_USE_LONG
 
 /* OSQP_PACK_SETTINGS (advanced usage) */
 /* #undef OSQP_PACK_SETTINGS */

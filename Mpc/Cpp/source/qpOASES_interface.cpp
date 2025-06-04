@@ -68,7 +68,7 @@ qpoasesInterface::~qpoasesInterface()
  * @param y_k 期望状态
  * @param x_k 当前轨迹
  */
-Matrixr qpoasesInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x_k)
+Vectorr qpoasesInterface::_predictionSolve(const Vectorr &y_k, const Vectorr &x_k)
 {
     // 生成预测矩阵
     this->_mpc_matrices();
@@ -129,14 +129,14 @@ Matrixr qpoasesInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x_
     //qp_solver.getBounds(guessedBounds);
     //qp_solver.getConstraints(guessedConstraints);
 
-    Matrixr result;
-    result.resize(uNum * ctrlStep, 1);
+    Vectorr result;
+    result.resize(uNum * ctrlStep);
     result.setZero();
     if (ret == qpOASES::SUCCESSFUL_RETURN)
     {
         for (int i = 0; i < uNum * ctrlStep; i++)
         {
-            result(i, 0) = xOpt_qpOASES[i];
+            result(i) = xOpt_qpOASES[i];
         }
     }
     return result;
@@ -146,7 +146,7 @@ Matrixr qpoasesInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x_
  * @brief mpc问题预测
  * @param None
  */
-void qpoasesInterface::_prediction(const Matrixr& y_k, const Matrixr& x_k)
+void qpoasesInterface::_prediction(const Vectorr& y_k, const Vectorr& x_k)
 {
     // 生成预测矩阵
     this->_mpc_matrices();
@@ -172,7 +172,7 @@ void qpoasesInterface::matrixCopy()
  * @brief mpc问题求解
  * @param None
  */
-Matrixr qpoasesInterface::_solve()
+Vectorr qpoasesInterface::_solve()
 {
     qpOASES::returnValue ret = qpOASES::SUCCESSFUL_RETURN;
     if (isModelUpdate == 1)
@@ -193,14 +193,14 @@ Matrixr qpoasesInterface::_solve()
     //qp_solver.getBounds(guessedBounds);
     //qp_solver.getConstraints(guessedConstraints);
 
-    Matrixr result;
-    result.resize(uNum * ctrlStep, 1);
+    Vectorr result;
+    result.resize(uNum * ctrlStep);
     result.setZero();
     if (ret == qpOASES::SUCCESSFUL_RETURN)
     {
         for (int i = 0; i < uNum * ctrlStep; i++)
         {
-            result(i, 0) = xOpt_qpOASES[i];
+            result(i) = xOpt_qpOASES[i];
         }
     }
     return result;
@@ -260,7 +260,7 @@ qpoasesInterfaceSimple::~qpoasesInterfaceSimple()
  * @param y_k 期望状态
  * @param x_k 当前轨迹
  */
-Matrixr qpoasesInterfaceSimple::_predictionSolve(const Matrixr& y_k, const Matrixr& x_k)
+Vectorr qpoasesInterfaceSimple::_predictionSolve(const Vectorr& y_k, const Vectorr& x_k)
 {
     // 生成预测矩阵
     this->_mpc_matrices();
@@ -295,14 +295,14 @@ Matrixr qpoasesInterfaceSimple::_predictionSolve(const Matrixr& y_k, const Matri
     qp_solver.getDualSolution(yOpt_qpOASES);
     //qp_solver.getBounds(guessedBounds);
 
-    Matrixr result;
-    result.resize(uNum * ctrlStep, 1);
+    Vectorr result;
+    result.resize(uNum * ctrlStep);
     result.setZero();
     if (ret == qpOASES::SUCCESSFUL_RETURN)
     {
         for (int i = 0; i < uNum * ctrlStep; i++)
         {
-            result(i, 0) = xOpt_qpOASES[i];
+            result(i) = xOpt_qpOASES[i];
         }
     }
     return result;
@@ -312,7 +312,7 @@ Matrixr qpoasesInterfaceSimple::_predictionSolve(const Matrixr& y_k, const Matri
  * @brief mpc问题预测
  * @param None
  */
-void qpoasesInterfaceSimple::_prediction(const Matrixr& y_k, const Matrixr& x_k)
+void qpoasesInterfaceSimple::_prediction(const Vectorr& y_k, const Vectorr& x_k)
 {
     // 生成预测矩阵
     this->_mpc_matrices();
@@ -335,7 +335,7 @@ void qpoasesInterfaceSimple::matrixCopy()
  * @brief mpc问题求解
  * @param None
  */
-Matrixr qpoasesInterfaceSimple::_solve()
+Vectorr qpoasesInterfaceSimple::_solve()
 {
     qpOASES::returnValue ret = qpOASES::SUCCESSFUL_RETURN;
 
@@ -347,14 +347,14 @@ Matrixr qpoasesInterfaceSimple::_solve()
     qp_solver.getDualSolution(yOpt_qpOASES);
     //qp_solver.getBounds(guessedBounds);
 
-    Matrixr result;
-    result.resize(uNum * ctrlStep, 1);
+    Vectorr result;
+    result.resize(uNum * ctrlStep);
     result.setZero();
     if (ret == qpOASES::SUCCESSFUL_RETURN)
     {
         for (int i = 0; i < uNum * ctrlStep; i++)
         {
-            result(i, 0) = xOpt_qpOASES[i];
+            result(i) = xOpt_qpOASES[i];
         }
     }
     return result;

@@ -39,7 +39,7 @@ quadprogInterface::quadprogInterface(int _xNum, int _uNum, int _cNum, int _eNum,
  * @param y_k 期望状态
  * @param x_k 当前轨迹
  */
-Matrixr quadprogInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x_k)
+Vectorr quadprogInterface::_predictionSolve(const Vectorr &y_k, const Vectorr &x_k)
 {
     // 生成预测矩阵
     this->_mpc_matrices();
@@ -89,12 +89,12 @@ Matrixr quadprogInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x
         _ci0[2 * q + n + i] = -ub(i, 0);
     }
     MPCFloat value = solve_quadprog(_G, _g0, _CE, _ce0, _CI, _ci0, _x);
-    Matrixr result;
-    result.resize(n, 1);
+    Vectorr result;
+    result.resize(n);
     result.setZero();
     for (int i = 0; i < n; i++)
     {
-        result(i, 0) = _x[i];
+        result(i) = _x[i];
     }
     return result;
 }
@@ -103,7 +103,7 @@ Matrixr quadprogInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x
  * @brief mpc问题预测
  * @param None
  */
-void quadprogInterface::_prediction(const Matrixr& y_k, const Matrixr& x_k)
+void quadprogInterface::_prediction(const Vectorr& y_k, const Vectorr& x_k)
 {
     // 生成预测矩阵
     this->_mpc_matrices();
@@ -165,15 +165,15 @@ void quadprogInterface::matrixCopy()
  * @brief mpc问题求解
  * @param None
  */
-Matrixr quadprogInterface::_solve()
+Vectorr quadprogInterface::_solve()
 {
     double value = solve_quadprog(_G, _g0, _CE, _ce0, _CI, _ci0, _x);
-    Matrixr result;
-    result.resize(n, 1);
+    Vectorr result;
+    result.resize(n);
     result.setZero();
     for (int i = 0; i < n; i++)
     {
-        result(i, 0) = _x[i];
+        result(i) = _x[i];
     }
     return result;
 }

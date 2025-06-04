@@ -49,11 +49,11 @@ private:
     bool isSetUp = false;
 
     // 重写预测求解函数
-    Matrixr _predictionSolve(const Matrixr &y_k, const Matrixr &x_k) override;
+    Vectorr _predictionSolve(const Vectorr &y_k, const Vectorr &x_k) override;
     // 重写预测函数
-    void _prediction(const Matrixr& y_k, const Matrixr& x_k) override;
+    void _prediction(const Vectorr& y_k, const Vectorr& x_k) override;
     // 重写求解函数
-    Matrixr _solve() override;
+    Vectorr _solve() override;
 
     // 独立矩阵处理函数
     void _matrix_transfer();

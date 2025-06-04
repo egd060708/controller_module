@@ -17,6 +17,7 @@
  *      10、getOutput
  */
 #include "../include/mpcMatrix.h"
+#include <iostream>
 
 /********************* Base *********************/
 
@@ -100,7 +101,6 @@ mpcBase::mpcBase(int _xNum, int _uNum, int _cNum, int _eNum, int _ctrlStep)
  */
 void mpcBase::mpcInit(const Matrixr &_A, const Matrixr &_B, const Vectorr &_Q, const Matrixr &_F, const Vectorr &_R, const Vectorr &_W, MPCFloat _Ts)
 {
-
     this->setStateSpace(_A, _B, _Ts);
     this->setWeightParams(_Q, _F, _R, _W);
 }
@@ -433,7 +433,7 @@ void mpcMatrix::_mpc_matrices()
  * @param y_k 期望状态
  * @param x_k 当前轨迹
  */
-void mpcMatrix::_update_qp(const Matrixr &y_k, const Matrixr &x)
+void mpcMatrix::_update_qp(const Vectorr &y_k, const Vectorr &x)
 {
     H_new = H + extraH;
     if (this->flat_mode == 0)

@@ -61,7 +61,7 @@ tinympcInterface::tinympcInterface(int _xNum, int _uNum, int _cNum, int _eNum, i
  * @param y_k 期望状态
  * @param x_k 当前轨迹
  */
-Matrixr tinympcInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x_k)
+Vectorr tinympcInterface::_predictionSolve(const Vectorr &y_k, const Vectorr &x_k)
 {
     _Adyn = A;
     _Bdyn = B;
@@ -115,8 +115,8 @@ Matrixr tinympcInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x_
 
     //std::cout << "iters: " << work->iter << std::endl;
 
-    Matrixr result;
-    result.resize(uNum * ctrlStep, 1);
+    Vectorr result;
+    result.resize(uNum * ctrlStep);
     result.setZero();
     /*for (int i = 0; i < ctrlStep-1; i++)
     {
@@ -125,7 +125,7 @@ Matrixr tinympcInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x_
             result(j+i*ctrlStep,0) = work->u(j,i);
         }
     }*/
-    result.block(0, 0, uNum, 1) = work->u.col(0);
+    result.topRows(uNum) = work->u.col(0);
     //std::cout << result.block(0, 0, uNum, 1) << std::endl;
     return result;
 }
@@ -134,7 +134,7 @@ Matrixr tinympcInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x_
  * @brief mpc问题预测
  * @param None
  */
-void tinympcInterface::_prediction(const Matrixr& y_k, const Matrixr& x_k)
+void tinympcInterface::_prediction(const Vectorr& y_k, const Vectorr& x_k)
 {
     _Adyn = A;
     _Bdyn = B;
@@ -188,7 +188,7 @@ void tinympcInterface::matrixCopy()
  * @brief mpc问题求解
  * @param None
  */
-Matrixr tinympcInterface::_solve()
+Vectorr tinympcInterface::_solve()
 {
     // 1. Update measurement
     tiny_set_x0(solver, _x0);
@@ -196,11 +196,11 @@ Matrixr tinympcInterface::_solve()
     // 2. Solve MPC problem
     tiny_solve(solver);
 
-    Matrixr result;
-    result.resize(uNum * ctrlStep, 1);
+    Vectorr result;
+    result.resize(uNum * ctrlStep);
     result.setZero();
 
-    result.block(0, 0, uNum, 1) = work->u.col(0);
+    result.topRows(uNum) = work->u.col(0);
 
     return result;
 }

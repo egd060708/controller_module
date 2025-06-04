@@ -45,21 +45,23 @@ public:
     // LQR反馈增益矩阵K，代价矩阵P
     Matrixr K, P;
     // 状态向量
-    Matrixr Y, X, U; // 目标向量、当前状态、输出向量
+    Vectorr Y, X, U; // 目标向量、当前状态、输出向量
     // 预测结果
-    Matrixr Y_K;   // qp求解给定
-    Matrixr X_K;   // qp求解状态
-    Matrixr U_K;   // qp求解输出
-    Matrixr U_pre; // 上一次qp求解的输出
+    Vectorr Y_K;   // qp求解给定
+    Vectorr X_K;   // qp求解状态
+    Vectorr U_K;   // qp求解输出
+    Vectorr U_pre; // 上一次qp求解的输出
     // 约束矩阵
     // 输入约束
-    Matrixr lb, ub;
+    Vectorr lb, ub;
     // 状态约束
-    Matrixr xlb, xub;
+    Vectorr xlb, xub;
     // 不等式约束
-    Matrixr cA, Alb, Aub;
+    Matrixr cA;
+    Vectorr Alb, Aub;
     // 等式约束
-    Matrixr cE, Eb;
+    Matrixr cE;
+    Vectorr Eb;
     // qp求解执行参数
     int nWSR_static = 1000; // 最大单轮qp迭代次数
     int nWSR = 1000;
@@ -96,28 +98,28 @@ public:
     // 手动更新上一次求解的输出
     virtual void updateLastU(const Matrixr &_U_pre, const int &_start, const int &_length);
     // 获取输出值
-    Matrixr getOutput()
+    Vectorr getOutput()
     {
         return U;
     }
     // 获取预测向量
-    Matrixr getPreState()
+    Vectorr getPreState()
     {
         return X_K;
     }
     // 获取输出向量
-    Matrixr getPreCtrl()
+    Vectorr getPreCtrl()
     {
         return U_K;
     }
 
 protected:
     // 执行预测并求解qp问题
-    virtual Matrixr _predictionSolve(const Matrixr &y_k, const Matrixr &x) = 0;
+    virtual Vectorr _predictionSolve(const Vectorr &y_k, const Vectorr &x) = 0;
     // 执行预测
-    virtual void _prediction(const Matrixr &y_k, const Matrixr &x) = 0;
+    virtual void _prediction(const Vectorr &y_k, const Vectorr &x) = 0;
     // 执行求解
-    virtual Matrixr _solve() = 0;
+    virtual Vectorr _solve() = 0;
 };
 
 class mpcMatrix : public mpcBase
@@ -145,5 +147,5 @@ protected:
     // mpc矩阵生成
     void _mpc_matrices();
     // 更新qp矩阵
-    void _update_qp(const Matrixr &y_k, const Matrixr &x);
+    void _update_qp(const Vectorr &y_k, const Vectorr &x);
 };

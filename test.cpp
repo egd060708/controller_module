@@ -330,13 +330,15 @@ int main()
     std::uniform_real_distribution<MPCFloat> dist(-0.5, 0.5);
 
     // qpoasesInterface mpcCal(10,4,4,0,2);// qpOASES
-    // tinympcInterface mpcCal(10, 4, 4, 0, 3, 0.1, 1);// tinyMPC
+    tinympcInterface mpcCal(10, 4, 4, 0, 3, 0.1, 1);// tinyMPC
     // quadprogInterface mpcCal(10, 4, 4, 0, 10);//qp++
-    osqpInterface mpcCal(10, 4, 4, 0, 2,0,0);//osqp
-    // osqpeInterface mpcCal(10, 4, 4, 0, 2);//osqp-eigen
+    // osqpInterface mpcCal(10, 4, 4, 0, 2,0,0);//osqp
+    // osqpeInterface mpcCal(10, 4, 4, 0, 20);//osqp-eigen
+    // osqpeInterfaceSparse mpcCal(10, 4, 4, 0, 20);//osqp-eigen sparse
+
     Eigen::Vector<MPCFloat,10> X = Eigen::Vector<MPCFloat,10>::Constant(0);
     Eigen::Vector<MPCFloat,10> Y = Eigen::Vector<MPCFloat,10>::Constant(0);
-    Y(1) = 2.;
+    Y(1) = 1.;
     X(8) = 0.01;
     MPCFloat avc_length = 0.13;
     modelFit<10, 10, 3> fitA;
@@ -360,7 +362,7 @@ int main()
     Eigen::Vector<MPCFloat,-1> Albv = lbv;
     Eigen::Vector<MPCFloat,-1> Aubv = ubv;
     Eigen::Matrix<MPCFloat,-1,-1> cA;
-    mpcCal.mpcInit(A,B,Qv.asDiagonal(),P,Rv.asDiagonal(),Wv.asDiagonal(),0);
+    mpcCal.mpcInit(A,B,Qv,P,Rv,Wv,0);
     while(1)
     {
         // X(8) = dist(gen);
@@ -381,15 +383,18 @@ int main()
         // auto start = std::chrono::high_resolution_clock::now();
 
         mpcCal.setInputConstrain(lbv,ubv);
+        Eigen::Vector<MPCFloat,10> xb;
+        xb.setConstant(1e17);
+        mpcCal.setStateConstrain(-xb,xb);
         mpcCal.setIeqConstrain(cA,Albv,Aubv);
         mpcCal.setLqrFeedback(K,P);
         mpcCal.mpcUpdate(Y,X,5,2e-3);
         // // 记录开始时间
         // auto start = std::chrono::high_resolution_clock::now();
-        // mpcCal.mpcPredictionSolve();
-        mpcCal.mpcPrediction();
-        mpcCal.matrixCopy();
-        mpcCal.mpcSolve();
+        mpcCal.mpcPredictionSolve();
+        // mpcCal.mpcPrediction();
+        // mpcCal.matrixCopy();
+        // mpcCal.mpcSolve();
         Eigen::Vector<MPCFloat,-1> output = mpcCal.getOutput();
         // 记录结束时间
         auto end = std::chrono::high_resolution_clock::now();

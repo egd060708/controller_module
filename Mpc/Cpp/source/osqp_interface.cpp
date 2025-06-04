@@ -94,7 +94,7 @@ void osqpInterface::osqpInit()
  * @param y_k 期望状态
  * @param x_k 当前轨迹
  */
-Matrixr osqpInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x_k)
+Vectorr osqpInterface::_predictionSolve(const Vectorr &y_k, const Vectorr &x_k)
 {
     if (isSetUp == false)
     {
@@ -140,12 +140,12 @@ Matrixr osqpInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x_k)
     //std::cout << solver->info->run_time << std::endl;
     //std::cout << solver->info->iter << std::endl;
     // 导出结果
-    Matrixr result;
-    result.resize(uNum * ctrlStep, 1);
+    Vectorr result;
+    result.resize(uNum * ctrlStep);
     result.setZero();
     for (int i = 0; i < n; i++)
     {
-        result(i, 0) = solver->solution->x[i];
+        result(i) = solver->solution->x[i];
     }
     return result;
 }
@@ -154,7 +154,7 @@ Matrixr osqpInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x_k)
  * @brief mpc问题预测
  * @param None
  */
-void osqpInterface::_prediction(const Matrixr& y_k, const Matrixr& x_k)
+void osqpInterface::_prediction(const Vectorr& y_k, const Vectorr& x_k)
 {
     if (isSetUp == false)
     {
@@ -197,7 +197,7 @@ void osqpInterface::matrixCopy()
  * @brief mpc问题求解
  * @param None
  */
-Matrixr osqpInterface::_solve()
+Vectorr osqpInterface::_solve()
 {
     // 更新向量
     if (!exitflag)
@@ -215,12 +215,12 @@ Matrixr osqpInterface::_solve()
     //std::cout << solver->info->run_time << std::endl;
     //std::cout << solver->info->iter << std::endl;
     // 导出结果
-    Matrixr result;
-    result.resize(uNum * ctrlStep, 1);
+    Vectorr result;
+    result.resize(uNum * ctrlStep);
     result.setZero();
     for (int i = 0; i < n; i++)
     {
-        result(i, 0) = solver->solution->x[i];
+        result(i) = solver->solution->x[i];
     }
     return result;
 }

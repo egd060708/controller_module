@@ -36,9 +36,13 @@ mpcMatrixSparse::mpcMatrixSparse(int _xNum, int _uNum, int _cNum, int _eNum, int
             for (int k = 0; k < xNum; k++)
             {
                 this->Acs.insert(xNum * (i + 1) + j, xNum * i + k) = 1e-30;
+            }
+    for (int i = 0; i < ctrlStep; i++)
+        for (int j = 0; j < xNum; j++)
+            for (int k = 0; k < uNum; k++)
+            {
                 this->Acs.insert(xNum * (i + 1) + j, uNum * i + k + xNum * (ctrlStep + 1)) = 1e-30;
             }
-
     this->Ps.makeCompressed(); // 压缩稀疏矩阵
     this->Acs.makeCompressed(); // 压缩稀疏矩阵
 }
@@ -85,10 +89,10 @@ void mpcMatrixSparse::setWeightParams(const Vectorr &_Q, const Matrixr &_F, cons
     this->R = _R.asDiagonal();
     this->W = _W.asDiagonal();
     // 高速拼接向量并赋值
-    Vectorr comb(_Q.size()*ctrlStep + _F.size() + _R.size()*ctrlStep);
+    Vectorr comb(_Q.size()*ctrlStep + _Q.size() + _R.size()*ctrlStep);
     comb.topRows(xNum * ctrlStep) = _Q.replicate(ctrlStep, 1); // 重复Q ctrlStep次
     comb.bottomRows(uNum * ctrlStep) = _R.replicate(ctrlStep, 1); // 重复R ctrlStep次
-    comb.middleRows(xNum * ctrlStep, xNum) = _F; // F只需要一次
+    comb.middleRows(xNum * ctrlStep, xNum) = _Q; // F只需要一次
     this->Ps.diagonal() = comb.sparseView(); // 设置对角线元素为Q,F,R，并且避免隐式转换开销
 }
 
@@ -100,16 +104,19 @@ void mpcMatrixSparse::setWeightParams(const Vectorr &_Q, const Matrixr &_F, cons
 void mpcMatrixSparse::_update_qp(const Vectorr &y, const Vectorr &x)
 {
     this->g.topRows(xNum * ctrlStep) = (-this->Q * y).replicate(ctrlStep, 1); // 更新状态部分
-    this->g.middleRows(xNum * ctrlStep, xNum) = -this->F * x; // 更新终端补偿部分
-    Eigen::SparseMatrix<MPCFloat> subA = this->A.sparseView(); // 获取稀疏矩阵A的视图
-    Eigen::SparseMatrix<MPCFloat> subB = this->B.sparseView(); // 获取稀疏矩阵B的视图
+    this->g.middleRows(xNum * ctrlStep, xNum) = -this->Q * y; // 更新终端补偿部分
     for (int i = 0; i < ctrlStep; i++)
-    {
-        // this->Acs.block(xNum * (i + 1), xNum * i, xNum, xNum) = this->A.sparseView(); // 更新状态转移矩阵
-        // this->Acs.block(xNum * (i + 1), uNum * i + xNum * (ctrlStep + 1), xNum, uNum) = this->B.sparseView(); // 更新输入矩阵
-        std::copy(subA.valuePtr(), subA.valuePtr() + subA.nonZeros(), Acs.middleCols(i*xNum,xNum).valuePtr()+subA.cols());
-        std::copy(subB.valuePtr(), subB.valuePtr() + subB.nonZeros(), Acs.middleCols(i*uNum+xNum*(ctrlStep+1),uNum).valuePtr());
-    }
+        for (int j = 0; j < xNum; j++)
+            for (int k = 0; k < xNum; k++)
+            {
+                this->Acs.coeffRef(xNum * (i + 1) + j, xNum * i + k) = A(j,k);
+            }
+    for (int i = 0; i < ctrlStep; i++)
+        for (int j = 0; j < xNum; j++)
+            for (int k = 0; k < uNum; k++)
+            {
+                this->Acs.coeffRef(xNum * (i + 1) + j, uNum * i + k + xNum * (ctrlStep + 1)) = B(j,k);
+            }
     this->l.topRows(xNum) = -x;
     this->u.topRows(xNum) = -x;
 }

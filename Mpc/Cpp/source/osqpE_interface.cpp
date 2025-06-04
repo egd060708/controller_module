@@ -7,6 +7,7 @@
  *	@usage See mpcMatrix for details
  */
 #include "../include/osqpE_interface.h"
+#include <chrono>
 
 /**
  * @brief osqp-eigen接口构造
@@ -74,10 +75,10 @@ osqpeInterface::osqpeInterface(int _xNum, int _uNum, int _cNum, int _eNum, int _
  * @param y_k 期望状态
  * @param x_k 当前轨迹
  */
-Matrixr osqpeInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x_k)
+Vectorr osqpeInterface::_predictionSolve(const Vectorr &y_k, const Vectorr &x_k)
 {
-    Matrixr result;
-    result.resize(n, 1);
+    Vectorr result;
+    result.resize(n);
     result.setZero();
     // 生成预测矩阵
     this->_mpc_matrices();
@@ -107,7 +108,7 @@ Matrixr osqpeInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x_k)
             }
         }
     }
-
+    
     if (!solver.isInitialized()) {
 
         solver.data()->setHessianMatrix(hessian);
@@ -129,7 +130,6 @@ Matrixr osqpeInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x_k)
         solver.updateUpperBound(upperBound);
         
     }
-
     if (solver.solveProblem() == OsqpEigen::ErrorExitFlag::NoError)
     {
         result = solver.getSolution();
@@ -143,7 +143,7 @@ Matrixr osqpeInterface::_predictionSolve(const Matrixr &y_k, const Matrixr &x_k)
  * @brief mpc问题预测
  * @param None
  */
-void osqpeInterface::_prediction(const Matrixr& y_k, const Matrixr& x_k)
+void osqpeInterface::_prediction(const Vectorr& y_k, const Vectorr& x_k)
 {
     // 生成预测矩阵
     this->_mpc_matrices();
@@ -208,10 +208,10 @@ void osqpeInterface::matrixCopy()
  * @brief mpc问题求解
  * @param None
  */
-Matrixr osqpeInterface::_solve()
+Vectorr osqpeInterface::_solve()
 {
-    Matrixr result;
-    result.resize(n, 1);
+    Vectorr result;
+    result.resize(n);
     result.setZero();
     if (solver.solveProblem() == OsqpEigen::ErrorExitFlag::NoError)
     {
@@ -251,10 +251,10 @@ osqpeInterfaceSparse::osqpeInterfaceSparse(int _xNum, int _uNum, int _cNum, int 
  * @param y_k 期望状态
  * @param x_k 当前轨迹
  */
-Matrixr osqpeInterfaceSparse::_predictionSolve(const Matrixr &y_k, const Matrixr &x)
+Vectorr osqpeInterfaceSparse::_predictionSolve(const Vectorr &y_k, const Vectorr &x)
 {
-    Matrixr result;
-    result.resize(n, 1);
+    Vectorr result;
+    result.resize(n);
     result.setZero();
     // 生成预测矩阵
     this->_update_qp(y_k.topRows(xNum), x);
@@ -262,10 +262,11 @@ Matrixr osqpeInterfaceSparse::_predictionSolve(const Matrixr &y_k, const Matrixr
     // 直接拷贝非零值（最快）
     std::copy(Ps.valuePtr(), Ps.valuePtr() + Ps.nonZeros(), this->hessian.valuePtr());
     std::copy(Acs.valuePtr(), Acs.valuePtr() + Acs.nonZeros(), this->linearMatrix.valuePtr());
+    // hessian = Ps;
+    // linearMatrix = Acs;
     gradient = g;
     lowerBound = l;
     upperBound = u;
-
     if (!solver.isInitialized()) {
 
         solver.data()->setHessianMatrix(hessian);
@@ -287,10 +288,9 @@ Matrixr osqpeInterfaceSparse::_predictionSolve(const Matrixr &y_k, const Matrixr
         solver.updateUpperBound(upperBound);
         
     }
-
     if (solver.solveProblem() == OsqpEigen::ErrorExitFlag::NoError)
     {
-        result = solver.getSolution().topRows(n);
+        result = solver.getSolution().block(xNum*(ctrlStep + 1), 0, n, 1);
     }
 
     return result;
@@ -300,10 +300,10 @@ Matrixr osqpeInterfaceSparse::_predictionSolve(const Matrixr &y_k, const Matrixr
  * @brief mpc问题预测
  * @param None
  */
-void osqpeInterfaceSparse::_prediction(const Matrixr& y_k, const Matrixr& x)
+void osqpeInterfaceSparse::_prediction(const Vectorr& y_k, const Vectorr& x)
 {
-    Matrixr result;
-    result.resize(n, 1);
+    Vectorr result;
+    result.resize(n);
     result.setZero();
     // 生成预测矩阵
     this->_update_qp(y_k.topRows(xNum), x);
@@ -311,6 +311,8 @@ void osqpeInterfaceSparse::_prediction(const Matrixr& y_k, const Matrixr& x)
     // 直接拷贝非零值（最快）
     std::copy(Ps.valuePtr(), Ps.valuePtr() + Ps.nonZeros(), this->hessian.valuePtr());
     std::copy(Acs.valuePtr(), Acs.valuePtr() + Acs.nonZeros(), this->linearMatrix.valuePtr());
+    // hessian = Ps;
+    // linearMatrix = Acs;
     gradient = g;
     lowerBound = l;
     upperBound = u;
@@ -349,14 +351,14 @@ void osqpeInterfaceSparse::matrixCopy()
  * @brief mpc问题求解
  * @param None
  */
-Matrixr osqpeInterfaceSparse::_solve()
+Vectorr osqpeInterfaceSparse::_solve()
 {
-    Matrixr result;
-    result.resize(n, 1);
+    Vectorr result;
+    result.resize(n);
     result.setZero();
     if (solver.solveProblem() == OsqpEigen::ErrorExitFlag::NoError)
     {
-        result = solver.getSolution().topRows(n);
+        result = solver.getSolution().block(xNum*(ctrlStep + 1), 0, n, 1);
     }
 
     return result;

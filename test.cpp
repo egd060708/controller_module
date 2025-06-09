@@ -349,10 +349,10 @@ int main()
     fitB.setFunctions(model_B);
     fitK.setFunctions(model_K);
     fitP.setFunctions(model_P);
-    Eigen::Matrix<MPCFloat,-1,-1> A = fitA.modelGenerateMat(avc_length);
-    Eigen::Matrix<MPCFloat,-1,-1> B = fitB.modelGenerateMat(avc_length);
-    Eigen::Matrix<MPCFloat,-1,-1> K = fitK.modelGenerateMat(avc_length);
-    Eigen::Matrix<MPCFloat,-1,-1> P = fitP.modelGenerateMat(avc_length);
+    Eigen::Matrix<MPCFloat,-1,-1> A = fitA.modelGenerate(avc_length);
+    Eigen::Matrix<MPCFloat,-1,-1> B = fitB.modelGenerate(avc_length);
+    Eigen::Matrix<MPCFloat,-1,-1> K = fitK.modelGenerate(avc_length);
+    Eigen::Matrix<MPCFloat,-1,-1> P = fitP.modelGenerate(avc_length);
     Eigen::Vector<MPCFloat,-1> Qv = Eigen::Map<Eigen::Vector<MPCFloat, 10>>(Q);
     Eigen::Vector<MPCFloat,-1> Rv = Eigen::Map<Eigen::Vector<MPCFloat, 4>>(R);
     Eigen::Vector<MPCFloat,-1> Fv = Qv;
@@ -370,10 +370,10 @@ int main()
         // X(4) = dist(gen);
         // 记录开始时间
         auto start = std::chrono::high_resolution_clock::now();
-        A = fitA.modelGenerateMat(avc_length);
-        B = fitB.modelGenerateMat(avc_length);
-        K = fitK.modelGenerateMat(avc_length);
-        P = fitP.modelGenerateMat(avc_length);
+        A = fitA.modelGenerate(avc_length);
+        B = fitB.modelGenerate(avc_length);
+        K = fitK.modelGenerate(avc_length);
+        P = fitP.modelGenerate(avc_length);
         // // 记录结束时间
         // auto end = std::chrono::high_resolution_clock::now();
         mpcCal.setStateSpace(A,B,0);

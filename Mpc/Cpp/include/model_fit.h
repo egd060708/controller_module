@@ -18,7 +18,8 @@ template<int rows,int cols,int order>
 class modelFit {
 public:
 	//Eigen::Matrix<MPCFloat, rows*cols,order+1> model;//行数区分阶次参数，列数区分矩阵位置参数
-	Eigen::Matrix<MPCFloat,-1,-1> model;
+	// Eigen::Matrix<MPCFloat,-1,-1> model;
+	Eigen::Matrix<MPCFloat, order + 1, rows* cols, Eigen::ColMajor> model;
 
 	/* 递归调用求解方程结果: 自变量，方程系数，方程阶数 */
 	MPCFloat functionSolve(const MPCFloat _x, const Eigen::Vector<MPCFloat,-1> _para, int _orderNum)
